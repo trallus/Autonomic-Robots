@@ -1,6 +1,6 @@
 #Wird von DERBY Erzeugt
 *.log
-/test
+/JPA_System/test
 
 
 *.class

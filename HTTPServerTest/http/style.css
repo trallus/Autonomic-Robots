@@ -1,0 +1,19 @@
+/* 
+    Document   : style
+    Created on : 02.09.2013, 19:12:21
+    Author     : Asasello
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+#background {
+    position: absolute;
+    overflow: hidden;
+    top: 0px;
+    left: 0px;
+    background-color: gray;
+}

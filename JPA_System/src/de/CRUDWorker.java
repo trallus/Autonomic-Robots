@@ -49,6 +49,8 @@ public class CRUDWorker implements CRUDIF {
      */
     @Override
     public boolean insert(Object obj) {
+	if(obj == null)
+	    return false;
 	boolean result = false;
 	final EntityManager em = emf.createEntityManager();
 	final EntityTransaction trans = em.getTransaction();
@@ -68,6 +70,8 @@ public class CRUDWorker implements CRUDIF {
      */
     @Override
     public boolean update(Object obj) {
+	if(obj == null)
+	    return false;
 	boolean result = false;
 	final EntityManager em = emf.createEntityManager();
 	final EntityTransaction trans = em.getTransaction();
@@ -87,6 +91,8 @@ public class CRUDWorker implements CRUDIF {
      */
     @Override
     public boolean remove(Object obj) {
+	if(obj == null)
+	    return false;
 	boolean result = false;
 	final EntityManager em = emf.createEntityManager();
 	final EntityTransaction trans = em.getTransaction();
@@ -107,6 +113,8 @@ public class CRUDWorker implements CRUDIF {
      */
     @Override
     public <T> T readID(Class<T> arg, long id) {
+	if(arg == null)
+	    return null;
 	final EntityManager em = emf.createEntityManager();
 	final T result = em.find(arg, id);
 	em.close();
@@ -118,6 +126,8 @@ public class CRUDWorker implements CRUDIF {
      */
     @Override
     public <T> List<T> readAll(Class<T> arg) {
+	if(arg == null)
+	    return null;
 	final EntityManager em = emf.createEntityManager();
 	final Query query = em.createQuery("SELECT x FROM "+arg.getName()+" x");
 	@SuppressWarnings("unchecked")
@@ -133,6 +143,8 @@ public class CRUDWorker implements CRUDIF {
     @Override
     public <T> List<T> readAll(Class<T> arg, String attributName,
 	    Object attributValue) {
+	if(arg == null || attributName == null || attributValue == null)
+	    return null;
 	final EntityManager em = emf.createEntityManager();
 	final Query query = em.createQuery("SELECT x FROM "+arg.getName()+" x WHERE x."+attributName+" = :value");
 	query.setParameter("value", attributValue);

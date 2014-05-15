@@ -1,0 +1,9 @@
+Die PersistenceUnit die bei:
+
+	Persistence.createEntityManagerFactory("<PERSISTENCEUNIT>");
+	
+angegeben werden muss steht in der persistence.xml weit oben, im konkreten beispiel über dem <provider> tag
+
+.... 3h Suchen -.-
+
+Bei @OneToXXXX kann das "leaf" nur gelöscht werden indem man die referenz entfernt(z.B.: =null) und die "wurzel" updated

@@ -53,7 +53,7 @@ public interface CRUDIF {
      * 
      * @param arg
      *            The class of the desired Entities
-     * @return List of all found Entities
+     * @return List of all found Entities or null
      */
     <T> List<T> readAll(Class<T> arg);
 
@@ -67,7 +67,7 @@ public interface CRUDIF {
      *            The EXACT name of the attribute
      * @param attributValue
      *            The value of the attribute
-     * @return List of all found Entities
+     * @return List of all found Entities or null
      */
     <T> List<T> readAll(Class<T> arg, String attributName, Object attributValue);
 }

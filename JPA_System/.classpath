@@ -5,5 +5,6 @@
 	<classpathentry kind="con" path="org.eclipse.datatools.connectivity.jdt.DRIVERLIBRARY/Derby Client JDBC Driver"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/DerbyDB"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/EclipseLink"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

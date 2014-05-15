@@ -43,9 +43,9 @@ public class TelephoneNumber {
 		+ ", number=" + number + "]";
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    
+
+    /* (non-Javadoc)
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -53,14 +53,11 @@ public class TelephoneNumber {
 	final int prime = 31;
 	int result = 1;
 	result = prime * result + areaCode;
-	result = prime * result + (int) (id ^ (id >>> 32));
 	result = prime * result + number;
 	return result;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /* (non-Javadoc)
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -69,12 +66,10 @@ public class TelephoneNumber {
 	    return true;
 	if (obj == null)
 	    return false;
-	if (getClass() != obj.getClass())
+	if (!(obj instanceof TelephoneNumber))
 	    return false;
 	TelephoneNumber other = (TelephoneNumber) obj;
 	if (areaCode != other.areaCode)
-	    return false;
-	if (id != other.id)
 	    return false;
 	if (number != other.number)
 	    return false;

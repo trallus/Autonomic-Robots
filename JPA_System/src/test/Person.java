@@ -79,6 +79,8 @@ public class Person {
 		+ ", lastWish=" + lastWish + "]";
     }
 
+    
+
     /* (non-Javadoc)
      * @see java.lang.Object#hashCode()
      */
@@ -89,11 +91,8 @@ public class Person {
 	result = prime * result + ((address == null) ? 0 : address.hashCode());
 	result = prime * result
 		+ ((firstName == null) ? 0 : firstName.hashCode());
-	result = prime * result + (int) (id ^ (id >>> 32));
 	result = prime * result
 		+ ((lastName == null) ? 0 : lastName.hashCode());
-	result = prime * result
-		+ ((lastWish == null) ? 0 : lastWish.hashCode());
 	result = prime * result + ((numbers == null) ? 0 : numbers.hashCode());
 	return result;
     }
@@ -107,7 +106,7 @@ public class Person {
 	    return true;
 	if (obj == null)
 	    return false;
-	if (getClass() != obj.getClass())
+	if (!(obj instanceof Person))
 	    return false;
 	Person other = (Person) obj;
 	if (address == null) {
@@ -122,19 +121,11 @@ public class Person {
 	}
 	else if (!firstName.equals(other.firstName))
 	    return false;
-	if (id != other.id)
-	    return false;
 	if (lastName == null) {
 	    if (other.lastName != null)
 		return false;
 	}
 	else if (!lastName.equals(other.lastName))
-	    return false;
-	if (lastWish == null) {
-	    if (other.lastWish != null)
-		return false;
-	}
-	else if (!lastWish.equals(other.lastWish))
 	    return false;
 	if (numbers == null) {
 	    if (other.numbers != null)

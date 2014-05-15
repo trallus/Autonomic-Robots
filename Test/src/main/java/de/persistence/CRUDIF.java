@@ -1,4 +1,4 @@
-package de;
+package de.persistence;
 
 import java.util.List;
 

@@ -3,6 +3,7 @@
 	<persistence-unit name="monster" transaction-type="RESOURCE_LOCAL">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<class>de.data.User</class>
+		<class>de.data.DBUser</class>
 		<properties>
 			<property name="javax.persistence.jdbc.user" value="master"/>
 			<property name="javax.persistence.jdbc.password" value="12345"/>

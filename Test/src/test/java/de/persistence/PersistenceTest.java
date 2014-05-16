@@ -2,13 +2,13 @@ package de.persistence;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.data.DBUser;
 import de.data.User;
 
 /**
@@ -21,7 +21,7 @@ import de.data.User;
 public class PersistenceTest {
 
     private CRUDIF crud;
-    private User user;
+    private DBUser user;
 
     /**
      * @throws java.lang.Exception
@@ -29,7 +29,7 @@ public class PersistenceTest {
     @Before
     public void setUp() throws Exception {
 	crud = PersistenceFacade.getDBController();
-	user = new User("Tester", "Tester@test.de", 1245);
+	user = new DBUser("Tester", "Tester@test.de", "1245");
     }
     
     /**
@@ -70,7 +70,7 @@ public class PersistenceTest {
 	crud.insert(user);
 	user.setName("Updated");
 	crud.update(user);
-	assertEquals(new User("Updated", "Tester@test.de", 1245), crud.readID(user.getClass(), user.getId()));
+	assertEquals(new DBUser("Updated", "Tester@test.de", "1245"), crud.readID(user.getClass(), user.getId()));
     }
     
     public void removeTest(){

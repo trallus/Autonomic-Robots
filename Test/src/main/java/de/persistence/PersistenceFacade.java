@@ -1,6 +1,6 @@
 package de.persistence;
 
-import de.data.User;
+import de.data.DBUser;
 
 /**
  * The Facade for the Persistence system
@@ -23,6 +23,6 @@ public class PersistenceFacade {
      */
     public final static void startDBSystem(){
 	final CRUDIF temp = new CRUDWorker();
-	temp.readAll(User.class);
+	temp.readAll(DBUser.class);
     }
 }

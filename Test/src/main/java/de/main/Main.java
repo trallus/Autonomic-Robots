@@ -1,8 +1,6 @@
 package de.main;
 
-import de.data.User;
-import de.persistence.CRUDIF;
-import de.persistence.PersistenceFacade;
+import de.game.GameControler;
 
 /**
  * The Entry Point for the Programm and for Christian ;P
@@ -16,13 +14,9 @@ public class Main {
      * The Entry Point for the program
      * @param args does nothing
      */
-    public static void main(String[] args){
-	//Start Database
-	PersistenceFacade.startDBSystem();
-	//Get Database Controller
-	final CRUDIF db = PersistenceFacade.getDBController();
-	//Create and insert User in Database
-	final User user = new User("Tester", "Test@test.de", 45781549);
-	db.insert(user);
+    public static void main(String[] args) throws Exception{
+    	
+		new GameControler();
+		
     }
 }

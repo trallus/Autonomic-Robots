@@ -1,166 +1,77 @@
 package de.data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import de.persistence.CRUDIF;
 
-/**
- * The representation of a User
- * @author Mike Kiekebusch
- * @version 0.1
- * @since 15.05.2014
- */
-@Entity
-@Table(name="UserAccount") //Because User is reserve in DerbyDB
 public class User {
-    
-    /**
-     * The Id for the Persistence System, DO NOT TOUCH THIS!
-     */
-    @Id
-    @GeneratedValue
-    private long id;
-    /**
-     * Name of the User
-     */
-    private String name;
-    /**
-     * Email Address of the User
-     */
-    private String eMail;
-    /**
-     * Password hashed of the User
-     */
-    private long pwHash;
-    /**
-     * The start point of the user
-     */
-    @Transient
-    private Point startPoint;
-    
-    /**
-     * @param name The Name of the user
-     * @param eMail The Email of the user
-     * @param pwHash The hashed password of the user
-     */
-    public User(String name, String eMail, long pwHash) {
-	this.name = name;
-	this.eMail = eMail;
-	this.pwHash = pwHash;
-    }
-    
-    /**
-     * Default Consturctor for the persistence system
-     */
-    public User(){
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * @return the eMail
-     */
-    public String geteMail() {
-        return eMail;
-    }
-
-    /**
-     * @param eMail the eMail to set
-     */
-    public void seteMail(String eMail) {
-        this.eMail = eMail;
-    }
-
-    /**
-     * @return the pwHash
-     */
-    public long getPwHash() {
-        return pwHash;
-    }
-
-    /**
-     * @param pwHash the pwHash to set
-     */
-    public void setPwHash(long pwHash) {
-        this.pwHash = pwHash;
-    }
-
-    /**
-     * @return the startPoint
-     */
-    public Point getStartPoint() {
-        return startPoint;
-    }
-
-    /**
-     * @param startPoint the startPoint to set
-     */
-    public void setStartPoint(Point startPoint) {
-        this.startPoint = startPoint;
-    }
-
-    /**
-     * @return the id
-     */
-    public long getId() {
-        return id;
-    }
-
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((eMail == null) ? 0 : eMail.hashCode());
-	result = prime * result + ((name == null) ? 0 : name.hashCode());
-	result = prime * result + (int) (pwHash ^ (pwHash >>> 32));
-	return result;
-    }
-
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (!(obj instanceof User))
-	    return false;
-	User other = (User) obj;
-	if (eMail == null) {
-	    if (other.eMail != null)
-		return false;
+	private final CRUDIF db;
+	private DBUser dbUser;
+	
+	public User ( CRUDIF db ) {
+		this.db = db;
 	}
-	else if (!eMail.equals(other.eMail))
-	    return false;
-	if (name == null) {
-	    if (other.name != null)
-		return false;
+	
+	public void logIn ( String eMail, String password ) throws EmailNotFoundException {
+		if ( eMail == null || password == null )
+			throw new IllegalArgumentException();
+
+		// check if eMail alredy in use
+		List<DBUser> list = db.readAll ( DBUser.class, "eMail", eMail );
+		if ( list.size() > 1 ) {
+			throw new RuntimeException ("(To) many Users with this eMail found");
+		}
+		
+		if ( list.size() == 0 ) {
+			throw new EmailNotFoundException();
+		}
+		
+		dbUser = list.get(0);
 	}
-	else if (!name.equals(other.name))
-	    return false;
-	if (pwHash != other.pwHash)
-	    return false;
-	return true;
-    }
-    
-    
+	
+	public void register ( String eMail, String password, String name ) throws Exception {
+		if ( eMail == null || password == null || name == null )
+			throw new IllegalArgumentException();
+		
+		if ( dbUser != null ) {
+			throw new UnsupportedOperationException ("User alredy registed.");
+		}
+		
+		// check if eMail alredy in use
+		List<DBUser> list = db.readAll ( DBUser.class, "eMail", eMail );
+		if ( list.size() > 0 ) {
+			throw new EmailInUseException();
+		}
+		
+		// create DBUser
+		dbUser = new DBUser();
+		dbUser.seteMail(eMail);
+		dbUser.setName(name);
+		dbUser.setPwHash ( convertToMD5Hash ( password ) );
+		
+		writeToDB();
+	}
+	
+	void writeToDB () {
+		db.insert( dbUser );
+	}
+	
+	String convertToMD5Hash ( String string ) throws NoSuchAlgorithmException {
+		
+		// generate md5 String
+		byte[] pwBytes = ( string ).getBytes();
+		
+		MessageDigest md = MessageDigest.getInstance( "MD5" );
+		
+		byte[] byteHash = md.digest( pwBytes );
+		
+		String md5String = "";
+		
+		for ( byte b : byteHash ) {
+			md5String += b;
+		}
+		
+		return ( md5String );
+	}
 }

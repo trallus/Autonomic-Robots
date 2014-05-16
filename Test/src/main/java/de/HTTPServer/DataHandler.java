@@ -6,11 +6,13 @@ import java.io.OutputStream;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+import de.game.GameControler;
+
 class DateHandler implements HttpHandler {
-	private Robot robot;
+	private final GameControler gc;
 	
-	public DateHandler( Robot robot ) {
-		this.robot = robot;
+	public DateHandler( GameControler gc ) {
+		this.gc = gc;
 	}
 	
 	@Override
@@ -22,7 +24,7 @@ class DateHandler implements HttpHandler {
 		Request request;
 
 		if (uri.indexOf("serverFrameRequest") != -1) {
-			request = new FrameRequest(httpExchange, robot);
+			request = new FrameRequest(httpExchange, gc.robot);
 		} else {
 			request = new DocumentRequest(httpExchange);
 		}

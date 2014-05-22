@@ -4,18 +4,19 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
  * The representation of a User
+ * 
  * @author Mike Kiekebusch
  * @version 0.1
  * @since 15.05.2014
  */
 @Entity
-@Table(name="UserAccount") //Because User is reserve in DerbyDB
+@Table(name = "UserAccount")
+// Because User is reserve in DerbyDB
 public class DBUser {
-    
+
     /**
      * The Id for the Persistence System, DO NOT TOUCH THIS!
      */
@@ -34,93 +35,82 @@ public class DBUser {
      * Password hashed of the User
      */
     private String pwHash;
+
     /**
-     * The start point of the user
-     */
-    @Transient
-    private Point startPoint;
-    
-    /**
-     * @param name The Name of the user
-     * @param eMail The Email of the user
-     * @param pwHash The hashed password of the user
+     * @param name
+     *            The Name of the user
+     * @param eMail
+     *            The Email of the user
+     * @param pwHash
+     *            The hashed password of the user
      */
     public DBUser(String name, String eMail, String pwHash) {
 	this.name = name;
 	this.eMail = eMail;
 	this.pwHash = pwHash;
     }
-    
+
     /**
      * Default Consturctor for the persistence system
      */
-    public DBUser(){
+    public DBUser() {
     }
 
     /**
      * @return the name
      */
     public String getName() {
-        return name;
+	return name;
     }
 
     /**
-     * @param name the name to set
+     * @param name
+     *            the name to set
      */
     public void setName(String name) {
-        this.name = name;
+	this.name = name;
     }
 
     /**
      * @return the eMail
      */
     public String geteMail() {
-        return eMail;
+	return eMail;
     }
 
     /**
-     * @param eMail the eMail to set
+     * @param eMail
+     *            the eMail to set
      */
     public void seteMail(String eMail) {
-        this.eMail = eMail;
+	this.eMail = eMail;
     }
 
     /**
      * @return the pwHash
      */
     public String getPwHash() {
-        return pwHash;
+	return pwHash;
     }
 
     /**
-     * @param pwHash the pwHash to set
+     * @param pwHash
+     *            the pwHash to set
      */
     public void setPwHash(String pwHash) {
-        this.pwHash = pwHash;
-    }
-
-    /**
-     * @return the startPoint
-     */
-    public Point getStartPoint() {
-        return startPoint;
-    }
-
-    /**
-     * @param startPoint the startPoint to set
-     */
-    public void setStartPoint(Point startPoint) {
-        this.startPoint = startPoint;
+	this.pwHash = pwHash;
     }
 
     /**
      * @return the id
      */
     public long getId() {
-        return id;
+	return id;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -130,11 +120,13 @@ public class DBUser {
 	result = prime * result + ((eMail == null) ? 0 : eMail.hashCode());
 	result = prime * result + ((name == null) ? 0 : name.hashCode());
 	result = prime * result + ((name == null) ? 0 : pwHash.hashCode());
-	//result = prime * result + (int) (pwHash ^ (pwHash >>> 32));
+	// result = prime * result + (int) (pwHash ^ (pwHash >>> 32));
 	return result;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -162,6 +154,5 @@ public class DBUser {
 	    return false;
 	return true;
     }
-    
-    
+
 }

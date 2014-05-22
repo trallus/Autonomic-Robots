@@ -1,4 +1,4 @@
-package de.HTTPServer;
+package de.httpServer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -6,7 +6,7 @@ import java.net.InetSocketAddress;
 import com.sun.net.httpserver.HttpServer;
 
 import de.game.GameControler;
-import de.general.Log;
+import de.logger.Log;
 
 
 public class HTTPServer {

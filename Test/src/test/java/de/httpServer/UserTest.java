@@ -1,4 +1,4 @@
-package de.data;
+package de.httpServer;
 
 import java.util.List;
 
@@ -6,6 +6,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.data.DBUser;
+import de.httpServer.EmailInUseException;
+import de.httpServer.EmailNotFoundException;
+import de.httpServer.User;
 import de.persistence.CRUDIF;
 import de.persistence.PersistenceFacade;
 

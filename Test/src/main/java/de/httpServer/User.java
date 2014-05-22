@@ -1,8 +1,10 @@
-package de.data;
+package de.httpServer;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+
+import de.data.DBUser;
 import de.persistence.CRUDIF;
 
 public class User {

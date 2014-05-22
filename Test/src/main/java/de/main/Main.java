@@ -13,15 +13,14 @@ public class Main {
     /**
      * The Entry Point for the program
      * 
-     * @param args
-     *            does nothing
+     * @param args The First entry is the portnumber
      */
     public static void main(String[] args) throws Exception {
+	int portNumber;
 	if (args.length != 1) {
-	    System.err.println("Usage java Main <port Number>");
-	    System.exit(-2);
+	    portNumber = 80;
 	}
-	final int portNumber = Integer.parseInt(args[0]);
+	portNumber = Integer.parseInt(args[0]);
 	new GameControler(portNumber);
 
     }

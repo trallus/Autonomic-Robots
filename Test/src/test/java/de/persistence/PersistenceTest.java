@@ -74,9 +74,9 @@ public class PersistenceTest {
     @Test
     public void removeTest(){
 	crud.insert(user);
-	assertTrue(crud.readAll(user.getClass()).size()==1);
+	assertEquals(1,crud.readAll(user.getClass()).size());
 	crud.remove(user);
-	assertTrue(crud.readAll(user.getClass()).size()==0);
+	assertEquals(0,crud.readAll(user.getClass()).size());
     }
     
     @Test

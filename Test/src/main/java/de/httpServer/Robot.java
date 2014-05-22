@@ -1,4 +1,4 @@
-package de.HTTPServer;
+package de.httpServer;
 
 
 public class Robot {

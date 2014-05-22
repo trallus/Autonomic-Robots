@@ -1,4 +1,4 @@
-package de.HTTPServer;
+package de.httpServer;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;

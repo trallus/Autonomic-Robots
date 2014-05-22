@@ -1,7 +1,7 @@
 package de.game;
 
-import de.HTTPServer.HTTPServer;
-import de.HTTPServer.Robot;
+import de.httpServer.HTTPServer;
+import de.httpServer.Robot;
 import de.persistence.CRUDIF;
 import de.persistence.PersistenceFacade;
 
@@ -23,5 +23,7 @@ public class GameControler {
 		
 		//Start HTTP Server
 		httpServer = new HTTPServer( this, portNumber );
+		
+		//Start Game
 	}
 }

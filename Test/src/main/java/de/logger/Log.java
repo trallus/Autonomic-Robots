@@ -1,4 +1,4 @@
-package de.general;
+package de.logger;
 /**
  * To control the logging
  * @author ko

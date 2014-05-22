@@ -2,8 +2,6 @@ package de.game;
 
 import de.HTTPServer.HTTPServer;
 import de.HTTPServer.Robot;
-import de.data.DBUser;
-import de.data.User;
 import de.persistence.CRUDIF;
 import de.persistence.PersistenceFacade;
 
@@ -17,13 +15,13 @@ public class GameControler {
 	final CRUDIF db;
 	public final Robot robot = new Robot ();
 	
-	public GameControler () throws Exception{
+	public GameControler (int portNumber) throws Exception{
 		//Start Database
 		PersistenceFacade.startDBSystem();
 		//Get Database Controller
 		db = PersistenceFacade.getDBController();
 		
 		//Start HTTP Server
-		httpServer = new HTTPServer( this );
+		httpServer = new HTTPServer( this, portNumber );
 	}
 }

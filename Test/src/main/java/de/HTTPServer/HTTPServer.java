@@ -12,10 +12,9 @@ import de.general.Log;
 public class HTTPServer {
 	final GameControler gc;
 	
-	public HTTPServer ( GameControler gc ) throws IOException {
+	public HTTPServer ( GameControler gc, int portNumber ) throws IOException {
 		this.gc = gc;
 		
-		int portNumber = 80;
 		
 	    HttpServer server = HttpServer.create( new InetSocketAddress( portNumber ), 0 );
 	    server.createContext( "/", new DateHandler( gc ) );

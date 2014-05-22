@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.data.DBUser;
-import de.data.User;
 
 /**
  * Test if the CrudWorker is working correctly
@@ -38,8 +37,8 @@ public class PersistenceTest {
      */
     @After
     public void tearDown() throws Exception {
-	final List<User> temp = crud.readAll(User.class);
-	for(User u : temp){
+	final List<DBUser> temp = crud.readAll(DBUser.class);
+	for(DBUser u : temp){
 	    crud.remove(u);
 	}
     }
@@ -65,14 +64,14 @@ public class PersistenceTest {
 	crud.insert(user);
 	assertEquals(user, crud.readID(user.getClass(), user.getId()));
     }
-    
+    @Test
     public void updateTest(){
 	crud.insert(user);
 	user.setName("Updated");
 	crud.update(user);
 	assertEquals(new DBUser("Updated", "Tester@test.de", "1245"), crud.readID(user.getClass(), user.getId()));
     }
-    
+    @Test
     public void removeTest(){
 	crud.insert(user);
 	assertTrue(crud.readAll(user.getClass()).size()==1);
@@ -83,7 +82,7 @@ public class PersistenceTest {
     @Test
     public void readWhereTest() {
 	crud.insert(user);
-	assertTrue(crud.readAll(user.getClass(),"pwHash",1245).size()==1);
+	assertTrue(crud.readAll(user.getClass(),"pwHash","1245").size()==1);
     }
 
 }

@@ -9,10 +9,20 @@ public class Battle {
 	private int fieldRadius;
 	private long timeLimitMs;
 	private ArrayList<Account>players = new ArrayList(NUMBER_OF_PLAYERS);
-	
+	/**
+	 * 
+	 * @param fieldRadius
+	 * @param timeLimitMs
+	 */
 	public Battle(int fieldRadius, long timeLimitMs){
 		this.fieldRadius = fieldRadius;
 		this.timeLimitMs = timeLimitMs;
+	}
+	
+	public Battle(int fieldRadius, long timeLimitMs, ArrayList<Account>players){
+		this.fieldRadius = fieldRadius;
+		this.timeLimitMs = timeLimitMs;
+		if(players.size() == NUMBER_OF_PLAYERS)this.players = players;
 	}
 
 	

@@ -1,5 +1,11 @@
 package de.persistence;
 
+import java.sql.DriverManager;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 import de.data.DBUser;
 
 /**
@@ -10,11 +16,21 @@ import de.data.DBUser;
  */
 public class PersistenceFacade {
     
+    private static boolean dbStarted = false;
+    private static EntityManagerFactory emf;
+    
     /**
      * @return A new implementing Object of the CRUDIF (Create,Read,Update,Delete)
      */
     public final static CRUDIF getDBController(){
-	return new CRUDWorker();
+	if(!dbStarted)
+	    throw new PersistenceException(new IllegalStateException("DB System not started"));
+	try{
+	    return new CRUDWorker(emf.createEntityManager(), emf.getPersistenceUnitUtil());
+	}
+	catch(Throwable arg0){
+	    throw new PersistenceException(arg0);
+	}
     }
     
     /**
@@ -22,7 +38,24 @@ public class PersistenceFacade {
      * @throws PersistenceException might be thrown if an error occurs
      */
     public final static void startDBSystem(){
-	final CRUDIF temp = new CRUDWorker();
-	temp.readAll(DBUser.class);
+	try{
+	    emf = Persistence.createEntityManagerFactory("monster");
+	    dbStarted = true;
+	}
+	catch(Throwable arg0){
+	    throw new PersistenceException(arg0);
+	}
+    }
+    
+    public final static void shutdownDBSystem(){
+	if(!dbStarted)
+	    throw new PersistenceException(new IllegalStateException("DB System not started"));
+	try{
+	    DriverManager.getConnection("jdbc:derby:DB;shutdown=true");
+	    dbStarted = false;
+	}
+	catch(Throwable arg0){
+	    throw new PersistenceException(arg0);
+	}
     }
 }

@@ -2,10 +2,13 @@ package de.persistence;
 
 import static org.junit.Assert.*;
 
+import java.sql.SQLNonTransientConnectionException;
 import java.util.List;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.data.DBUser;
@@ -22,6 +25,27 @@ public class PersistenceTest {
     private CRUDIF crud;
     private DBUser user;
 
+    @BeforeClass
+    public static void startDB(){
+	PersistenceFacade.startDBSystem();
+    }
+    @AfterClass
+    public static void stopDB(){
+	try{
+	    PersistenceFacade.shutdownDBSystem();
+	}
+	catch(PersistenceException arg0){
+	    if(arg0.getCause() instanceof SQLNonTransientConnectionException){
+		/*
+		 * DO NOTHING, this exception is thrown from derby during shutdown and means no error
+		 * See http://db.apache.org/derby/papers/DerbyTut/embedded_intro.html
+		 */
+	    }
+	    else
+		throw arg0;
+	}
+    }
+    
     /**
      * @throws java.lang.Exception
      */
@@ -48,8 +72,11 @@ public class PersistenceTest {
 	crud.insert(null);
     }
     
-    @Test(expected = PersistenceException.class)
+    @Test
     public void twoInsertsOfSameEntityTest(){
+	/*
+	 * No longer throws an exception because the cache registers that the entity is already inserted
+	 */
 	crud.insert(user);
 	crud.insert(user);
     }

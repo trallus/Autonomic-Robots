@@ -18,18 +18,18 @@ import javax.persistence.Query;
  * @version 0.3
  */
 public class CRUDWorker implements CRUDIF {
-
-    private final EntityManagerFactory emf;
+    
+    private final EntityManager em;
 
     private final PersistenceUnitUtil util;
 
     /**
      * Just Initializing the entityManagerFactory
      */
-    protected CRUDWorker() {
+    protected CRUDWorker(final EntityManager em, final PersistenceUnitUtil util) {
 	try {
-	    emf = Persistence.createEntityManagerFactory("monster");
-	    util = emf.getPersistenceUnitUtil();
+	    this.util = util;
+	    this.em = em;
 	}
 	catch (Throwable arg0) {
 	    throw new PersistenceException(arg0);
@@ -42,12 +42,10 @@ public class CRUDWorker implements CRUDIF {
     @Override
     public void insert(Object obj) {
 	try {
-	    final EntityManager em = emf.createEntityManager();
 	    final EntityTransaction trans = em.getTransaction();
 	    trans.begin();
 	    em.persist(obj);
 	    trans.commit();
-	    em.close();
 	}
 	catch (Throwable arg0) {
 	    throw new PersistenceException(arg0);
@@ -60,12 +58,10 @@ public class CRUDWorker implements CRUDIF {
     @Override
     public void update(Object obj) {
 	try {
-	    final EntityManager em = emf.createEntityManager();
 	    final EntityTransaction trans = em.getTransaction();
 	    trans.begin();
 	    em.merge(obj);
 	    trans.commit();
-	    em.close();
 	}
 	catch (Throwable arg0) {
 	    throw new PersistenceException(arg0);
@@ -78,14 +74,12 @@ public class CRUDWorker implements CRUDIF {
     @Override
     public void remove(Object obj) {
 	try {
-	    final EntityManager em = emf.createEntityManager();
 	    final EntityTransaction trans = em.getTransaction();
 	    final Object id = util.getIdentifier(obj);
 	    final Object removable = em.find(obj.getClass(), id);
 	    trans.begin();
 	    em.remove(removable);
 	    trans.commit();
-	    em.close();
 	}
 	catch (Throwable arg0) {
 	    throw new PersistenceException(arg0);
@@ -98,9 +92,7 @@ public class CRUDWorker implements CRUDIF {
     @Override
     public <T> T readID(Class<T> arg, long id) {
 	try {
-	    final EntityManager em = emf.createEntityManager();
 	    final T result = em.find(arg, id);
-	    em.close();
 	    if (result == null)
 		throw new EntityNotFoundException();
 	    return result;
@@ -117,12 +109,10 @@ public class CRUDWorker implements CRUDIF {
     public <T> List<T> readAll(Class<T> arg) {
 	try {
 	    final List<T> result = new ArrayList<>();
-	    final EntityManager em = emf.createEntityManager();
 	    final Query query = em.createQuery("SELECT x FROM " + arg.getName()
 		    + " x");
 	    @SuppressWarnings("unchecked")
 	    final List<T> temp = query.getResultList();
-	    em.close();
 	    result.addAll(temp);
 	    return result;
 	}
@@ -140,13 +130,11 @@ public class CRUDWorker implements CRUDIF {
 	    Object attributValue) {
 	try {
 	    final List<T> result = new ArrayList<>();
-	    final EntityManager em = emf.createEntityManager();
 	    final Query query = em.createQuery("SELECT x FROM " + arg.getName()
 		    + " x WHERE x." + attributName + " = :value");
 	    query.setParameter("value", attributValue);
 	    @SuppressWarnings("unchecked")
 	    final List<T> temp = query.getResultList();
-	    em.close();
 	    result.addAll(temp);
 	    return result;
 	}

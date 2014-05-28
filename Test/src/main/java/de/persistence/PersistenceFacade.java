@@ -2,6 +2,7 @@ package de.persistence;
 
 import java.sql.DriverManager;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
@@ -9,13 +10,14 @@ import javax.persistence.Persistence;
  * The Facade for the Persistence system
  * 
  * @author Mike Kiekebusch
- * @version 0.1
+ * @version 0.2
  * @since 15.05.2014
  */
 public class PersistenceFacade implements PersistenceFacadeIF {
 
     private boolean dbStarted;
     private EntityManagerFactory emf;
+    private EntityManager em;
 
     public PersistenceFacade() {
 	dbStarted = false;
@@ -27,7 +29,7 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	    throw new PersistenceException(new IllegalStateException(
 		    "DB System not started"));
 	try {
-	    return new CRUDWorker(emf.createEntityManager(),
+	    return new CRUDWorker(em,
 		    emf.getPersistenceUnitUtil());
 	}
 	catch (Throwable arg0) {
@@ -42,6 +44,7 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 		    "DB System already started"));
 	try {
 	    emf = Persistence.createEntityManagerFactory("monster");
+	    em = emf.createEntityManager();
 	    dbStarted = true;
 	}
 	catch (Throwable arg0) {
@@ -69,7 +72,15 @@ public class PersistenceFacade implements PersistenceFacadeIF {
      */
     @Override
     public void beginTransaction() {
-	throw new PersistenceException(new UnsupportedOperationException("TODO implementation of methode"));
+	if (!dbStarted)
+	    throw new PersistenceException(new IllegalStateException(
+		    "DB System not started"));
+	try{
+	    em.getTransaction().begin();
+	}
+	catch(Throwable arg0){
+	    throw new PersistenceException(arg0);
+	}
     }
 
     /**
@@ -77,7 +88,15 @@ public class PersistenceFacade implements PersistenceFacadeIF {
      */
     @Override
     public void commitTransaction() {
-	throw new PersistenceException(new UnsupportedOperationException("TODO implementation of methode"));
+	if (!dbStarted)
+	    throw new PersistenceException(new IllegalStateException(
+		    "DB System not started"));
+	try{
+	    em.getTransaction().commit();
+	}
+	catch(Throwable arg0){
+	    throw new PersistenceException(arg0);
+	}
     }
 
     /**
@@ -85,6 +104,14 @@ public class PersistenceFacade implements PersistenceFacadeIF {
      */
     @Override
     public void rollbackTransaction() {
-	throw new PersistenceException(new UnsupportedOperationException("TODO implementation of methode"));
+	if (!dbStarted)
+	    throw new PersistenceException(new IllegalStateException(
+		    "DB System not started"));
+	try{
+	    em.getTransaction().rollback();
+	}
+	catch(Throwable arg0){
+	    throw new PersistenceException(arg0);
+	}
     }
 }

@@ -26,92 +26,96 @@ public class UserTest {
     private String password = "password";
     private String userName = "userName";
     private static PersistenceFacadeIF persistence;
-    
+
     @BeforeClass
-    public static void start(){
+    public static void start() {
 	persistence = new PersistenceFacade();
 	persistence.startDBSystem();
-	
+
     }
-    
+
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-		db = persistence.getDBController();
-		user = new User ( db );
+	db = persistence.getDBController();
+	user = new User(db);
     }
-    
+
     @After
     public void tearDown() throws Exception {
-		cleareDB();
+	cleareDB();
     }
-    
+
     @AfterClass
-    public static void end(){
-	try{
+    public static void end() {
+	try {
 	    persistence.shutdownDBSystem();
 	}
-	catch(PersistenceException arg0){
-	    if(arg0.getCause() instanceof SQLNonTransientConnectionException){
+	catch (PersistenceException arg0) {
+	    if (arg0.getCause() instanceof SQLNonTransientConnectionException) {
 		/*
-		 * DO NOTHING, this exception is thrown from derby during shutdown and means no error
-		 * See http://db.apache.org/derby/papers/DerbyTut/embedded_intro.html
+		 * DO NOTHING, this exception is thrown from derby during
+		 * shutdown and means no error See
+		 * http://db.apache.org/derby/papers
+		 * /DerbyTut/embedded_intro.html
 		 */
 	    }
 	    else
 		throw arg0;
 	}
     }
-    
+
     /**
      * bevore registration, expected failed
      */
-    @Test ( expected = EmailNotFoundException.class )
-	public void logInTestBevore () throws Exception {
-    	cleareDB();
-    	
-    	User user2 = new User ( db );
-    	
-		user2.logIn ( eMail, password );
+    @Test(expected = EmailNotFoundException.class)
+    public void logInTestBevore() throws Exception {
+	cleareDB();
+
+	User user2 = new User(db);
+	user2.logIn(eMail, password);
     }
-    
+
     @Test
-	public void registerTest () throws Exception {
-    	cleareDB();
-    	
-		user.register ( eMail, password, userName );
+    public void registerTest() throws Exception {
+	cleareDB();
+
+	persistence.beginTransaction();
+	user.register(eMail, password, userName);
+	persistence.commitTransaction();
     }
-    
-    @Test( expected = EmailInUseException.class )
-	public void registerTest2 () throws Exception {
-    	registerTest();
-    	
-    	User user2 = new User ( db );
-    	user2.register ( eMail, password, userName );
+
+    @Test(expected = EmailInUseException.class)
+    public void registerTest2() throws Exception {
+	registerTest();
+
+	User user2 = new User(db);
+	user2.register(eMail, password, userName);
     }
-    
+
     /**
      * after registration
-     * @throws Exception 
+     * 
+     * @throws Exception
      */
     @Test
-	public void logInTestAfter () throws Exception {
-    	registerTest();
-    	
-    	User user2 = new User ( db );
-    	
-		user2.logIn ( eMail, password );
+    public void logInTestAfter() throws Exception {
+	registerTest();
+
+	User user2 = new User(db);
+
+	user2.logIn(eMail, password);
     }
-    
 
     public void cleareDB() throws Exception {
-		final List<DBUser> temp = db.readAll(DBUser.class);
-		
-		for(DBUser u : temp){
-			db.remove(u);
-		}
+	final List<DBUser> temp = db.readAll(DBUser.class);
+	persistence.beginTransaction();
+	for (DBUser u : temp) {
+	    db.remove(u);
+	}
+	persistence.commitTransaction();
     }
-	
+
 }

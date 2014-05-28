@@ -64,14 +64,26 @@ public class PersistenceTest {
     @After
     public void tearDown() throws Exception {
 	final List<DBUser> temp = crud.readAll(DBUser.class);
+	persistence.beginTransaction();
 	for(DBUser u : temp){
 	    crud.remove(u);
 	}
+	persistence.commitTransaction();
     }
 
-    @Test(expected = PersistenceException.class)
+    @Test
     public void nullTest(){
-	crud.insert(null);
+	persistence.beginTransaction();
+	try{
+	    crud.insert(null);
+	    fail("No exception for insert(null)");
+	}
+	catch(PersistenceException arg0){
+	    //Must throw this exception
+	}
+	finally{
+	    persistence.rollbackTransaction();
+	}
     }
     
     @Test
@@ -79,39 +91,71 @@ public class PersistenceTest {
 	/*
 	 * No longer throws an exception because the cache registers that the entity is already inserted
 	 */
+	persistence.beginTransaction();
 	crud.insert(user);
 	crud.insert(user);
+	persistence.commitTransaction();
     }
     
-    @Test(expected = PersistenceException.class)
+    @Test
     public void removeNotPersistedEntityTest(){
-	crud.remove(user);
+	persistence.beginTransaction();
+	try{
+	    crud.remove(user);
+	    fail("No exception for insert(null)");
+	}
+	catch(PersistenceException arg0){
+	    //Must throw this exception
+	}
+	finally{
+	    persistence.rollbackTransaction();
+	}
     }
     
     @Test
     public void insertReadTest(){
+	persistence.beginTransaction();
 	crud.insert(user);
+	persistence.commitTransaction();
 	assertEquals(user, crud.readID(user.getClass(), user.getId()));
     }
     @Test
     public void updateTest(){
+	persistence.beginTransaction();
 	crud.insert(user);
+	persistence.commitTransaction();
 	user.setName("Updated");
+	persistence.beginTransaction();
 	crud.update(user);
+	persistence.commitTransaction();
 	assertEquals(new DBUser("Updated", "Tester@test.de", "1245"), crud.readID(user.getClass(), user.getId()));
     }
     @Test
     public void removeTest(){
+	persistence.beginTransaction();
 	crud.insert(user);
+	persistence.commitTransaction();
 	assertEquals(1,crud.readAll(user.getClass()).size());
+	persistence.beginTransaction();
 	crud.remove(user);
+	persistence.commitTransaction();
 	assertEquals(0,crud.readAll(user.getClass()).size());
     }
     
     @Test
     public void readWhereTest() {
+	persistence.beginTransaction();
 	crud.insert(user);
-	assertTrue(crud.readAll(user.getClass(),"pwHash","1245").size()==1);
+	persistence.commitTransaction();
+	assertEquals(1,crud.readAll(user.getClass(),"pwHash","1245").size());
     }
 
+    @Test
+    public void transactionRolledBackTest() throws Exception{
+	assertEquals(0,crud.readAll(user.getClass()).size());
+	persistence.beginTransaction();
+	crud.insert(user);
+	persistence.rollbackTransaction();
+	assertEquals(0,crud.readAll(user.getClass()).size());
+    }
 }

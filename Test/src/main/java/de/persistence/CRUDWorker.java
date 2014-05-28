@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceUnitUtil;
 import javax.persistence.Query;
 
@@ -13,7 +12,7 @@ import javax.persistence.Query;
  * Implementation of the CRUDIF
  * 
  * @author Mike Kiekebusch
- * @version 0.3
+ * @version 0.4
  */
 public class CRUDWorker implements CRUDIF {
     
@@ -40,10 +39,9 @@ public class CRUDWorker implements CRUDIF {
     @Override
     public void insert(Object obj) {
 	try {
-	    final EntityTransaction trans = em.getTransaction();
-	    trans.begin();
+	    if(!em.getTransaction().isActive())
+		throw new IllegalStateException("You must begin transaction first");
 	    em.persist(obj);
-	    trans.commit();
 	}
 	catch (Throwable arg0) {
 	    throw new PersistenceException(arg0);
@@ -56,10 +54,9 @@ public class CRUDWorker implements CRUDIF {
     @Override
     public void update(Object obj) {
 	try {
-	    final EntityTransaction trans = em.getTransaction();
-	    trans.begin();
+	    if(!em.getTransaction().isActive())
+		throw new IllegalStateException("You must begin transaction first");
 	    em.merge(obj);
-	    trans.commit();
 	}
 	catch (Throwable arg0) {
 	    throw new PersistenceException(arg0);
@@ -72,12 +69,11 @@ public class CRUDWorker implements CRUDIF {
     @Override
     public void remove(Object obj) {
 	try {
-	    final EntityTransaction trans = em.getTransaction();
+	    if(!em.getTransaction().isActive())
+		throw new IllegalStateException("You must begin transaction first");
 	    final Object id = util.getIdentifier(obj);
 	    final Object removable = em.find(obj.getClass(), id);
-	    trans.begin();
 	    em.remove(removable);
-	    trans.commit();
 	}
 	catch (Throwable arg0) {
 	    throw new PersistenceException(arg0);

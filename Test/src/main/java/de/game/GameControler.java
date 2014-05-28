@@ -4,6 +4,7 @@ import de.httpServer.HTTPServer;
 import de.httpServer.Robot;
 import de.persistence.CRUDIF;
 import de.persistence.PersistenceFacade;
+import de.persistence.PersistenceFacadeIF;
 
 /**
  * Controls the Game
@@ -16,10 +17,11 @@ public class GameControler {
 	public final Robot robot = new Robot ();
 	
 	public GameControler (int portNumber) throws Exception{
+	    	PersistenceFacadeIF persistence = new PersistenceFacade();
 		//Start Database
-		PersistenceFacade.startDBSystem();
+		persistence.startDBSystem();
 		//Get Database Controller
-		db = PersistenceFacade.getDBController();
+		db = persistence.getDBController();
 		
 		//Start HTTP Server
 		httpServer = new HTTPServer( this, portNumber );

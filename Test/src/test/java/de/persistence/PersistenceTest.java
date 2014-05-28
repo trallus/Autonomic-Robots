@@ -24,15 +24,17 @@ public class PersistenceTest {
 
     private CRUDIF crud;
     private DBUser user;
+    private static PersistenceFacadeIF persistence;
 
     @BeforeClass
     public static void startDB(){
-	PersistenceFacade.startDBSystem();
+	persistence = new PersistenceFacade();
+	persistence.startDBSystem();
     }
     @AfterClass
     public static void stopDB(){
 	try{
-	    PersistenceFacade.shutdownDBSystem();
+	    persistence.shutdownDBSystem();
 	}
 	catch(PersistenceException arg0){
 	    if(arg0.getCause() instanceof SQLNonTransientConnectionException){
@@ -51,7 +53,7 @@ public class PersistenceTest {
      */
     @Before
     public void setUp() throws Exception {
-	crud = PersistenceFacade.getDBController();
+	crud = persistence.getDBController();
 	user = new DBUser("Tester", "Tester@test.de", "1245");
     }
     

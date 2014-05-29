@@ -36,6 +36,9 @@ public class DocumentRequest extends Request{
 		case "png":
 			mediaType = "image/png";
 			break;
+		case "ico":
+		    mediaType = "image/x-icon";
+		    break;
 		case "js":
 			mediaType = "application/javascript";
 			break;

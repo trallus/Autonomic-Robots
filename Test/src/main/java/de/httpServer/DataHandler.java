@@ -30,7 +30,7 @@ class DateHandler implements HttpHandler {
 		Request request = null;
 
 		try {
-			if (uri.matches(".?" + keyURI + ".*")) {
+			if (uri.matches(".*" + keyURI + ".*")) {
 
 				request = new ServerRequest(httpExchange, userManager);
 			} else {

@@ -19,8 +19,9 @@ public class Main {
 	int portNumber;
 	if (args.length != 1) {
 	    portNumber = 80;
+	} else {
+		portNumber = Integer.parseInt(args[0]);
 	}
-	portNumber = Integer.parseInt(args[0]);
 	new GameControler(portNumber);
 
     }

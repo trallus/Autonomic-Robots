@@ -108,6 +108,7 @@ public class UserManager {
 		persistence.beginTransaction();
 		db.remove(user.getDBUser());
 		persistence.commitTransaction();
+		Log.debugLog("User removed: eMail:" + user.getDBUser().getEMail());
 	}
 
 	private User createUser() {

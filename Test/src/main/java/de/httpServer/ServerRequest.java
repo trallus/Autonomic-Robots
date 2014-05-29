@@ -3,6 +3,7 @@ package de.httpServer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -50,19 +51,44 @@ public class ServerRequest extends Request {
 		content = json.getBytes();
 	}
 
-	private void handleURICommand(String uri, UserManager userManager)
-			throws Exception {
+	private void handleURICommand(String uri, UserManager userManager) throws Exception {
 
 		if (uri.indexOf("registration") != -1) {
 			readInputStream();
 			ClientUser clientUser = convertToClientUser(jsonString);
-			userManager.register(clientUser.name, clientUser.eMail, clientUser.password, user);
+			try {
+				userManager.register(clientUser.name, clientUser.eMail, clientUser.password, user);
+			} catch (EmailInUseException e) {
+				replyJson.put("registered", false);
+				replyJson.put("registration message", "Email already in use");
+				return;
+			}
+			replyJson.put("registered", true);
 		} else if (uri.indexOf("logIn") != -1) {
 			readInputStream();
 			ClientUser clientUser = convertToClientUser(jsonString);
-			userManager.logIn(clientUser.name, clientUser.password, user);
+			try {
+				userManager.logIn(clientUser.eMail, clientUser.password, user);
+			} catch (EmailNotFoundException e) {
+				replyJson.put("logIn message", "Wrong e-mail or password");
+			}
 		} else if (uri.indexOf("logOut") != -1) {
 			userManager.logOut(user);
+		} else if (uri.indexOf("remove") != -1) {
+			// just work with a new login -> save
+			readInputStream();
+			ClientUser clientUser = convertToClientUser(jsonString);
+			try {
+				userManager.logIn(clientUser.eMail, clientUser.password, user);
+			} catch (EmailNotFoundException e) {
+				replyJson.put("logIn message", "Wrong e-mail or password");
+				// don't remove if new login failed, but user don't logOut!!
+				replyJson.put("removed", false);
+				return;
+			}
+			userManager.removeUser(user);
+			user.logOut();
+			replyJson.put("removed", true);
 		} else {
 			replyJson.put("Unexpectrd URI", uri);
 		}

@@ -24,7 +24,11 @@ public class GameControler {
 		db = persistence.getDBController();
 		
 		//Start HTTP Server
-		httpServer = new HTTPServer( this, portNumber );
+
+        String httpPath = System.getProperty("user.dir") + "/http/";
+        String keyURI = "serverRequest";
+        	    
+        httpServer = new HTTPServer(keyURI, httpPath, portNumber);
 		
 		//Start Game
 	}

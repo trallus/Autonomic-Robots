@@ -23,17 +23,8 @@ public class DBUser {
     @Id
     @GeneratedValue
     private long id;
-    /**
-     * Name of the User
-     */
     private String name;
-    /**
-     * Email Address of the User
-     */
     private String eMail;
-    /**
-     * Password hashed of the User
-     */
     private String pwHash;
 
     /**
@@ -46,8 +37,8 @@ public class DBUser {
      */
     public DBUser(String name, String eMail, String pwHash) {
 	this.name = name;
-	this.eMail = eMail;
 	this.pwHash = pwHash;
+	this.eMail = eMail;
     }
 
     /**
@@ -72,24 +63,9 @@ public class DBUser {
     }
 
     /**
-     * @return the eMail
-     */
-    public String geteMail() {
-	return eMail;
-    }
-
-    /**
-     * @param eMail
-     *            the eMail to set
-     */
-    public void seteMail(String eMail) {
-	this.eMail = eMail;
-    }
-
-    /**
      * @return the pwHash
      */
-    public String getPwHash() {
+    public String getPassword() {
 	return pwHash;
     }
 
@@ -97,8 +73,8 @@ public class DBUser {
      * @param pwHash
      *            the pwHash to set
      */
-    public void setPwHash(String pwHash) {
-	this.pwHash = pwHash;
+    public void setPassword(String password) {
+	this.pwHash = password;
     }
 
     /**
@@ -108,51 +84,15 @@ public class DBUser {
 	return id;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
     @Override
-    public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((eMail == null) ? 0 : eMail.hashCode());
-	result = prime * result + ((name == null) ? 0 : name.hashCode());
-	result = prime * result + ((name == null) ? 0 : pwHash.hashCode());
-	// result = prime * result + (int) (pwHash ^ (pwHash >>> 32));
-	return result;
+    public String toString() {
+	String s = "name:" + name;
+	s += ", password:" + pwHash;
+	return s;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (!(obj instanceof DBUser))
-	    return false;
-	DBUser other = (DBUser) obj;
-	if (eMail == null) {
-	    if (other.eMail != null)
-		return false;
+	public Object getEMail() {
+		return eMail;
 	}
-	else if (!eMail.equals(other.eMail))
-	    return false;
-	if (name == null) {
-	    if (other.name != null)
-		return false;
-	}
-	else if (!name.equals(other.name))
-	    return false;
-	if (pwHash != other.pwHash)
-	    return false;
-	return true;
-    }
 
 }

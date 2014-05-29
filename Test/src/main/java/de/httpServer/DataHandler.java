@@ -7,34 +7,46 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import de.game.GameControler;
+import de.logger.Log;
 
 class DateHandler implements HttpHandler {
-	private final GameControler gc;
-	
-	public DateHandler( GameControler gc ) {
-		this.gc = gc;
+
+	private final UserManager userManager;
+	private final String httpPath;
+	private final String keyURI;
+
+	public DateHandler(UserManager userManager, String httpPath, String keyURI) {
+		this.userManager = userManager;
+		this.httpPath = httpPath;
+		this.keyURI = keyURI;
 	}
-	
+
 	@Override
 	public void handle(HttpExchange httpExchange) throws IOException {
 
 		String uri = httpExchange.getRequestURI().toString();
-		System.out.println(uri);
+		Log.debugLog("Angefragte URI: " + uri);
 
-		Request request;
+		Request request = null;
 
-		if (uri.indexOf("serverFrameRequest") != -1) {
-			request = new FrameRequest(httpExchange, gc.robot);
-		} else {
-			request = new DocumentRequest(httpExchange);
+		try {
+			if (uri.matches(".?" + keyURI + ".*")) {
+
+				request = new ServerRequest(httpExchange, userManager);
+			} else {
+				request = new DocumentRequest(httpExchange, httpPath);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
-		httpExchange.getResponseHeaders().add("Content-type", request.getMediaType());
+
+		httpExchange.getResponseHeaders().add("Content-type",
+				request.getMediaType());
 
 		httpExchange.sendResponseHeaders(200, request.getContent().length);
 
 		OutputStream os = httpExchange.getResponseBody();
-		os.write( request.getContent() );
+		os.write(request.getContent());
 		os.close();
 	}
 }

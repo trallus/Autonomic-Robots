@@ -1,5 +1,7 @@
 package de.httpServer;
 
+import static org.junit.Assert.fail;
+
 import java.sql.SQLNonTransientConnectionException;
 import java.util.List;
 
@@ -8,6 +10,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.internal.runners.statements.Fail;
 
 import de.data.DBUser;
 import de.httpServer.EmailInUseException;
@@ -70,29 +73,40 @@ public class UserTest {
     /**
      * bevore registration, expected failed
      */
-    @Test(expected = EmailNotFoundException.class)
+    @Test
     public void logInTestBevore() throws Exception {
-	cleareDB();
-
-	User user2 = new User(db);
-	user2.logIn(eMail, password);
+		cleareDB();
+	
+		User user2 = new User(db);
+		
+		try {
+			user2.logIn(eMail, password);
+		} catch (EmailNotFoundException e) {
+			return;
+		}
+		fail("expected EmailNotFoundException");
     }
 
     @Test
     public void registerTest() throws Exception {
-	cleareDB();
-
-	persistence.beginTransaction();
-	user.register(eMail, password, userName);
-	persistence.commitTransaction();
+		cleareDB();
+	
+		persistence.beginTransaction();
+		user.register(eMail, password, userName);
+		persistence.commitTransaction();
     }
 
-    @Test(expected = EmailInUseException.class)
+    @Test
     public void registerTest2() throws Exception {
-	registerTest();
-
-	User user2 = new User(db);
-	user2.register(eMail, password, userName);
+		registerTest();
+	
+		User user2 = new User(db);
+		try {
+			user2.register(eMail, password, userName);
+		} catch (EmailInUseException e) {
+			return;
+		}
+		fail("expected EmailInUseException");
     }
 
     /**
@@ -102,11 +116,11 @@ public class UserTest {
      */
     @Test
     public void logInTestAfter() throws Exception {
-	registerTest();
-
-	User user2 = new User(db);
-
-	user2.logIn(eMail, password);
+		registerTest();
+	
+		User user2 = new User(db);
+	
+		user2.logIn(eMail, password);
     }
 
     public void cleareDB() throws Exception {

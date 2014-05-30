@@ -11,13 +11,32 @@ import de.logger.Log;
 import de.persistence.CRUDIF;
 import de.persistence.PersistenceFacade;
 
+/**
+ * @author ko
+ *
+ */
 public class UserManager {
 
+	/**
+	 * Buffer for all loged in users
+	 */
 	private List<User> userList = new ArrayList<User>();
+	/**
+	 * connection to database
+	 */
 	public final CRUDIF db;
-	private final SessionManager sessionManager;
+	/**
+	 *  connection to database
+	 */
 	private final PersistenceFacade persistence;
+	/**
+	 * to get new session IDs
+	 */
+	private final SessionManager sessionManager;
 
+	/**
+	 * 
+	 */
 	public UserManager() {
 
 		sessionManager = new SessionManager();
@@ -29,16 +48,30 @@ public class UserManager {
 
 	}
 	
+	/**
+	 * 
+	 */
 	public void shutDown () {
 		persistence.shutdownDBSystem();
 	}
 
+	/**
+	 * update a user in database
+	 * 
+	 * @param user
+	 */
 	public void upDate(User user) {
 		persistence.beginTransaction();
 		db.update(user.getDBUser());
 		persistence.commitTransaction();
 	}
 
+	/**
+	 * get the user with this SID or create a new one
+	 * 
+	 * @param sessionID
+	 * @return
+	 */
 	public User getUser(String sessionID) {
 
 		if (sessionID != null) {
@@ -52,6 +85,17 @@ public class UserManager {
 		return (createUser());
 	}
 
+	/**
+	 * registrate e new user in database
+	 * 
+	 * @param userName
+	 * @param eMail
+	 * @param password
+	 * @param user
+	 * @return
+	 * @throws NoSuchAlgorithmException
+	 * @throws EmailInUseException
+	 */
 	public String register(String userName, String eMail, String password, User user)
 			throws NoSuchAlgorithmException, EmailInUseException {
 		// check if username exist
@@ -74,6 +118,16 @@ public class UserManager {
 		return ("Registrierung erfolgreich");
 	}
 
+	/**
+	 * log in a user
+	 * 
+	 * @param eMail
+	 * @param password
+	 * @param user
+	 * @return
+	 * @throws NoSuchAlgorithmException
+	 * @throws EmailNotFoundException
+	 */
 	public String logIn(String eMail, String password, User user)
 			throws NoSuchAlgorithmException, EmailNotFoundException {
 
@@ -98,12 +152,22 @@ public class UserManager {
 		throw (new EmailNotFoundException());
 	}
 
+	/**
+	 * log out a user
+	 * 
+	 * @param user
+	 */
 	public void logOut(User user) {
 		userList.remove(user);
 		user.logOut();
 		Log.debugLog("User loged out");
 	}
 	
+	/**
+	 * delete a user from database
+	 * 
+	 * @param user
+	 */
 	public void removeUser ( User user ) {
 		persistence.beginTransaction();
 		db.remove(user.getDBUser());
@@ -111,6 +175,11 @@ public class UserManager {
 		Log.debugLog("User removed: eMail:" + user.getDBUser().getEMail());
 	}
 
+	/**
+	 * create a new user
+	 * 
+	 * @return
+	 */
 	private User createUser() {
 		final String sessionID = sessionManager.getSessionID();
 
@@ -122,6 +191,13 @@ public class UserManager {
 		return (u);
 	}
 
+	/**
+	 * create a md5 sum
+	 * 
+	 * @param string
+	 * @return
+	 * @throws NoSuchAlgorithmException
+	 */
 	private String convertToMD5Hash(String string)
 			throws NoSuchAlgorithmException {
 

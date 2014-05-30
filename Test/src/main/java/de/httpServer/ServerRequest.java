@@ -15,17 +15,51 @@ import com.sun.net.httpserver.HttpExchange;
 import de.httpServer.ClientClasses.ClientUser;
 import de.logger.Log;
 
+/**
+ * Handle requests to the server
+ * 
+ * @author ko
+ *
+ */
 public class ServerRequest extends Request {
 
+	/**
+	 * buffer for Json from client
+	 */
 	private String jsonString;
+	/**
+	 * http protokol data from client
+	 */
 	private final HttpExchange httpExchange;
+	/**
+	 * type of encoding
+	 */
 	private final String encoding = "UTF-8";
+	/**
+	 * json builder to build send json
+	 */
 	private final Gson gsonOut = new GsonBuilder()
 			.excludeFieldsWithoutExposeAnnotation().create();
+	/**
+	 * builder to build java objects from json
+	 */
 	private final Gson gsonIn = new Gson();
+	/**
+	 * object will be send to client as a json
+	 */
 	Map<String, Object> replyJson = new HashMap<String, Object>();
+	/**
+	 * the user for this request
+	 */
 	private User user;
 
+	/**
+	 * handle the request
+	 * 
+	 * @param httpExchange
+	 * @param userManager
+	 * @throws Exception
+	 */
 	public ServerRequest(HttpExchange httpExchange, UserManager userManager)
 			throws Exception {
 
@@ -51,6 +85,13 @@ public class ServerRequest extends Request {
 		content = json.getBytes();
 	}
 
+	/**
+	 * execute what the uri expacted
+	 * 
+	 * @param uri
+	 * @param userManager
+	 * @throws Exception
+	 */
 	private void handleURICommand(String uri, UserManager userManager) throws Exception {
 
 		if (uri.indexOf("registration") != -1) {
@@ -95,10 +136,22 @@ public class ServerRequest extends Request {
 
 	}
 
+	/**
+	 * convert json to ClientUser Object
+	 * 
+	 * @param jsonString
+	 * @return
+	 */
 	private ClientUser convertToClientUser(String jsonString) {
 		return (gsonIn.fromJson(jsonString, ClientUser.class));
 	}
 
+	/**
+	 * get the SID from browser cookie
+	 * 
+	 * @param httpExchange
+	 * @return
+	 */
 	private String getSessionID(HttpExchange httpExchange) {
 		final String SID;
 
@@ -122,11 +175,21 @@ public class ServerRequest extends Request {
 		return (null);
 	}
 
+	/**
+	 * add the SID do send object to write a (browser) session cookie
+	 * 
+	 * @param SID
+	 */
 	private void sendNewSID(String SID) {
 		// send the sessionID to browser
 		httpExchange.getResponseHeaders().add("Set-Cookie", "SessionID=" + SID);
 	}
 
+	/**
+	 * read the datas how are send from client to jsonString
+	 * 
+	 * @throws IOException
+	 */
 	private void readInputStream() throws IOException {
 
 		InputStream in = httpExchange.getRequestBody();

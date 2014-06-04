@@ -128,7 +128,7 @@ public class PersistenceTest {
 	persistence.beginTransaction();
 	crud.update(user);
 	persistence.commitTransaction();
-	assertEquals(new DBUser("Updated", "Tester@test.de", "1245"), crud.readID(user.getClass(), user.getId()));
+	assertEquals(user, crud.readID(user.getClass(), user.getId()));
     }
     @Test
     public void removeTest(){

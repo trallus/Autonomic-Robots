@@ -120,15 +120,12 @@ public class ServerRequest extends Request {
 			readInputStream();
 			ClientUser clientUser = convertToClientUser(jsonString);
 			try {
-				userManager.logIn(clientUser.eMail, clientUser.password, user);
+				userManager.removeUser(clientUser.eMail, clientUser.password, user);
 			} catch (EmailNotFoundException e) {
 				replyJson.put("logIn message", "Wrong e-mail or password");
-				// don't remove if new login failed, but user don't logOut!!
 				replyJson.put("removed", false);
 				return;
 			}
-			userManager.removeUser(user);
-			user.logOut();
 			replyJson.put("removed", true);
 		} else {
 			replyJson.put("Unexpectrd URI", uri);

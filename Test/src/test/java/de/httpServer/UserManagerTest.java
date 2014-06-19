@@ -7,8 +7,10 @@ import java.sql.SQLNonTransientConnectionException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 import de.httpServer.EmailNotFoundException;
 import de.httpServer.User;
+import de.logger.Log;
 import de.persistence.PersistenceException;
 
 /**
@@ -31,6 +33,7 @@ public class UserManagerTest {
 	public void start() {
 		userManager = new UserManager();
 		user = userManager.getUser(null);
+		userManager.clareDB();
 	}
 
 	/**
@@ -38,6 +41,7 @@ public class UserManagerTest {
 	 */
 	@After
 	public void end() {
+		
 		try {
 			userManager.shutDown();
 		} catch (PersistenceException arg0) {
@@ -60,14 +64,13 @@ public class UserManagerTest {
 	 */
 	@Test
 	public void logInTestBevore() throws Exception {
-		User user2 = userManager.getUser(null);
+		final User user2 = userManager.getUser(null);
 
 		try {
 			userManager.logIn(eMail, password, user2);
-		} catch (EmailNotFoundException e) {
-			return;
+			fail("EmailNotFoundException expected");
+		} catch (EmailNotFoundException expected) {
 		}
-		fail("expected EmailNotFoundException");
 	}
 
 	/**
@@ -80,8 +83,6 @@ public class UserManagerTest {
 		userManager.register(userName, eMail, password, user);
 		userManager.removeUser(user);
 		userManager.register(userName, eMail, password, user);
-		// just to cleare
-		userManager.removeUser(user);
 	}
 
 	/**
@@ -97,12 +98,9 @@ public class UserManagerTest {
 		User user2 = userManager.getUser(null);
 		try {
 			userManager.register(userName, eMail, password, user2);
+			fail("expected EmailInUseException");
 		} catch (EmailInUseException e) {
-			userManager.removeUser(user);	// just to cleare
-			return;
 		}
-		userManager.removeUser(user);	// just to cleare
-		fail("expected EmailInUseException");
 	}
 
 	/**
@@ -117,8 +115,6 @@ public class UserManagerTest {
 		User user2 = userManager.getUser(null);
 
 		userManager.logIn(eMail, password, user2);
-		
-		userManager.removeUser(user);
 		
 		if (! user2.isLogedIn()) {
 			fail("Unable to log in with registrated eMail");

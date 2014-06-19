@@ -167,12 +167,16 @@ public class UserManager {
 	 * delete a user from database
 	 * 
 	 * @param user
+	 * @throws EmailNotFoundException 
+	 * @throws NoSuchAlgorithmException 
 	 */
-	public void removeUser ( User user ) {
+	public void removeUser ( String eMail, String password, User user ) throws NoSuchAlgorithmException, EmailNotFoundException {
+		logIn(eMail, password, user);	// to be sure that he will be removed
 		persistence.beginTransaction();
 		db.remove(user.getDBUser());
 		persistence.commitTransaction();
 		Log.debugLog("User removed: eMail:" + user.getDBUser().getEMail());
+		user.logOut();
 	}
 
 	/**

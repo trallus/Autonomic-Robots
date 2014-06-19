@@ -54,6 +54,18 @@ public class UserManager {
 	public void shutDown () {
 		persistence.shutdownDBSystem();
 	}
+	
+	/**
+	 * remove all Users from Database
+	 */
+	public void clareDB () {
+		List<DBUser> userList = db.readAll(DBUser.class);
+		persistence.beginTransaction();
+		for ( DBUser u : userList ) {
+			db.remove(u);
+		}
+		persistence.commitTransaction();
+	}
 
 	/**
 	 * update a user in database

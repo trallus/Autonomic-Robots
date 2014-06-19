@@ -3,7 +3,6 @@ package de.httpServer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -22,11 +21,6 @@ import de.logger.Log;
  *
  */
 public class ServerRequest extends Request {
-
-	/**
-	 * buffer for Json from client
-	 */
-	private String jsonString;
 	/**
 	 * http protokol data from client
 	 */
@@ -95,8 +89,7 @@ public class ServerRequest extends Request {
 	private void handleURICommand(String uri, UserManager userManager) throws Exception {
 
 		if (uri.indexOf("registration") != -1) {
-			readInputStream();
-			ClientUser clientUser = convertToClientUser(jsonString);
+			ClientUser clientUser = readClientUser();
 			try {
 				userManager.register(clientUser.name, clientUser.eMail, clientUser.password, user);
 			} catch (EmailInUseException e) {
@@ -106,8 +99,7 @@ public class ServerRequest extends Request {
 			}
 			replyJson.put("registered", true);
 		} else if (uri.indexOf("logIn") != -1) {
-			readInputStream();
-			ClientUser clientUser = convertToClientUser(jsonString);
+			ClientUser clientUser = readClientUser();
 			try {
 				userManager.logIn(clientUser.eMail, clientUser.password, user);
 			} catch (EmailNotFoundException e) {
@@ -117,8 +109,7 @@ public class ServerRequest extends Request {
 			userManager.logOut(user);
 		} else if (uri.indexOf("remove") != -1) {
 			// just work with a new login -> save
-			readInputStream();
-			ClientUser clientUser = convertToClientUser(jsonString);
+			ClientUser clientUser = readClientUser();
 			try {
 				userManager.removeUser(clientUser.eMail, clientUser.password, user);
 			} catch (EmailNotFoundException e) {
@@ -138,8 +129,10 @@ public class ServerRequest extends Request {
 	 * 
 	 * @param jsonString
 	 * @return
+	 * @throws IOException 
 	 */
-	private ClientUser convertToClientUser(String jsonString) {
+	private ClientUser readClientUser () throws IOException {
+		final String jsonString = readInputStream();
 		return (gsonIn.fromJson(jsonString, ClientUser.class));
 	}
 
@@ -184,10 +177,12 @@ public class ServerRequest extends Request {
 
 	/**
 	 * read the datas how are send from client to jsonString
+	 * @return 
 	 * 
 	 * @throws IOException
 	 */
-	private void readInputStream() throws IOException {
+	private String readInputStream() throws IOException {
+		final String jsonString;
 
 		InputStream in = httpExchange.getRequestBody();
 
@@ -201,5 +196,7 @@ public class ServerRequest extends Request {
 		} finally {
 			in.close();
 		}
+		
+		return (jsonString);
 	}
 }

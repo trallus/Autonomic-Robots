@@ -1,0 +1,51 @@
+/* 
+    Document   : style
+    Created on : 02.09.2013, 19:12:21
+    Author     : Asasello
+    Description:
+        Purpose of the stylesheet follows.
+
+*/
+
+* {
+	margin: 0 auto;
+	padding: 0;
+}
+
+img {
+	border: none;
+}
+
+root {
+    display: block;
+}
+
+table {
+	margin-top: 100px;
+	background-color: gray;
+}
+
+footer {
+	position: absolute;
+	margin: 0;
+	
+}
+/*
+#background {
+	margin-top: 100px;
+	/*margin-left: -400px;
+    position: absolute;
+    overflow: hidden;
+    
+    background-color: gray;
+}
+
+#infobar {
+	margin-top: 100px;
+	/*margin-left: 0px;
+    position: absolute;
+    overflow: hidden;
+    
+    background-color: gray;
+}
+*/

@@ -1,12 +1,10 @@
-var c = new Controler();
-c.remove(name, password);
-
-function Controler () {
+function Controller () {
     var server = "serverRequest";
     
     var name;
     var password;
     var eMail;
+    var valid = false;
     
     function main () {
 
@@ -14,10 +12,24 @@ function Controler () {
         $("#btnLogIn").click( logIn );
         $("#btnLogOut").click( logOut );
         $("#btnRemove").click( remove );
+        $("#btnStartGame").click( startGame );
 
     };
     
-    this.remove = function ( name, password ) {
+    function startGame () {
+        
+        var destination = server + "/login";
+        
+        var user = {
+            name : name,
+            password : password,
+            eMail : eMail
+        };
+        
+        serverRequest ( user, destination, function() { window.location = "gorobo.html";} );
+    }
+    
+    function remove () {
         readInputFealds();
         
         var destination = server + "/remove";
@@ -48,7 +60,7 @@ function Controler () {
             eMail : eMail
         };
         
-        serverRequest ( user, destination );
+        serverRequest ( user, destination, function() { window.location = "home.html"; } );
     }
     
     function registration () {
@@ -62,7 +74,8 @@ function Controler () {
             eMail : eMail
         };
         
-        serverRequest ( user, destination );
+        serverRequest ( user, destination, function() { } );
+        
     }
     
     function readInputFealds () {
@@ -71,8 +84,8 @@ function Controler () {
         eMail = $("#inputUserEMail").val();
     }
     
-    function serverRequest ( json, destination, callback ) {
-    
+    this.serverRequest = function ( json, destination, callback ) {
+    	
         $.ajax({
             type: "POST",
             url: destination,
@@ -84,14 +97,18 @@ function Controler () {
                 console.log(c);
             }
         }).done ( function ( json ) {
-            console.log(json);
+            console.log( json );
+            callback();
         }).fail ( function ( info ) {
             console.log(info);
+            callback();
         });
+        
     }
     
     main ();
 };
+
 
 function TrackPoint () {
     this.latitude = parseInt(Math.random()*100000000000);

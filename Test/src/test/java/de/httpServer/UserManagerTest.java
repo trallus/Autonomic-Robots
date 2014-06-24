@@ -81,7 +81,7 @@ public class UserManagerTest {
 	@Test
 	public void registerRemoveTest() throws Exception {
 		userManager.register(userName, eMail, password, user);
-		userManager.removeUser(user);
+		userManager.removeUser(eMail, password, user);
 		userManager.register(userName, eMail, password, user);
 	}
 

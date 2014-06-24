@@ -25,7 +25,7 @@ public class GameControler {
 		
 		//Start HTTP Server
 
-        String httpPath = System.getProperty("user.dir") + "/http/";
+        String httpPath = System.getProperty("user.dir") + "/http/final/";
         String keyURI = "serverRequest";
         	    
         httpServer = new HTTPServer(keyURI, httpPath, portNumber);

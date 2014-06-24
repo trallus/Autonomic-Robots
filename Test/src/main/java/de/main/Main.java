@@ -18,7 +18,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 	int portNumber;
 	if (args.length != 1) {
-	    portNumber = 80;
+	    portNumber = 8000;
 	} else {
 		portNumber = Integer.parseInt(args[0]);
 	}

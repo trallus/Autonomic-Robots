@@ -9,9 +9,9 @@ function Controller () {
     var eMail;
     var user;
     
-    this.valid = false;
-
+    //
     //Get Html Parts
+    //
     
     function getAJAX ( destination ) {
     	$.ajax({
@@ -42,14 +42,24 @@ function Controller () {
     }
     
     this.startGame = function () {
-    	window.location = "gorobo.html";
+    	$.ajax({
+            url: "gorobo.html"
+        }).done ( function ( html ) {
+        	$("body").html(html).promise().done(function(){
+        		GameController.main();
+        		regisButtons();
+        	});
+        });	
     }
     
     function endGame () {
-        backendCom.endGame( function () { thisObj.loadHome(); } );
+        //backendCom.endGame( function () { thisObj.loadHome(); } );
+    	thisObj.loadHome();
     }
     
+    //
     //handle User
+    //
     
     function remove () {
         user = {
@@ -83,7 +93,6 @@ function Controller () {
         backendCom.registration ( name, password, eMail, function ( json ) {
 
         	if ( check( json, "registered", true ) ) {
-        		//this.changeValid();
             	logIn();
             	
         	} else {
@@ -122,10 +131,6 @@ function Controller () {
 	    return false;
 	}
     
-	function changeValid () {
-		if ( this.valid ) this.valid = false;
-		else this.valid = true;
-	}
 };
 
 var controller;

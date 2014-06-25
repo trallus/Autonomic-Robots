@@ -12,8 +12,9 @@ function BackendCom ( ) {
         serverRequest ( user, server + "/endGame", callback );
 	};
     
-	this.startGame = function () {
-		//Game start via html-document onClick
+	this.startGame = function ( callback ) {
+		//Game start noch via html-document onClick
+		//callback();
     }
     
     this.remove = function ( name, password, eMail, callback) {
@@ -44,7 +45,6 @@ function BackendCom ( ) {
             password : password,
             eMail : eMail
         };
-        //console.log(user);
         serverRequest( user, server + "/registration", callback );
     }
     

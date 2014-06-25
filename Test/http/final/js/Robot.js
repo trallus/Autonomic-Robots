@@ -6,6 +6,7 @@ function Robot ( frameControler, server ) {
     var destinationX = 100;
     var destinationY = 100;
     var acceleration = 10; // pix / (sec*sec)
+    var color = getColor();
     
     function construct () {
         frameControler.addOnNewFrame ( onFrame );
@@ -21,6 +22,17 @@ function Robot ( frameControler, server ) {
         draw ( context );
     }
     
+    function getColor() {
+    	var letters = "0123456789ABCDEF".split("");
+    	var color = "#";
+    	for ( var i = 0; i < 6; i++) {
+    		color += letters[Math.floor(Math.random() * 16)];
+    	}
+    	return color;
+    	
+    }
+    
+    
     function draw ( context ) {
 
         var radius = 10;
@@ -30,7 +42,7 @@ function Robot ( frameControler, server ) {
         
         // set drawing style
         context.lineWidth = 2;
-        context.strokeStyle = "#000000";;
+        context.strokeStyle = color;
         
         // actually start drawing
         context.stroke(); 

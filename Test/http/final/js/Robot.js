@@ -1,18 +1,21 @@
 function Robot ( frameControler, server ) {
-    var posX = 100;
-    var posY = 100;
+    var posX = 575;
+    var posY = 375;
     var speed = 0; // pix / sec
     var direction = Math.PI;
     var destinationX = 100;
     var destinationY = 100;
     var acceleration = 10; // pix / (sec*sec)
+    //var color = getColor();
     var color = getColor();
+    this.getRobotColor = color;
     
     function construct () {
         frameControler.addOnNewFrame ( onFrame );
     }
     
     function onFrame ( context, timeSinceLastDraw ) {
+
         if (server.position) {
             destinationX = server.position.posX;
             destinationY = server.position.posY;
@@ -24,12 +27,11 @@ function Robot ( frameControler, server ) {
     
     function getColor() {
     	var letters = "0123456789ABCDEF".split("");
-    	var color = "#";
+    	var hold = "#";
     	for ( var i = 0; i < 6; i++) {
-    		color += letters[Math.floor(Math.random() * 16)];
+    		hold += letters[Math.floor(Math.random() * 16)];
     	}
-    	return color;
-    	
+    	return hold;	
     }
     
     
@@ -42,7 +44,7 @@ function Robot ( frameControler, server ) {
         
         // set drawing style
         context.lineWidth = 2;
-        context.strokeStyle = color;
+        context.strokeStyle =  color;
         
         // actually start drawing
         context.stroke(); 
@@ -57,8 +59,7 @@ function Robot ( frameControler, server ) {
         context.strokeStyle = "#00FF00";;
         
         // actually start drawing
-        context.stroke(); 
-        
+        context.stroke();    
     }
     
     function calcPosition ( timeSinceLastDraw ) {

@@ -5,7 +5,7 @@ function FrameControler ( ) {
     var minFrameLength = 1000 / maxFrameRate;
     var onNewFrameFunctions = [];
     var gui;
-    var pause = false;;
+    var pause = false;
     
     function construct () {
     }
@@ -17,6 +17,7 @@ function FrameControler ( ) {
     this.start = function () {
         nextFrame (  );
     };
+    
     
     this.pauseButton = function pauseButton () {
         if (pause) {

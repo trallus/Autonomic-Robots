@@ -8,12 +8,17 @@ function BackendCom ( ) {
     this.password;
     this.eMail;
     
-    this.endGame = function  () {
+    this.endGame = function  ( name, password, eMail, callback ) {
+    	user = {
+            name : name,
+            password : password,
+            eMail : eMail
+        };
         serverRequest ( user, server + "/endGame", callback );
 	};
     
 	this.startGame = function ( callback ) {
-		//Game start noch via html-document onClick
+		//During test units for Jasmine this callback is outslashed
 		//callback();
     }
     

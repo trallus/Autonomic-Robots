@@ -9,9 +9,8 @@ var GameController = {
         frameControler.setGUI ( gui );
         frameControler.start();
         
-        
-        new Robot ( frameControler, server );
-        
+        //new Robot ( frameControler, server );
+        gui.newRobot();
         
         $("body").keydown(function(event) {
             if(event.keyCode == 80){

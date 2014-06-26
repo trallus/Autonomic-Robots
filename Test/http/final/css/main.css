@@ -9,15 +9,23 @@ img {
 }
 
 h1 {
+	font-family: Verdana;
 	font-size: 1.7em;
 }
 
 h1 p {	
 }
 
+caption {
+	font-style: bold;
+	font-family: Verdana;
+	font-size: 1.8em;
+	
+}
+
 body {
 	color: #ffffff;
-	font-family: Verdana, sans-serif;
+	font-family:   Andale Mono, Courier New, Sans-serif;
 	font-size: 100%;
 	background: url("images/background.png");
 	background-size: 100%;
@@ -39,5 +47,9 @@ body {
 	border-bottom-left-radius: 7px;
 	border-bottom-right-radius: 7px;
 	background: rgba(256,256,256, 0.3);
+}
+
+#wood {
+	height: 14px;
 }
 

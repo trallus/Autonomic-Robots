@@ -12,7 +12,6 @@ function Controller () {
     //
     //Get Html Parts
     //
-    
     function getAJAX ( destination ) {
     	$.ajax({
             url: destination
@@ -24,7 +23,7 @@ function Controller () {
     }
     
     this.loadRegister = function () {
-    	getAJAX ( "register.html" );
+    	getAJAX ( "signup.html" );
     }
     
     this.loadHome = function () {
@@ -41,9 +40,41 @@ function Controller () {
     	});
     }
     
+    //
+    //handle User
+    //
+    
+    function registration () {
+        readInputFealds();
+        backendCom.registration ( name, password, eMail, function ( json ) {
+
+        	if ( json.registered ) {
+        		window.alert('Successfully registered...\n\nWelcome ' + name + '!!!\n\n');
+            	logIn();
+            	
+        	} else {
+        		window.alert("This eMail is already chosen");
+        	}
+        });
+    }
+    
+    function logIn () {
+    	readInputFealds();
+    	backendCom.logIn ( password, eMail, function ( json ) {
+    		
+    		if ( json.logedIn )  {
+    			thisObj.valid = true;
+    			thisObj.loadHome();
+    			
+    		} else {
+    			window.alert("Wrong Mail or Password");
+			}
+    	});
+    }
+    
     this.startGame = function () {
     	$.ajax({
-            url: "gorobo.html"
+            url: "robots.html"
         }).done ( function ( html ) {
         	$("body").html(html).promise().done(function(){
         		GameController.main();
@@ -53,55 +84,35 @@ function Controller () {
     }
     
     function endGame () {
-        //backendCom.endGame( function () { thisObj.loadHome(); } );
-    	thisObj.loadHome();
+    	backendCom.endGame( name, password, eMail, function () { thisObj.loadHome(); } );
     }
     
-    //
-    //handle User
-    //
+    function logOut () {
+    	backendCom.logOut( function () { 
+    		window.alert('You\'ve been logged out!\n')
+    		thisObj.loadLogin(); });
+    }
     
     function remove () {
+    	readInputFealds();
         user = {
             name : name,
             password : password,
             eMail : eMail
         };
-        backendCom.remove(name, password, eMail, function() { thisObj.loadRegister(); } );
-    }
-    
-    function logOut () {
-    	backendCom.logOut( function () { thisObj.loadLogin(); });
-    }
-    
-    function logIn () {
-    	readInputFealds();
-    	backendCom.logIn ( password, eMail, function ( json ) {
-    		if ( check( json, "logedIn", true ) ) {
-    			thisObj.valid = true;
-    			thisObj.loadHome();
-    			
-    		} else if ( check( json, "logedIn", false ) ) {
-    			window.alert("Wrong Mail or Password");
-    			thisObj.loadRegister();
-			}
-    	});
-    }
-
-    function registration () {
-        readInputFealds();
-        backendCom.registration ( name, password, eMail, function ( json ) {
-
-        	if ( check( json, "registered", true ) ) {
-            	logIn();
-            	
+        backendCom.remove(name, password, eMail, function( json ) {
+        	
+        	if ( json.removed ) {
+        		window.alert( 'User: ' + name + '\n...has been removed' );
+        		thisObj.loadRegister();
         	} else {
-        		window.alert("This eMail is already chosen.");
+        		window.alert( 'There is no User: ' + name + '\n... Please try again' );
         	}
-			//console.log(json);
-        });
+        } );
     }
-
+    
+    //UtilityStuff
+    
     regisButtons = function () {
 
         $("#btnRegister").click( registration );
@@ -111,15 +122,13 @@ function Controller () {
         $("#btnEndGame").click( endGame );
     };
     
-    //UtilityStuff
-    
     function readInputFealds () {
         name = $("#inputUserName").val();
         password = $("#inputUserPass").val();
         eMail = $("#inputUserEMail").val();
     }
     
-	function check ( json,value1, value2) {
+	function check ( json, value1, value2) {
 	    for (key in json) {
 	        if (typeof (json[key]) === "object") {
 	            return checkForValue(json[key], value1, value2);
@@ -129,8 +138,7 @@ function Controller () {
 	        }
 	    }
 	    return false;
-	}
-    
+	}    
 };
 
 var controller;

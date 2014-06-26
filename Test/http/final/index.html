@@ -1,51 +1,56 @@
 <!DOCTYPE html>
 <html>
-
-    <head>
+	<head>
         <title>Automatic Robots</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        <link rel="shortcut icon" type="image/x-icon" href="css/images/favicon.ico">
+        <link rel="shortcut icon" type="image/x-icon" href="css/images/logo.ico">
         <link rel="stylesheet" href="css/main.css" type="text/css"/>
+        <link rel="stylesheet" type="text/css" href="css/style.css"/>
         
         <script type="text/javascript" src="js/Controller.js"></script>
         <script type="text/javascript" src="js/BackendCom.js"></script>
         <script type="text/javascript" src="js/jquery-1.7.1.js"></script>  
-          
-        
+         
         <script type="text/javascript" src="js/FrameControler.js"></script>
         <script type="text/javascript" src="js/GUI.js"></script>
         <script type="text/javascript" src="js/Robot.js"></script>
         <script type="text/javascript" src="js/GameController.js"></script>
         <script type="text/javascript" src="js/swp.js"></script>
         
-        
-
-        <link rel="stylesheet" type="text/css" href="css/style.css"/>
-        
     </head>
     <h1>
     	Automatic Robots is a Free-Online-Game-Adventure... 
     </h1>
-    <div id="down">
+    
     
     <body onload="start();">
+    <div id="down">
+    <div id="wood"></div>
     <table>
-    	
-    	<caption  style="font-size: 2em;">
+    	<caption>
     	It's Free-To-Play!!!
     	</caption>
-    	
     	<tr>
-    	<th>
-        		<input type="button" value="Sign Up" onClick="controller.loadRegister()">
+    	<th><div id="wood"></div>
+    	</tr>
+    	<tr>
+    	
+    	<th><div id="wood">
+        		<input type="button" value="Sign Up" onClick="controller.loadRegister()"></div>
         </th>
-        <th>or</th>
         <th>
-        		<input type="button" value="Sign In" onClick="controller.loadLogin()">
+        <div id="wood">
+        <p>or</p></div>
         </th>
-        </tr>
+        <th><div id="wood">
+        		<input type="button" value="Sign In" onClick="controller.loadLogin()"></div>
+        		
+        
+        </th>
    		</table>
+   		<div id="wood"></div>
    		</div>
    		
     </body>
+    
 </html>

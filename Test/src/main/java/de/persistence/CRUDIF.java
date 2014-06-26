@@ -3,7 +3,7 @@ package de.persistence;
 import java.util.List;
 
 /**
- * Declares the four tipicall CRUD (Create Read Update Delete) operations
+ * Declares the four default CRUD (Create Read Update Delete) operations
  * 
  * @author Mike Kiekebusch
  * @version 0.2

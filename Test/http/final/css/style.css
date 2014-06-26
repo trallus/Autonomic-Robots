@@ -21,6 +21,7 @@ root {
 }
 
 table {
+	
 	/*
 	margin-top: 100px;
 	background-color: gray;
@@ -28,36 +29,27 @@ table {
 }
 
 td {
+	background-color: rgba(256,256,256, 0.2);
+	border: 2px solid rgba(256,256,256, 0.3);
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
 }
 
 #table {
-	width: 60%;
+	width: 814px;
 	margin-top: 100px;
 	background-color: gray;
-	
+	border: 7px solid rgba(256,256,256, 0.3);
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
 }
 
 footer {
 	position: absolute;
 	margin: 0;
-	
-}
-/*
-#background {
-	margin-top: 100px;
-	/*margin-left: -400px;
-    position: absolute;
-    overflow: hidden;
-    
-    background-color: gray;
-}
-
-#infobar {
-	margin-top: 100px;
-	/*margin-left: 0px;
-    position: absolute;
-    overflow: hidden;
-    
-    background-color: gray;
 }
 */

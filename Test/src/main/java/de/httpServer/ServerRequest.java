@@ -41,11 +41,11 @@ public class ServerRequest extends Request {
 	/**
 	 * object will be send to client as a json
 	 */
-	Map<String, Object> replyJson = new HashMap<String, Object>();
+	private final Map<String, Object> replyJson = new HashMap<String, Object>();
 	/**
 	 * the user for this request
 	 */
-	private User user;
+	private final User user;
 
 	/**
 	 * handle the request

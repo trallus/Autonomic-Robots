@@ -65,9 +65,9 @@ function BackendCom ( ) {
                 console.log(b);
                 console.log(c);
             }
-        }).done ( function ( json ) {
-        	callback ( json );
-        }).fail ( function ( info ) {
+        }).done ( 
+        	callback
+        ).fail ( function ( info ) {
             console.log(info);
         });
     }

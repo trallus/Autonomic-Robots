@@ -68,7 +68,7 @@ public class PersistenceTest {
 	for(DBUser u : temp){
 	    crud.remove(u);
 	}
-	persistence.commitTransaction();
+	persistence.endTransaction(true);
     }
 
     @Test
@@ -82,7 +82,7 @@ public class PersistenceTest {
 	    //Must throw this exception
 	}
 	finally{
-	    persistence.rollbackTransaction();
+	    persistence.endTransaction(false);
 	}
     }
     
@@ -94,7 +94,7 @@ public class PersistenceTest {
 	persistence.beginTransaction();
 	crud.insert(user);
 	crud.insert(user);
-	persistence.commitTransaction();
+	persistence.endTransaction(true);
     }
     
     @Test
@@ -108,7 +108,7 @@ public class PersistenceTest {
 	    //Must throw this exception
 	}
 	finally{
-	    persistence.rollbackTransaction();
+	    persistence.endTransaction(false);
 	}
     }
     
@@ -116,29 +116,29 @@ public class PersistenceTest {
     public void insertReadTest(){
 	persistence.beginTransaction();
 	crud.insert(user);
-	persistence.commitTransaction();
+	persistence.endTransaction(true);
 	assertEquals(user, crud.readID(user.getClass(), user.getId()));
     }
     @Test
     public void updateTest(){
 	persistence.beginTransaction();
 	crud.insert(user);
-	persistence.commitTransaction();
+	persistence.endTransaction(true);
 	user.setName("Updated");
 	persistence.beginTransaction();
 	crud.update(user);
-	persistence.commitTransaction();
+	persistence.endTransaction(true);
 	assertEquals(user, crud.readID(user.getClass(), user.getId()));
     }
     @Test
     public void removeTest(){
 	persistence.beginTransaction();
 	crud.insert(user);
-	persistence.commitTransaction();
+	persistence.endTransaction(true);
 	assertEquals(1,crud.readAll(user.getClass()).size());
 	persistence.beginTransaction();
 	crud.remove(user);
-	persistence.commitTransaction();
+	persistence.endTransaction(true);
 	assertEquals(0,crud.readAll(user.getClass()).size());
     }
     
@@ -146,7 +146,7 @@ public class PersistenceTest {
     public void readWhereTest() {
 	persistence.beginTransaction();
 	crud.insert(user);
-	persistence.commitTransaction();
+	persistence.endTransaction(true);
 	assertEquals(1,crud.readAll(user.getClass(),"pwHash","1245").size());
     }
 
@@ -155,7 +155,7 @@ public class PersistenceTest {
 	assertEquals(0,crud.readAll(user.getClass()).size());
 	persistence.beginTransaction();
 	crud.insert(user);
-	persistence.rollbackTransaction();
+	persistence.endTransaction(false);
 	assertEquals(0,crud.readAll(user.getClass()).size());
     }
 }

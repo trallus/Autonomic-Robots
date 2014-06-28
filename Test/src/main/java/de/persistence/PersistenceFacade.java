@@ -6,6 +6,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import de.logger.Log;
+
 /**
  * The Facade for the Persistence system
  * 
@@ -84,34 +86,23 @@ public class PersistenceFacade implements PersistenceFacadeIF {
     }
 
     /**
-     * @see de.persistence.PersistenceFacadeIF#commitTransaction()
+     * @see de.persistence.PersistenceFacadeIF#endTransaction(boolean)
      */
     @Override
-    public void commitTransaction() {
+    public void endTransaction(boolean state) {
 	if (!dbStarted)
 	    throw new PersistenceException(new IllegalStateException(
 		    "DB System not started"));
 	try{
-	    em.getTransaction().commit();
+	    if(state){
+		em.getTransaction().commit();
+	    }
+	    else{
+		em.getTransaction().rollback();
+	    }
 	}
 	catch(Throwable arg0){
-	    throw new PersistenceException(arg0);
-	}
-    }
-
-    /**
-     * @see de.persistence.PersistenceFacadeIF#rollbackTransaction()
-     */
-    @Override
-    public void rollbackTransaction() {
-	if (!dbStarted)
-	    throw new PersistenceException(new IllegalStateException(
-		    "DB System not started"));
-	try{
-	    em.getTransaction().rollback();
-	}
-	catch(Throwable arg0){
-	    throw new PersistenceException(arg0);
+	    Log.errorLog(arg0.getLocalizedMessage());
 	}
     }
 }

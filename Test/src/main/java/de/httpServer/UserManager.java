@@ -64,7 +64,7 @@ public class UserManager {
 		for ( DBUser u : userList ) {
 			db.remove(u);
 		}
-		persistence.commitTransaction();
+		persistence.endTransaction(true);
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class UserManager {
 	public void upDate(User user) {
 		persistence.beginTransaction();
 		db.update(user.getDBUser());
-		persistence.commitTransaction();
+		persistence.endTransaction(true);
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class UserManager {
 		DBUser dbUser = new DBUser(userName, eMail, passwordHash);
 		persistence.beginTransaction();
 		db.insert(dbUser);
-		persistence.commitTransaction();
+		persistence.endTransaction(true);
 		user.setDBUser(dbUser);
 		Log.debugLog("User registed: " + userName);
 		return ("Registrierung erfolgreich");
@@ -186,7 +186,7 @@ public class UserManager {
 		logIn(eMail, password, user);	// to be sure that he will be removed
 		persistence.beginTransaction();
 		db.remove(user.getDBUser());
-		persistence.commitTransaction();
+		persistence.endTransaction(true);
 		Log.debugLog("User removed: eMail:" + user.getDBUser().getEMail());
 		user.logOut();
 	}

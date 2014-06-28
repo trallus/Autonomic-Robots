@@ -30,12 +30,9 @@ public interface PersistenceFacadeIF {
     public void beginTransaction();
     
     /**
-     * Ends the Transaction with a commit
+     * Ends the Transaction with the specified state
+     * @param state	true := commit
+     * 			false := rollback
      */
-    public void commitTransaction();
-    
-    /**
-     * End the Transaction with a rollback
-     */
-    public void rollbackTransaction();
+    public void endTransaction(boolean state);
 }

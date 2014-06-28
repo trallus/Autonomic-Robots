@@ -31,7 +31,7 @@ public class UserManagerTest {
 	 */
 	@Before
 	public void start() {
-		userManager = new UserManager();
+		userManager = new UserManagerImpl();
 		user = userManager.getUser(null);
 		userManager.clareDB();
 	}

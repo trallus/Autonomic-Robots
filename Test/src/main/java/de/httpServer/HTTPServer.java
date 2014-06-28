@@ -24,7 +24,7 @@ public class HTTPServer {
 	public HTTPServer(String keyURI, String httpPath,
 		    int portNumber) throws Exception {
 
-		UserManager userManager = new UserManager();
+		UserManager userManager = new UserManagerImpl();
 
 		HttpServer httpServer = HttpServer.create(new InetSocketAddress(
 			portNumber), 0);

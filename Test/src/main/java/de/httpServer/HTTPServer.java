@@ -1,5 +1,6 @@
 package de.httpServer;
 
+import java.lang.reflect.Proxy;
 import java.net.InetSocketAddress;
 
 import com.sun.net.httpserver.HttpServer;
@@ -24,11 +25,16 @@ public class HTTPServer {
 	public HTTPServer(String keyURI, String httpPath,
 		    int portNumber) throws Exception {
 
-		UserManager userManager = new UserManagerImpl();
+		UserManager plainUserManager = new UserManagerImpl();
+		UserManager proxydUserManager = ( UserManager )
+				Proxy.newProxyInstance(
+						plainUserManager.getClass().getClassLoader(), 
+						plainUserManager.getClass().getInterfaces(),
+						new TranactionHandler ( plainUserManager ));
 
 		HttpServer httpServer = HttpServer.create(new InetSocketAddress(
 			portNumber), 0);
-		httpServer.createContext("/", new DateHandler(userManager, httpPath, keyURI));
+		httpServer.createContext("/", new DateHandler(proxydUserManager, httpPath, keyURI));
 		httpServer.start();
 
 		Log.log("HTTP Server gestartet an port: " + portNumber);

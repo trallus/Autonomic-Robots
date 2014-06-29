@@ -105,13 +105,10 @@ public class UserManagerImpl implements UserManager {
 	 */
 	public String register(String userName, String eMail, String password, User user)
 			throws NoSuchAlgorithmException, EmailInUseException {
-		// check if username exist
-		List<DBUser> users = db.readAll(DBUser.class);
-		for (DBUser dbUser : users) {
-			if (dbUser.getEMail().equals(eMail)) {
-				Log.debugLog("Registration failes. Email already registered: " + eMail);
-				throw (new EmailInUseException());
-			}
+		// check if email already registered
+		if ( getUserWithEmail (eMail) != null ) {
+			Log.debugLog("Registration failes. Email already registered: " + eMail);
+			throw (new EmailInUseException());
 		}
 
 		// create new user in database
@@ -135,21 +132,15 @@ public class UserManagerImpl implements UserManager {
 	 */
 	public String logIn(String eMail, String password, User user)
 			throws NoSuchAlgorithmException, EmailNotFoundException {
-
-		// get all users from db
-		List<DBUser> users = db.readAll(DBUser.class);
-		// find the user with this name
-		for (DBUser dbUser : users) {
-			if (dbUser.getEMail().equals(eMail)) {
-				// test the password
-				final String passwordHash = convertToMD5Hash(password);
-				if (dbUser.getPassword().equals(passwordHash)) {
-					user.logIn(dbUser);
-					Log.debugLog("Log in erfolgreich. User: " + user.toString());
-					return ("Log in erfolgreich");
-				} else {
-					break;
-				}
+		DBUser dbUser = getUserWithEmail(eMail);
+		
+		if ( dbUser != null ) {
+			// test the password
+			final String passwordHash = convertToMD5Hash(password);
+			if (dbUser.getPassword().equals(passwordHash)) {
+				user.logIn(dbUser);
+				Log.debugLog("Log in erfolgreich. User: " + user.toString());
+				return ("Log in erfolgreich");
 			}
 		}
 
@@ -226,5 +217,14 @@ public class UserManagerImpl implements UserManager {
 
 	public PersistenceFacade getPersistence() {
 		return persistence;
+	}
+	
+	private DBUser getUserWithEmail ( String eMail ) {
+		List<DBUser> userList = db.readAll(DBUser.class, "eMail", eMail);
+		if ( userList.size() == 0 ) {
+			return null;
+		}
+		
+		return userList.get(0);
 	}
 }

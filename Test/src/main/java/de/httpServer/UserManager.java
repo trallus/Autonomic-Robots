@@ -2,7 +2,13 @@ package de.httpServer;
 
 import java.security.NoSuchAlgorithmException;
 
+import de.persistence.PersistenceFacade;
+
 public interface UserManager {
+	/**
+	 *  connection to database
+	 */
+	
 	public void shutDown ();
 	public void clareDB ();
 	public void upDate(User user);
@@ -14,4 +20,5 @@ public interface UserManager {
 	public void logOut(User user);
 	public void removeUser ( String eMail, String password, User user )
 			throws NoSuchAlgorithmException, EmailNotFoundException;
+	public PersistenceFacade getPersistence ();
 }

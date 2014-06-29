@@ -4,7 +4,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import de.data.DBUser;
 import de.logger.Log;
@@ -28,7 +27,7 @@ public class UserManagerImpl implements UserManager {
 	/**
 	 *  connection to database
 	 */
-	private final PersistenceFacade persistence;
+	public final PersistenceFacade persistence;
 	/**
 	 * to get new session IDs
 	 */
@@ -59,12 +58,10 @@ public class UserManagerImpl implements UserManager {
 	 * remove all Users from Database
 	 */
 	public void clareDB () {
-		persistence.beginTransaction();
 		List<DBUser> userList = db.readAll(DBUser.class);
 		for ( DBUser u : userList ) {
 			db.remove(u);
 		}
-		persistence.endTransaction(true);
 	}
 
 	/**
@@ -73,9 +70,7 @@ public class UserManagerImpl implements UserManager {
 	 * @param user
 	 */
 	public void upDate(User user) {
-		persistence.beginTransaction();
 		db.update(user.getDBUser());
-		persistence.endTransaction(true);
 	}
 
 	/**
@@ -122,9 +117,7 @@ public class UserManagerImpl implements UserManager {
 		// create new user in database
 		String passwordHash = convertToMD5Hash(password);
 		DBUser dbUser = new DBUser(userName, eMail, passwordHash);
-		persistence.beginTransaction();
 		db.insert(dbUser);
-		persistence.endTransaction(true);
 		user.setDBUser(dbUser);
 		Log.debugLog("User registed: " + userName);
 		return ("Registrierung erfolgreich");
@@ -184,9 +177,7 @@ public class UserManagerImpl implements UserManager {
 	 */
 	public void removeUser ( String eMail, String password, User user ) throws NoSuchAlgorithmException, EmailNotFoundException {
 		logIn(eMail, password, user);	// to be sure that he will be removed
-		persistence.beginTransaction();
 		db.remove(user.getDBUser());
-		persistence.endTransaction(true);
 		Log.debugLog("User removed: eMail:" + user.getDBUser().getEMail());
 		user.logOut();
 	}
@@ -231,5 +222,9 @@ public class UserManagerImpl implements UserManager {
 		}
 
 		return (md5String);
+	}
+
+	public PersistenceFacade getPersistence() {
+		return persistence;
 	}
 }

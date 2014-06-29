@@ -14,6 +14,8 @@ function GUI ( frameControler, server ) {
     var robo;
     var e;
     var selectedItem;
+    var allRobots = [];
+    var physic;
    
     
     
@@ -31,12 +33,16 @@ function GUI ( frameControler, server ) {
         fillSelect();
         
         frameControler.addOnNewFrame ( draw );
+        
+        physic = new CollisionControler ( allRobots );
+        frameControler.addOnNewFrame ( physic.onFrame );
     };
     
     this.newRobot = function () {
     	robo = new Robot ( frameControler, server );
     	color = robo.getRobotColor;
-    }
+        allRobots.push(robo);
+    };
     
     
     function fillSelect() {

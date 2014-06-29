@@ -9,10 +9,31 @@ function Robot ( frameControler, server ) {
     //var color = getColor();
     var color = getColor();
     this.getRobotColor = color;
+    var radius = 10;
+    var moveVector = new Array(0, 0);
+    var mass = 1; // Gewicht des Robot
     
     function construct () {
         frameControler.addOnNewFrame ( onFrame );
     }
+    
+    
+    this.getDimension = function () { return radius; };
+    this.getPosition = function () {
+        var ret = [posX, posY];
+        return ret;
+    };
+    this.getMoveVector = function () { return moveVector; };
+    this.getMass = function () { return mass; };
+    
+    this.setDirection = function ( d ) { direction = d; };
+    this.setSpeed = function ( s ) {
+        speed = s;
+    };
+    this.setPosition = function ( p ) {
+        posX = p[0];
+        posY = p[1];
+    };
     
     function onFrame ( context, timeSinceLastDraw ) {
 
@@ -36,8 +57,6 @@ function Robot ( frameControler, server ) {
     
     
     function draw ( context ) {
-
-        var radius = 10;
         
         context.beginPath();
         context.arc( posX, posY, radius, 0, 2 * Math.PI, false);
@@ -101,6 +120,7 @@ function Robot ( frameControler, server ) {
         // position
         var speedX = Math.cos ( direction ) * speed;
         var speedY = Math.sin ( direction ) * speed;
+        moveVector = [speedX, speedY];
         posX += ( speedX * timeSinceLastDraw );
         posY += ( speedY * timeSinceLastDraw );
         

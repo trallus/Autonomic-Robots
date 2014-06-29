@@ -169,8 +169,8 @@ public class UserManagerImpl implements UserManager {
 	public void removeUser ( String eMail, String password, User user ) throws NoSuchAlgorithmException, EmailNotFoundException {
 		logIn(eMail, password, user);	// to be sure that he will be removed
 		db.remove(user.getDBUser());
-		Log.debugLog("User removed: eMail:" + user.getDBUser().getEMail());
 		user.logOut();
+		Log.debugLog("User removed: eMail:" + user.getDBUser().getEMail());
 	}
 
 	/**

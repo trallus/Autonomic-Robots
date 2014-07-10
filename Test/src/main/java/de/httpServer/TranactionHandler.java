@@ -22,11 +22,11 @@ public class TranactionHandler implements InvocationHandler {
 		
 		psf.beginTransaction();
 		
-		boolean correct = true;
+		boolean correct = false;
 		try {
 			result = method.invoke( userManager, args);
+			correct = true;
 		} catch ( Exception e ) {
-			correct = false;
 			// alle Exceptions werden in eine java.lang.reflect.InvocationTargetException verpackt
 			// wir wollen aber das Original
 			throw e.getCause();

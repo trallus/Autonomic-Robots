@@ -4,11 +4,7 @@ describe("BackendCom Test", function () {
 	var b = new BackendCom();
 	var json;
 	var valid;
-	
-	//Destinations
-	var server = "serverRequest";
-	var register = server + "/registration";
-	var login = server + "/logIn";
+        var timeout = 10000;
 	
 	//Testuser
 	var name = "name";
@@ -17,17 +13,17 @@ describe("BackendCom Test", function () {
 	
     //Test-Case1
     it("should be able to sign up a new user", function() {
-    	json = {};
+    	var json = new Object();
         runs(function() {
         	b.registration ( name, password, eMail, function ( json1 ) {
         		json = json1;
         		
         	} );
-        }, 500);
+        }, timeout);
 
         waitsFor(function() {
             return json.registered;
-        }, "JSON registered should be set", 750);
+        }, "JSON registered should be set", timeout);
 
         runs(function() {
             expect(json.registered).toEqual(true);
@@ -43,11 +39,11 @@ describe("BackendCom Test", function () {
         		json = json1;
         		
         	} );
-        }, 500);
+        }, timeout);
 
         waitsFor(function() {
             return json.logedIn;
-        }, "JSON logedIn should be set", 750);
+        }, "JSON logedIn should be set", timeout);
 
         runs(function() {
             expect(json.logedIn).toEqual(true);
@@ -56,20 +52,21 @@ describe("BackendCom Test", function () {
     
     //Test-Case3
     it("should be able to remove a user", function() {
-    	valid = false;
+    	json = {};
         runs(function() {
-        	b.remove ( name, password, eMail, function () {
-        		valid = true;
+        	b.remove ( name, password, eMail, function ( json1 ) {
+                    console.log(json1);
+        		json = json1;
         	});	
         	
         }, 500);
 
         waitsFor(function() {
-            return valid;
-        }, "valid should be set", 750);
+            return json.removed;
+        }, "valid should be set", timeout);
 
         runs(function() {
-            expect(valid).toEqual(true);
+            expect(json.removed).toEqual(true);
         });
     });
     
@@ -78,7 +75,7 @@ describe("BackendCom Test", function () {
     	valid = false;
         runs(function() {
         	b.startGame( function () { valid = true; });
-        }, 750);
+        }, timeout);
 
         waitsFor(function() {
             return valid;

@@ -53,6 +53,39 @@ function BackendCom ( ) {
         serverRequest( user, server + "/registration", callback );
     }
     
+    this.searchUser = function ( name, callback ) {
+        var user = {
+            name : name,
+            password : "",
+            eMail : ""
+        };
+        
+        // just to show
+        callback ({
+            searchResult : [
+                "heinz",
+                "kinz"
+            ]
+        });
+        
+        //serverRequest( user, server + "/searchUser", callback );
+    }
+    
+    this.changeUser = function ( name, password, callback ) {
+        var user = {
+            name : name,
+            password : password,
+            eMail : ""
+        };
+        
+        // just to show
+        callback ({
+            nameChanged : true
+        });
+        
+        //serverRequest( user, server + "/changeUser", callback );
+    }
+    
 	
     function serverRequest  ( json, destination, callback ) {
         $.ajax({

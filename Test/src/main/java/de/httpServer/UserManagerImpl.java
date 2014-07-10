@@ -117,7 +117,7 @@ public class UserManagerImpl implements UserManager {
 		db.insert(dbUser);
 		user.setDBUser(dbUser);
 		Log.debugLog("User registed: " + userName);
-		return ("Registrierung erfolgreich");
+		return "Registrierung erfolgreich";
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class UserManagerImpl implements UserManager {
 		}
 
 		Log.debugLog("Log in fehlgeschlagen. User: " + user.toString());
-		throw (new EmailNotFoundException());
+		throw new EmailNotFoundException();
 	}
 
 	/**

@@ -52,4 +52,9 @@ footer {
 	position: absolute;
 	margin: 0;
 }
-*/
+
+.button {
+    width: 70px;
+    height: 25px;
+    cursor: pointer;
+}

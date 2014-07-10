@@ -2,9 +2,8 @@ package de.httpServer;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
-import de.logger.Log;
+import de.persistence.PersistenceFacade;
 
 public class TranactionHandler implements InvocationHandler {
 	
@@ -17,11 +16,11 @@ public class TranactionHandler implements InvocationHandler {
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args)
 			throws Throwable {
-		Log.log("Starting Transaction: " + method.getName() + " with Args: " + Arrays.toString(args));
 		
+		final PersistenceFacade psf = userManager.getPersistence();
 		Object result = null;
 		
-		userManager.getPersistence().beginTransaction();
+		psf.beginTransaction();
 		
 		boolean correct = true;
 		try {
@@ -32,7 +31,7 @@ public class TranactionHandler implements InvocationHandler {
 			// wir wollen aber das Original
 			throw e.getCause();
 		} finally {
-			userManager.getPersistence().endTransaction(correct);
+			psf.endTransaction(correct);
 		}
 		
 		return result;

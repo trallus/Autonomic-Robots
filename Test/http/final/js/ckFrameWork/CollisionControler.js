@@ -1,22 +1,29 @@
 function CollisionControler ( physicObjects ) {
     
-    var aircraftRegister = physicObjects;
+    var physicalObjects = physicObjects;
     
     this.onFrame = function onFrame (context, time) {
         collisionDetection(time);
     };
+    
+    function addPlast ( plast, array ) {
+        array[0] *= plast;
+        array[1] *= plast;
+        
+        return array;
+    }
 
     function collisionDetection ( time ) {
                     
-        for (var i=0; i<aircraftRegister.length; i++) {
+        for (var i=0; i<physicalObjects.length; i++) {
             
-            var pos1 = aircraftRegister[i].getPosition();
-            var rad1 = aircraftRegister[i].getDimension();
+            var pos1 = physicalObjects[i].getPosition();
+            var rad1 = physicalObjects[i].getDimension();
             
-            for (var k=i+1; k<aircraftRegister.length; k++) {
+            for (var k=i+1; k<physicalObjects.length; k++) {
                 
-                var pos2 = aircraftRegister[k].getPosition();
-                var rad2 = aircraftRegister[k].getDimension();
+                var pos2 = physicalObjects[k].getPosition();
+                var rad2 = physicalObjects[k].getDimension();
             
                 var a = pos1[0]-pos2[0];
                 var b = pos1[1]-pos2[1];
@@ -25,14 +32,14 @@ function CollisionControler ( physicObjects ) {
                 
                 if (distance < rad1+rad2) {
                     
-                    // aircraftRegister[i].collisionWith(aircraftRegister[k]);
-                    // aircraftRegister[k].collisionWith(aircraftRegister[i]);
+                    // physicalObjects[i].collisionWith(physicalObjects[k]);
+                    // physicalObjects[k].collisionWith(physicalObjects[i]);
 
                     // wich distance have the aircrafts in the (close) future (.01 sec)
                     var futureTime = .01; //sec
                     
-                    var mV1 = aircraftRegister[i].getMoveVector();
-                    var mV2 = aircraftRegister[k].getMoveVector();
+                    var mV1 = physicalObjects[i].getMoveVector();
+                    var mV2 = physicalObjects[k].getMoveVector();
                     
                     var pos1a = new Array(pos1[0]+mV1[0]*futureTime, pos1[1]+mV1[1]*futureTime);
                     var pos2a = new Array(pos2[0]+mV2[0]*futureTime, pos2[1]+mV2[1]*futureTime);
@@ -51,8 +58,8 @@ function CollisionControler ( physicObjects ) {
                     
 //                    log("pos1 "+pos1);
 //                    log("pos2 "+pos2);
-//                    log("speed1 "+aircraftRegister[i].getSpeed());
-//                    log("speed1 "+aircraftRegister[k].getSpeed());
+//                    log("speed1 "+physicalObjects[i].getSpeed());
+//                    log("speed1 "+physicalObjects[k].getSpeed());
 //                    log("mV1 "+mV1);
 //                    log("mV2 "+mV2);
 //                    log("kV "+kV);
@@ -87,32 +94,37 @@ function CollisionControler ( physicObjects ) {
 //                    
                     // berücksicheigen der masse
                     // Achtung: hier noch nur Kollisionsanteile
-                    var m1 = aircraftRegister[i].getMass();
-                    var m2 = aircraftRegister[k].getMass();
+                    var m1 = physicalObjects[i].getMass();
+                    var m2 = physicalObjects[k].getMass();
                     var sp1 = 2 * (m1*mV1[0][0]+m2*mV2[0][0]) / (m1+m2) // 2 * geschwindigkeit des gemeinsamen schwerpunktes
                     var sp2 = 2 * (m1*mV1[0][1]+m2*mV2[0][1]) / (m1+m2) // 2 * geschwindigkeit des gemeinsamen schwerpunktes
 
                     mV1[0] = new Array (sp1-mV1[0][0], sp2-mV1[0][1]);
                     mV2[0] = new Array (sp1-mV2[0][0], sp2-mV2[0][1]);
                     
+                    // plastisch
+                    var plast = .8;
+                    mV1[0] = addPlast(plast, mV1[0]);
+                    mV2[0] = addPlast(plast, mV2[0]);
+                    
                     // addieren der aufgeteilten Bewegungsvektoren zu einem Vektor
                     mV1 = new $ckVector (mV1[0][0]+mV1[1][0], mV1[0][1]+mV1[1][1]);
                     mV2 = new $ckVector (mV2[0][0]+mV2[1][0], mV2[0][1]+mV2[1][1]);
 
                     // neue Richtiung setzen
-                    aircraftRegister[i].setDirection(mV1.getDirektionXY());
-                    aircraftRegister[k].setDirection(mV2.getDirektionXY());
+                    physicalObjects[i].setDirection(mV1.getDirektionXY());
+                    physicalObjects[k].setDirection(mV2.getDirektionXY());
                     
                     // neue Geschwinigkeit setzen
-                    aircraftRegister[i].setSpeed(mV1.getLength());
-                    aircraftRegister[k].setSpeed(mV2.getLength());
+                    physicalObjects[i].setSpeed(mV1.getLength());
+                    physicalObjects[k].setSpeed(mV2.getLength());
                     // schieb die objecte ein stück aus einander damit sie nicht zusammen kleben bleiben
                     pos1[0] -= kV[0]*time;
                     pos1[1] -= kV[1]*time;
                     pos2[0] += kV[0]*time;
                     pos2[1] += kV[1]*time;
-                    aircraftRegister[i].setPosition(pos1);
-                    aircraftRegister[k].setPosition(pos2);
+                    physicalObjects[i].setPosition(pos1);
+                    physicalObjects[k].setPosition(pos2);
 //                    log("speed1 "+mV1.getLength());
 //                    log("speed1 "+mV2.getLength());
 //                    //test=false;

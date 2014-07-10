@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.PersistenceUnitUtil;
 import javax.persistence.Query;
 
 /**
@@ -18,14 +17,11 @@ public class CRUDWorker implements CRUDIF {
     
     private final EntityManager em;
 
-    private final PersistenceUnitUtil util;
-
     /**
      * Just Initializing the entityManagerFactory
      */
-    protected CRUDWorker(final EntityManager em, final PersistenceUnitUtil util) {
+    protected CRUDWorker(final EntityManager em) {
 	try {
-	    this.util = util;
 	    this.em = em;
 	}
 	catch (Throwable arg0) {
@@ -71,9 +67,7 @@ public class CRUDWorker implements CRUDIF {
 	try {
 	    if(!em.getTransaction().isActive())
 		throw new IllegalStateException("You must begin transaction first");
-	    final Object id = util.getIdentifier(obj);
-	    final Object removable = em.find(obj.getClass(), id);
-	    em.remove(removable);
+	    em.remove(obj);
 	}
 	catch (Throwable arg0) {
 	    throw new PersistenceException(arg0);

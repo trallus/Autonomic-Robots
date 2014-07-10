@@ -31,8 +31,7 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	    throw new PersistenceException(new IllegalStateException(
 		    "DB System not started"));
 	try {
-	    return new CRUDWorker(em,
-		    emf.getPersistenceUnitUtil());
+	    return new CRUDWorker(em);
 	}
 	catch (Throwable arg0) {
 	    throw new PersistenceException(arg0);

@@ -100,16 +100,8 @@ public class PersistenceTest {
     @Test
     public void removeNotPersistedEntityTest(){
 	persistence.beginTransaction();
-	try{
-	    crud.remove(user);
-	    fail("No exception for insert(null)");
-	}
-	catch(PersistenceException arg0){
-	    //Must throw this exception
-	}
-	finally{
-	    persistence.endTransaction(false);
-	}
+	crud.remove(user);
+	persistence.endTransaction(true);
     }
     
     @Test

@@ -104,13 +104,8 @@ public class UserManagerImpl implements UserManager {
 	 * @throws EmailInUseException
 	 */
 	public String register(String userName, String eMail, String password, User user)
-			throws NoSuchAlgorithmException, EmailInUseException {
-		// check if email already registered
-		if ( getUserWithEmail (eMail) != null ) {
-			Log.debugLog("Registration failes. Email already registered: " + eMail);
-			throw (new EmailInUseException());
-		}
-
+			throws NoSuchAlgorithmException, EmailInUseException, NameInUseException {
+		checkInUse(eMail, userName);
 		// create new user in database
 		String passwordHash = convertToMD5Hash(password);
 		DBUser dbUser = new DBUser(userName, eMail, passwordHash);
@@ -173,6 +168,35 @@ public class UserManagerImpl implements UserManager {
 		Log.debugLog("User removed: eMail:" + user.getDBUser().getEMail());
 	}
 
+	@Override
+	public String[] searchUser(String prefix) {
+		final List<DBUser> allUsers = db.readAll(DBUser.class);
+		final ArrayList<String> nameList = new ArrayList<String>();
+		for (final DBUser u : allUsers) {
+			final String dbName = u.getName();
+			if (dbName.startsWith(prefix)) {
+				nameList.add(dbName);
+			}
+		}
+		
+		return nameList.toArray(new String[nameList.size()]);
+	}
+
+	@Override
+	public void changeUser(User user, String newName, String newEMail, String newPassword) throws EmailInUseException, NameInUseException, NoSuchAlgorithmException {
+		checkInUse(newEMail, newName);
+		
+		final DBUser dbu = user.getDBUser();
+		
+		dbu.setName(newName);
+		dbu.setEMail(newEMail);
+		dbu.setPassword(convertToMD5Hash(newPassword));
+		
+		db.update(dbu);
+
+		Log.debugLog("Chagne User: " + user.toString());
+	}
+
 	/**
 	 * create a new user
 	 * 
@@ -226,5 +250,27 @@ public class UserManagerImpl implements UserManager {
 		}
 		
 		return userList.get(0);
+	}
+	
+	private DBUser getUserWithName ( String name ) {
+		List<DBUser> userList = db.readAll(DBUser.class, "name", name);
+		if ( userList.size() == 0 ) {
+			return null;
+		}
+		
+		return userList.get(0);
+	}
+	
+	private void checkInUse (String eMail, String name) throws EmailInUseException, NameInUseException {
+		// check if email already registered
+		if ( getUserWithEmail (eMail) != null ) {
+			Log.debugLog("Registration failes. Email already registered: " + eMail);
+			throw (new EmailInUseException());
+		}
+		// check if name already registered
+		if ( getUserWithName (name) != null ) {
+			Log.debugLog("Registration failes. Name already registered: " + eMail);
+			throw (new NameInUseException());
+		}
 	}
 }

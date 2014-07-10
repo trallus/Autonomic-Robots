@@ -95,4 +95,8 @@ public class DBUser {
 		return eMail;
 	}
 
+	public void setEMail(String eMail) {
+		this.eMail = eMail;
+	}
+
 }

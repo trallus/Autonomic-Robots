@@ -1,14 +1,18 @@
 package de.httpServer;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.lang.reflect.Proxy;
 import java.sql.SQLNonTransientConnectionException;
+import java.util.ArrayList;
 
+import org.eclipse.persistence.jpa.jpql.Assert.AssertException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.data.DBUser;
 import de.httpServer.EmailNotFoundException;
 import de.httpServer.User;
 import de.logger.Log;
@@ -104,10 +108,91 @@ public class ProxydUserManagerTest {
 
 		User user2 = userManager.getUser(null);
 		try {
-			userManager.register(userName, eMail, password, user2);
+			userManager.register("anotherName", eMail, password, user2);
 			fail("expected EmailInUseException");
 		} catch (EmailInUseException e) {
 		}
+	}
+
+	/**
+	 * Try to register 2 Users with the same name
+	 * This shoud be failed
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void registerTest3() throws Exception {
+		userManager.register(userName, eMail, password, user);
+
+		User user2 = userManager.getUser(null);
+		try {
+			userManager.register(userName, "amotherEmail", password, user2);
+			fail("expected NameInUseException");
+		} catch (NameInUseException e) {
+		}
+	}
+
+	/**
+	 * Register many users and Search all how started with man
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void searchUserTest() throws Exception {
+		//define expectet result
+		final String searchPrefix = "man";
+		final String[] newUserNames = {"man", "mantest2", "3mantest", "ma4ntest", "mantest5", "mantest6"};
+		final ArrayList<String> expectedUserNames = new ArrayList<String>();
+		expectedUserNames.add("man");
+		expectedUserNames.add("mantest2");
+		expectedUserNames.add("mantest5");
+		expectedUserNames.add("mantest6");
+		//registrate the users
+		for (int i=0; i<newUserNames.length; i++) {
+			userManager.register(newUserNames[i], eMail+i, password, user);
+		}
+		
+		
+
+		final String[] resultUserNames = userManager.searchUser(searchPrefix);
+		for(final String resultName : resultUserNames) {
+			final int i = expectedUserNames.indexOf(resultName);
+			if (i == -1){
+				fail("Found unexpected user name: \"" + resultName + "\" in the search result");
+			}
+			expectedUserNames.remove(i); //remove the found name
+		}
+		
+		if (expectedUserNames.size() > 0) {
+			fail("Found not all expected names in the search result");
+		}
+	}
+
+	/**
+	 * Register many users and Search all how started with man
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void changeUserTest() throws Exception {
+		final String newName = "khcnifhxf";
+		final String newEMail = "alskjfdoiadhnfak";
+		final String newPassword = "sadfkpadskfsadöfl";
+		final String newPasswordHash = "-25139618-11143-41105-7963-457511621-27-26";
+		
+		userManager.register(userName, eMail, password, user);
+		userManager.logIn(eMail, password, user);
+		userManager.changeUser(user, newName, newEMail, newPassword);
+		
+		userManager.logOut(user);
+		
+		final User testUser = userManager.getUser(null);
+		userManager.logIn(newEMail, newPassword, testUser);
+		final DBUser testBDUser = testUser.getDBUser();
+
+		assertEquals(testBDUser.getName(), newName);
+		assertEquals(testBDUser.getEMail(), newEMail);
+		assertEquals(testBDUser.getPassword(), newPasswordHash);
 	}
 
 	/**

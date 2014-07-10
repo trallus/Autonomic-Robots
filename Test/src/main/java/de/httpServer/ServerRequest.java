@@ -90,13 +90,20 @@ public class ServerRequest extends Request {
 
 		if (uri.indexOf("registration") != -1) {
 			ClientUser clientUser = readClientUser();
+			String failReason = null;
 			try {
 				userManager.register(clientUser.name, clientUser.eMail, clientUser.password, user);
 			} catch (EmailInUseException e) {
+				failReason = "Email";
+			} catch (NameInUseException e) {
+				failReason = "Name";
+			}
+			if (failReason != null) {
 				replyJson.put("registered", false);
-				replyJson.put("registration message", "Email already in use");
+				replyJson.put("registration message", failReason + " already in use");
 				return;
 			}
+			
 			replyJson.put("registered", true);
 		} else if (uri.indexOf("logIn") != -1) {
 			ClientUser clientUser = readClientUser();
@@ -109,7 +116,7 @@ public class ServerRequest extends Request {
 			userManager.logOut(user);
 		} else if (uri.indexOf("remove") != -1) {
 			// just work with a new login -> save
-			ClientUser clientUser = readClientUser();
+			final ClientUser clientUser = readClientUser();
 			try {
 				userManager.removeUser(clientUser.eMail, clientUser.password, user);
 			} catch (EmailNotFoundException e) {

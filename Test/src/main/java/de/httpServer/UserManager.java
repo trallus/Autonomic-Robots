@@ -9,19 +9,19 @@ public interface UserManager {
 	 *  connection to database
 	 */
 	
-	public void shutDown ();
+	void shutDown ();
 	
 	/**
 	 * remove all Users from Database
 	 */
-	public void clareDB ();
+	void clareDB ();
 
 	/**
 	 * update a user in database
 	 * 
 	 * @param user
 	 */
-	public void upDate(User user);
+	void upDate(User user);
 
 	/**
 	 * get the user with this SID or create a new one
@@ -29,7 +29,7 @@ public interface UserManager {
 	 * @param sessionID
 	 * @return
 	 */
-	public User getUser(String sessionID);
+	User getUser(String sessionID);
 
 	/**
 	 * registrate e new user in database
@@ -41,9 +41,10 @@ public interface UserManager {
 	 * @return
 	 * @throws NoSuchAlgorithmException
 	 * @throws EmailInUseException
+	 * @throws NameInUseException 
 	 */
-	public String register(String userName, String eMail, String password, User user)
-			throws NoSuchAlgorithmException, EmailInUseException;
+	 String register(String userName, String eMail, String password, User user)
+			throws NoSuchAlgorithmException, EmailInUseException, NameInUseException;
 
 	/**
 	 * log in a user
@@ -55,7 +56,7 @@ public interface UserManager {
 	 * @throws NoSuchAlgorithmException
 	 * @throws EmailNotFoundException
 	 */
-	public String logIn(String eMail, String password, User user)
+	String logIn(String eMail, String password, User user)
 			throws NoSuchAlgorithmException, EmailNotFoundException;
 
 	/**
@@ -63,7 +64,7 @@ public interface UserManager {
 	 * 
 	 * @param user
 	 */
-	public void logOut(User user);
+	void logOut(User user);
 	
 	/**
 	 * delete a user from database
@@ -72,7 +73,7 @@ public interface UserManager {
 	 * @throws EmailNotFoundException 
 	 * @throws NoSuchAlgorithmException 
 	 */
-	public void removeUser ( String eMail, String password, User user )
+	void removeUser ( String eMail, String password, User user )
 			throws NoSuchAlgorithmException, EmailNotFoundException;
 
 	/**
@@ -80,5 +81,23 @@ public interface UserManager {
 	 * 
 	 * @return PersistenceFacade
 	 */
-	public PersistenceFacade getPersistence ();
+	PersistenceFacade getPersistence ();
+	
+	/**
+	 * Search user/s by name and return a list of usernames
+	 * 
+	 * @param userName
+	 * @return list of usernames: String []
+	 */
+	String[] searchUser ( String userName ); 
+	
+	/**
+	 * Change atributes of a User
+	 * 
+	 * @param user
+	 * @throws NameInUseException 
+	 * @throws EmailInUseException 
+	 * @throws NoSuchAlgorithmException 
+	 */
+	void changeUser(User user, String newName, String newEMail, String newPassword) throws EmailInUseException, NameInUseException, NoSuchAlgorithmException; 
 }

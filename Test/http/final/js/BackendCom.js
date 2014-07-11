@@ -44,7 +44,6 @@ function BackendCom ( ) {
         serverRequest( user, server + "/logIn", callback );
     }
     
-    //leere felder (z.B. name = "") werden nicht geschrieben
     this.registration = function ( name, password, eMail, callback ) {
         var user = {
             name : name,
@@ -64,6 +63,8 @@ function BackendCom ( ) {
         serverRequest( user, server + "/searchUser", callback );
     }
     
+    
+    //leere felder (z.B. name = "") werden nicht geschrieben
     this.changeUser = function ( name, password, eMail, callback ) {
         var user = {
             name : name,

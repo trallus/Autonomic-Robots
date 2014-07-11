@@ -55,7 +55,7 @@ describe("BackendCom Test", function () {
     	json = {};
         runs(function() {
         	b.remove ( name, password, eMail, function ( json1 ) {
-                    console.log(json1);
+                    //console.log(json1);
         		json = json1;
         	});	
         	
@@ -83,6 +83,131 @@ describe("BackendCom Test", function () {
 
         runs(function() {
             expect(valid).toEqual(true);
+        });
+    });
+    
+    //Test-Case5 Search User
+    it("text", function() {
+        var registerResult = new Array();
+        var searchName = "mic";
+        var searchResult;
+        var testUserNames = [
+            "micha",
+            "müller",
+            "hinz",
+            "mict",
+            "mic",
+            "test",
+            "bla",
+            "michaela"
+        ];
+        var expectetSearchUserNames = [
+            "micha",
+            "mict",
+            "mic",
+            "michaela"
+        ];
+        
+        // registrate the Users
+        for (var i in testUserNames) {
+            b.registration ( testUserNames[i], password, eMail+i, function ( json ) {
+                registerResult.push(json);
+            });
+        }
+        // wair for registrations
+        waitsFor(function() {
+            return registerResult[testUserNames.length - 1];
+        }, "valid should be set", timeout);
+        
+        // search
+        runs(function() {
+            b.searchUser ( searchName, function ( json ) {
+                searchResult = json.searchResult;
+            });
+        }, 500);
+
+        waitsFor(function() {
+            return searchResult;
+        }, "valid should be set", timeout);
+
+        runs(function() {
+            for (var i in expectetSearchUserNames) {
+                var tmp = expectetSearchUserNames[i];
+                var position = searchResult.indexOf(tmp);
+                expect(position).toBeGreaterThan(-1);
+                //remove the found name
+                searchResult.splice(position, 1);
+            }
+            
+            // be sure that not to many names
+            expect(searchResult.length).toBe(0);
+            
+            // cleanUp
+            for (var i in testUserNames) {
+                b.remove ( testUserNames[i], password, eMail+i, function ( json ) {
+                    // löschen wurde ja schon getestet
+                });
+            }
+        });
+    });
+    
+    //Test-Case6 change User
+    it("text", function() {
+    	var json = new Object();
+        runs(function() {
+            b.registration ( name, password, eMail, function ( json1 ) {
+                json = json1;
+            } );
+        }, timeout);
+
+        waitsFor(function() {
+            return json.registered;
+        }, "JSON registered should be set", timeout);
+        
+        runs(function() {
+            b.logIn ( password, eMail, function ( json1 ) {
+                json = json1;
+            } );
+        }, timeout);
+
+        waitsFor(function() {
+            return json.logedIn;
+        }, "JSON logedIn should be set", timeout);
+        
+        var newName = "newName";
+        var newEmail = "newEmail";
+        var newPassword = "newPassword";
+        
+        runs(function() {
+            //b.logOut(function ( ) {});
+            b.changeUser ( newName, newPassword, newEmail, function ( json1 ) {
+                json = json1;
+            } );
+        }, timeout);
+
+        waitsFor(function() {
+            return json.userChanged;
+        }, "JSON registered should be set", timeout);
+        
+        runs(function() {
+            b.logOut(function ( ) {});
+            b.logIn ( newPassword, newEmail, function ( json1 ) {
+                json = json1;
+            } );
+        }, timeout);
+
+        waitsFor(function() {
+            return json.logedIn;
+        }, "JSON logedIn should be set", timeout);
+
+        runs(function() {
+            expect(json.logedIn).toEqual(true);
+        });
+        
+        runs(function() {
+            b.remove ( newPassword, newPassword, newEmail, function ( json ) {
+                // löschen wurde ja schon getestet
+            });
         });
     });
 });

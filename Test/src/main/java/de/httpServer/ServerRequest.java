@@ -125,7 +125,28 @@ public class ServerRequest extends Request {
 				return;
 			}
 			replyJson.put("removed", true);
-		} else {
+		} else if (uri.indexOf("searchUser") != -1) {
+			final ClientUser clientUser = readClientUser();
+			final String[] searchResule = userManager.searchUser(clientUser.name);
+			replyJson.put("searchResult", searchResule);
+		} else if (uri.indexOf("changeUser") != -1) {
+			ClientUser clientUser = readClientUser();
+			String failReason = null;
+			try {
+				userManager.changeUser(user, clientUser.name, clientUser.eMail, clientUser.password);
+			} catch (EmailInUseException e) {
+				failReason = "Email";
+			} catch (NameInUseException e) {
+				failReason = "Name";
+			}
+			if (failReason != null) {
+				replyJson.put("userChanged", false);
+				replyJson.put("userChanged message", failReason + " already in use");
+				return;
+			}
+			
+			replyJson.put("userChanged", true);
+		} else  {
 			replyJson.put("Unexpectrd URI", uri);
 		}
 
@@ -162,7 +183,6 @@ public class ServerRequest extends Request {
 			for (String s : headerList) {
 				if (s.indexOf(key) == 0) { // cookie has a SessionID=
 					SID = s.substring(key.length());
-
 					return (SID);
 				}
 			}

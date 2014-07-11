@@ -188,9 +188,16 @@ public class UserManagerImpl implements UserManager {
 		
 		final DBUser dbu = user.getDBUser();
 		
-		dbu.setName(newName);
-		dbu.setEMail(newEMail);
-		dbu.setPassword(convertToMD5Hash(newPassword));
+		// dont change to emty strings
+		if (newName.length() > 0) {
+			dbu.setName(newName);
+		}
+		if (newEMail.length() > 0) {
+			dbu.setEMail(newEMail);
+		}
+		if (newPassword.length() > 0) {
+			dbu.setPassword(convertToMD5Hash(newPassword));
+		}
 		
 		db.update(dbu);
 

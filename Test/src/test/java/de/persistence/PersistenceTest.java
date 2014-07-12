@@ -2,7 +2,6 @@ package de.persistence;
 
 import static org.junit.Assert.*;
 
-import java.sql.SQLNonTransientConnectionException;
 import java.util.List;
 
 import org.junit.After;
@@ -27,27 +26,16 @@ public class PersistenceTest {
     private static PersistenceFacadeIF persistence;
 
     @BeforeClass
-    public static void startDB(){
+    public static void startDB() {
 	persistence = new PersistenceFacade();
 	persistence.startDBSystem();
     }
+
     @AfterClass
-    public static void stopDB(){
-	try{
-	    persistence.shutdownDBSystem();
-	}
-	catch(PersistenceException arg0){
-	    if(arg0.getCause() instanceof SQLNonTransientConnectionException){
-		/*
-		 * DO NOTHING, this exception is thrown from derby during shutdown and means no error
-		 * See http://db.apache.org/derby/papers/DerbyTut/embedded_intro.html
-		 */
-	    }
-	    else
-		throw arg0;
-	}
+    public static void stopDB() {
+	persistence.shutdownDBSystem();
     }
-    
+
     /**
      * @throws java.lang.Exception
      */
@@ -56,63 +44,63 @@ public class PersistenceTest {
 	crud = persistence.getDBController();
 	user = new DBUser("Tester", "Tester@test.de", "1245");
     }
-    
+
     /**
      * Cleares the database of all Users entries if any
+     * 
      * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
 	final List<DBUser> temp = crud.readAll(DBUser.class);
 	persistence.beginTransaction();
-	for(DBUser u : temp){
+	for (DBUser u : temp) {
 	    crud.remove(u);
 	}
 	persistence.endTransaction(true);
     }
 
     @Test
-    public void nullTest(){
+    public void nullTest() {
 	persistence.beginTransaction();
-	try{
+	try {
 	    crud.insert(null);
 	    fail("No exception for insert(null)");
 	}
-	catch(PersistenceException arg0){
-	    //Must throw this exception
+	catch (PersistenceException expected) {
+	    // Must throw this exception
 	}
-	finally{
+	finally {
 	    persistence.endTransaction(false);
 	}
     }
     
     @Test
-    public void twoInsertsOfSameEntityTest(){
-	/*
-	 * No longer throws an exception because the cache registers that the entity is already inserted
-	 */
-	persistence.beginTransaction();
-	crud.insert(user);
-	crud.insert(user);
-	persistence.endTransaction(true);
+    public void stopAndRestartDBTest(){
+	persistence.shutdownDBSystem();
+	try{
+	    persistence.beginTransaction();
+	    fail("Expected IllegalStateException was not thrown");
+	}
+	catch(PersistenceException expected){
+	    if(!(expected.getCause() instanceof IllegalStateException)){
+		fail("Expected IllegalStateException was not thrown");
+	    }
+	}
+	persistence.startDBSystem();
+	crud = persistence.getDBController();
     }
-    
+
     @Test
-    public void removeNotPersistedEntityTest(){
-	persistence.beginTransaction();
-	crud.remove(user);
-	persistence.endTransaction(true);
-    }
-    
-    @Test
-    public void insertReadTest(){
+    public void insertReadTest() {
 	persistence.beginTransaction();
 	crud.insert(user);
 	persistence.endTransaction(true);
 	assertEquals(user, crud.readID(user.getClass(), user.getId()));
     }
+
     @Test
-    public void updateTest(){
+    public void updateTest() {
 	persistence.beginTransaction();
 	crud.insert(user);
 	persistence.endTransaction(true);
@@ -122,32 +110,33 @@ public class PersistenceTest {
 	persistence.endTransaction(true);
 	assertEquals(user, crud.readID(user.getClass(), user.getId()));
     }
+
     @Test
-    public void removeTest(){
+    public void removeTest() {
 	persistence.beginTransaction();
 	crud.insert(user);
 	persistence.endTransaction(true);
-	assertEquals(1,crud.readAll(user.getClass()).size());
+	assertEquals(1, crud.readAll(user.getClass()).size());
 	persistence.beginTransaction();
 	crud.remove(user);
 	persistence.endTransaction(true);
-	assertEquals(0,crud.readAll(user.getClass()).size());
+	assertEquals(0, crud.readAll(user.getClass()).size());
     }
-    
+
     @Test
     public void readWhereTest() {
 	persistence.beginTransaction();
 	crud.insert(user);
 	persistence.endTransaction(true);
-	assertEquals(1,crud.readAll(user.getClass(),"pwHash","1245").size());
+	assertEquals(1, crud.readAll(user.getClass(), "pwHash", "1245").size());
     }
 
     @Test
-    public void transactionRolledBackTest() throws Exception{
-	assertEquals(0,crud.readAll(user.getClass()).size());
+    public void transactionRolledBackTest() throws Exception {
+	assertEquals(0, crud.readAll(user.getClass()).size());
 	persistence.beginTransaction();
 	crud.insert(user);
 	persistence.endTransaction(false);
-	assertEquals(0,crud.readAll(user.getClass()).size());
+	assertEquals(0, crud.readAll(user.getClass()).size());
     }
 }

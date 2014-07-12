@@ -1,6 +1,7 @@
 package de.persistence;
 
 import java.sql.DriverManager;
+import java.sql.SQLNonTransientConnectionException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -47,6 +48,7 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	    emf = Persistence.createEntityManagerFactory("monster");
 	    em = emf.createEntityManager();
 	    dbStarted = true;
+	    Log.info("Database started");
 	}
 	catch (Throwable arg0) {
 	    throw new PersistenceException(arg0);
@@ -60,11 +62,21 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 		    "DB System not started"));
 	try {
 	    DriverManager.getConnection("jdbc:derby:DB;shutdown=true");
-	    emf.close();
-	    dbStarted = false;
+	}
+	catch (SQLNonTransientConnectionException expected) {
+	    Log.info("Database shutdown");
+	    /*
+	     * DO NOTHING, this exception is thrown from derby during shutdown
+	     * and means no error See http://db.apache.org/derby/papers
+	     * /DerbyTut/embedded_intro.html
+	     */
 	}
 	catch (Throwable arg0) {
 	    throw new PersistenceException(arg0);
+	}
+	finally {
+	    emf.close();
+	    dbStarted = false;
 	}
     }
 
@@ -76,10 +88,10 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	if (!dbStarted)
 	    throw new PersistenceException(new IllegalStateException(
 		    "DB System not started"));
-	try{
+	try {
 	    em.getTransaction().begin();
 	}
-	catch(Throwable arg0){
+	catch (Throwable arg0) {
 	    throw new PersistenceException(arg0);
 	}
     }
@@ -92,15 +104,15 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	if (!dbStarted)
 	    throw new PersistenceException(new IllegalStateException(
 		    "DB System not started"));
-	try{
-	    if(state){
+	try {
+	    if (state) {
 		em.getTransaction().commit();
 	    }
-	    else{
+	    else {
 		em.getTransaction().rollback();
 	    }
 	}
-	catch(Throwable arg0){
+	catch (Throwable arg0) {
 	    Log.errorLog(arg0.getLocalizedMessage());
 	}
     }

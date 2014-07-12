@@ -46,5 +46,14 @@
         	</configuration>
   		</plugin>
   	</plugins>
+  	<resources>
+      <resource>
+        <directory>/home/mike/SoftwareProjekt/Autonomic-Robots/Test/src/main/resources</directory>
+        <includes>
+        	<include>**/META-INF/**/*.*</include>
+        	<include>**/http/final/**/*.*</include>
+        </includes>
+      </resource>
+    </resources>
   </build>
 </project>

@@ -3,15 +3,14 @@ function Controller () {
 	var thisObj = this;
     var server = "serverRequest";
     var backendCom = new BackendCom ();
-    
     var name;
     var password;
     var eMail;
     var user;
     
-    //
     //Get Html Parts
     //
+    //... via AJAX
     function getAJAX ( destination ) {
     	$.ajax({
             url: destination
@@ -22,32 +21,35 @@ function Controller () {
         });
     }
     
+    //LoadAccountPage
     this.loadAccount = function () {
     	getAJAX ( "account.html" );
     }
     
+    //LoadRegistrationPage
     this.loadRegister = function () {
     	getAJAX ( "signup.html" );
     }
     
+    //LoadHomePage
     this.loadHome = function () {
     	getAJAX ( "home.html" );
     }
-
+    
+    //LoadLoginPage
     this.loadLogin = function () {
     	getAJAX ( "login.html" );
     }
-
+    
+    //LogOut
     this.logOut = function () {
     	backendCom.logOut( function () {
     		thisObj.loadLogin();
     	});
     }
     
-    //
     //handle User
     //
-    
     //Registration
     function registration () {
         readInputFealds();
@@ -66,7 +68,7 @@ function Controller () {
         				logIn();
             	
         			} else {
-        				window.alert("This eMail is already chosen");
+        				window.alert("This name or eMail is already chosen");
         			}
         		});
         	}
@@ -76,8 +78,7 @@ function Controller () {
     //Change User Settings
     function changeUser() {
     	readInputFealds();
-    	backendCom.changeUser( name, password, eMail, function ( json ) { 
-    		console.log(json);
+    	backendCom.changeUser( name, password, eMail, function ( json ) {
     		window.alert('User settings changed');
     		thisObj.loadHome();
     		} );
@@ -127,8 +128,10 @@ function Controller () {
     		thisObj.loadLogin(); });
     }
     
-    //Remoce an User
+    //Remove an User
     function remove () {
+		//window.alert( 'User: ' + name + ' has been removed' );
+    	//window.alert('For remove an user: \nType in name, eMail and password of the user')
     	readInputFealds();
         user = {
             name : name,
@@ -137,15 +140,15 @@ function Controller () {
         };
         backendCom.remove(name, password, eMail, function( json ) {
         	if ( json.removed ) {
-        		window.alert( 'User: ' + name + '\n...has been removed' );
+        		window.alert( 'User ' + name + ' has been removed' );
         		thisObj.loadRegister();
         	} else {
-        		window.alert( 'There is no User: ' + name + '\n... Please try again' );
+        		window.alert( 'There is no User: ' + name + '\n... Please try again...\nType in name, eMail and password' );
         	}
         } );
     }
     
-    //Search an User
+    //Search User
     function searchUser () {
     	$('select').empty();
     	backendCom.searchUser ( $("#inputUserName").val(), function ( json ) {
@@ -159,6 +162,7 @@ function Controller () {
     
     
     //UtilityStuff
+    //
     //Button Initialization
     regisButtons = function () {
 
@@ -172,12 +176,14 @@ function Controller () {
         $("#btnSearchUser").click( searchUser );
     };
     
+    //InputRead
     function readInputFealds () {
         name = $("#inputUserName").val();
         password = $("#inputUserPass").val();
         eMail = $("#inputUserEMail").val();
     }
     
+    //JSON CHECK for 2 values
 	function check ( json, value1, value2) {
 	    for (key in json) {
 	        if (typeof (json[key]) === "object") {
@@ -191,6 +197,7 @@ function Controller () {
 	}    
 };
 
+//HTML ACCESS
 var controller;
 
 function start () {

@@ -1,13 +1,15 @@
 function BackendCom ( ) {
-	
+	//Global var's
 	var thisObj = this;
     var user;
 	var server = "serverRequest";
-	
-    this.name;
+	this.name;
     this.password;
     this.eMail;
     
+    //Static Methods
+    //
+    //EndGame
     this.endGame = function  ( name, password, eMail, callback ) {
     	user = {
             name : name,
@@ -17,11 +19,12 @@ function BackendCom ( ) {
         serverRequest ( user, server + "/endGame", callback );
 	};
     
+	//StartGame
 	this.startGame = function ( callback ) {
-		//During test units for Jasmine this callback is outslashed
-		//callback();
+		callback();
     }
     
+	//Remove User
     this.remove = function ( name, password, eMail, callback) {
     	user = {
             name : name,
@@ -31,10 +34,12 @@ function BackendCom ( ) {
         serverRequest( user, server + "/remove", callback );
     }
     
+    //LogOut
     this.logOut = function ( callback ) {
         serverRequest( null, server + "/logOut", callback );
     }
     
+    //Login
     this.logIn = function ( password, eMail, callback) {
     	user = {
             name : "",
@@ -44,6 +49,7 @@ function BackendCom ( ) {
         serverRequest( user, server + "/logIn", callback );
     }
     
+    //Registration
     this.registration = function ( name, password, eMail, callback ) {
         var user = {
             name : name,
@@ -53,6 +59,7 @@ function BackendCom ( ) {
         serverRequest( user, server + "/registration", callback );
     }
     
+    //SearchUser
     this.searchUser = function ( name, callback ) {
         var user = {
             name : name,
@@ -63,8 +70,7 @@ function BackendCom ( ) {
         serverRequest( user, server + "/searchUser", callback );
     }
     
-    
-    //leere felder (z.B. name = "") werden nicht geschrieben
+    //ChangeUser
     this.changeUser = function ( name, password, eMail, callback ) {
         var user = {
             name : name,
@@ -75,7 +81,9 @@ function BackendCom ( ) {
         serverRequest( user, server + "/changeUser", callback );
     }
     
-	
+    //Method
+    //
+	//ServerCommunication
     function serverRequest  ( json, destination, callback ) {
         $.ajax({
             type: "POST",
@@ -93,6 +101,4 @@ function BackendCom ( ) {
             console.log(info);
         });
     }
-};
-	
-	
+};	

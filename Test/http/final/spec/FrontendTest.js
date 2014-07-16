@@ -1,12 +1,10 @@
-describe("BackendCom Test", function () {
+describe("BackendCom/ServerCom Test", function () {
 	
 	//Global Var's
 	var b = new BackendCom();
-	var json;
-	var valid;
-        var timeout = 10000;
+    var timeout = 10000;
 	
-	//Testuser
+	//Test user
 	var name = "name";
 	var password = "password";
 	var eMail = "eMail1";
@@ -32,7 +30,7 @@ describe("BackendCom Test", function () {
     
     //Test-Case2
     it("should be able to login a user", function() {
-    	json = {};
+    	var json = {};
         runs(function() {
         	b.logOut( function () {});
         	b.logIn ( password, eMail, function ( json1 ) {
@@ -52,7 +50,7 @@ describe("BackendCom Test", function () {
     
     //Test-Case3
     it("should be able to remove a user", function() {
-    	json = {};
+    	var json = {};
         runs(function() {
         	b.remove ( name, password, eMail, function ( json1 ) {
                     //console.log(json1);
@@ -71,22 +69,22 @@ describe("BackendCom Test", function () {
     });
     
     //Test-Case4
-    it("should NOT be able to start a game cause there is NO game yet", function() {
-    	valid = false;
+    it("should be able to start a game", function() {
+    	var valid;
         runs(function() {
         	b.startGame( function () { valid = true; });
         }, timeout);
 
         waitsFor(function() {
             return valid;
-        }, " --> kein callback --> leere Methode in BackendCom.startGame() ! FEHLER ERWUENSCHT !", 1500);
+        }, "valid should be set", 1500);
 
         runs(function() {
             expect(valid).toEqual(true);
         });
     });
     
-    //Test-Case5 Search User
+    //Test-Case5
     it("should be able to search for other online players", function() {
         var registerResult = new Array();
         var searchName = "mic";
@@ -108,13 +106,13 @@ describe("BackendCom Test", function () {
             "michaela"
         ];
         
-        // registrate the Users
+        // sign up new users
         for (var i in testUserNames) {
             b.registration ( testUserNames[i], password, eMail+i, function ( json ) {
                 registerResult.push(json);
             });
         }
-        // wair for registrations
+        // wait for registrations
         waitsFor(function() {
             return registerResult[testUserNames.length - 1];
         }, "valid should be set", timeout);
@@ -145,13 +143,13 @@ describe("BackendCom Test", function () {
             // cleanUp
             for (var i in testUserNames) {
                 b.remove ( testUserNames[i], password, eMail+i, function ( json ) {
-                    // löschen wurde ja schon getestet
+                	// remove has been tested above
                 });
             }
         });
     });
     
-    //Test-Case6 change User
+    //Test-Case6
     it("should be able to change name, eMail, password of an user", function() {
     	var json = new Object();
         runs(function() {
@@ -206,7 +204,7 @@ describe("BackendCom Test", function () {
         
         runs(function() {
             b.remove ( newPassword, newPassword, newEmail, function ( json ) {
-                // löschen wurde ja schon getestet
+                // remove has been tested above
             });
         });
     });

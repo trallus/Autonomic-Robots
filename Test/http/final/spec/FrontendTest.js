@@ -87,7 +87,7 @@ describe("BackendCom Test", function () {
     });
     
     //Test-Case5 Search User
-    it("text", function() {
+    it("should be able to search for other online players", function() {
         var registerResult = new Array();
         var searchName = "mic";
         var searchResult;
@@ -152,7 +152,7 @@ describe("BackendCom Test", function () {
     });
     
     //Test-Case6 change User
-    it("text", function() {
+    it("should be able to change name, eMail, password of an user", function() {
     	var json = new Object();
         runs(function() {
             b.registration ( name, password, eMail, function ( json1 ) {

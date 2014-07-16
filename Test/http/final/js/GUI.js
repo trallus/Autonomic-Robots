@@ -98,11 +98,12 @@ function GUI ( frameControler, server ) {
         x.fillText( 'Playtime:  ' + msToTime(time), 15, 30);
         x.fillText( 'New Robot in:       ' + count, 15, 75);
         x.fillText( 'Count of Robots:   ' + robotNum, 15, 120)
-        
+        /**
         e = document.getElementById("robots");
 		selectedItem = e.options[e.selectedIndex].text;
 		
 		x.fillText( 'Selected:     ' + selectedItem, 15, 165)
+		**/
 		x.fillStyle = color;
 		x.fillText( 'LAST ROBOT COLOR', 15, 360)
         

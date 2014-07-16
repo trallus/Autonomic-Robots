@@ -1,5 +1,5 @@
 function Controller () {
-	
+	//Global var's
 	var thisObj = this;
     var server = "serverRequest";
     var backendCom = new BackendCom ();
@@ -20,6 +20,10 @@ function Controller () {
         		regisButtons();
         	});
         });
+    }
+    
+    this.loadAccount = function () {
+    	getAJAX ( "account.html" );
     }
     
     this.loadRegister = function () {
@@ -44,20 +48,47 @@ function Controller () {
     //handle User
     //
     
+    //Registration
     function registration () {
         readInputFealds();
-        backendCom.registration ( name, password, eMail, function ( json ) {
-
-        	if ( json.registered ) {
-        		window.alert('Successfully registered...\n\nWelcome ' + name + '!!!\n\n');
-            	logIn();
-            	
-        	} else {
-        		window.alert("This eMail is already chosen");
+        if ( name.trim() == '' ) {
+        	window.alert('Your name can\'t be empty');
+        }
+        else {
+        	if ( eMail.indexOf('@') < 0) {
+        	window.alert('This is no valid eMail');
         	}
-        });
+        	else {
+        		backendCom.registration ( name, password, eMail, function ( json ) {
+
+        			if ( json.registered ) {
+        				window.alert('Successfully registered...\n\nWelcome ' + name + '!!!\n\n');
+        				logIn();
+            	
+        			} else {
+        				window.alert("This eMail is already chosen");
+        			}
+        		});
+        	}
+        }
     }
     
+    //Change User Settings
+    function changeUser() {
+    	readInputFealds();
+    	backendCom.changeUser( name, password, eMail, function ( json ) { 
+    		console.log(json);
+    		window.alert('User settings changed');
+    		thisObj.loadHome();
+    		} );
+    }
+    
+    //Open Account Settings Form
+    function account () {
+    	thisObj.loadAccount();
+    }
+    
+    //Login
     function logIn () {
     	readInputFealds();
     	backendCom.logIn ( password, eMail, function ( json ) {
@@ -72,6 +103,7 @@ function Controller () {
     	});
     }
     
+    //Start a Game
     this.startGame = function () {
     	$.ajax({
             url: "robots.html"
@@ -83,16 +115,19 @@ function Controller () {
         });	
     }
     
+    //End a Game
     function endGame () {
     	backendCom.endGame( name, password, eMail, function () { thisObj.loadHome(); } );
     }
     
+    //LogOut
     function logOut () {
     	backendCom.logOut( function () { 
     		window.alert('You\'ve been logged out!\n')
     		thisObj.loadLogin(); });
     }
     
+    //Remoce an User
     function remove () {
     	readInputFealds();
         user = {
@@ -101,7 +136,6 @@ function Controller () {
             eMail : eMail
         };
         backendCom.remove(name, password, eMail, function( json ) {
-        	
         	if ( json.removed ) {
         		window.alert( 'User: ' + name + '\n...has been removed' );
         		thisObj.loadRegister();
@@ -111,8 +145,21 @@ function Controller () {
         } );
     }
     
-    //UtilityStuff
+    //Search an User
+    function searchUser () {
+    	$('select').empty();
+    	backendCom.searchUser ( $("#inputUserName").val(), function ( json ) {
+            var searchResult = json.searchResult;
+            $select = $('#Users');
+        	for ( var i = 0; i < searchResult.length; i++) {
+        		$select.append($('<option />', { value: (i+1), text: searchResult[i] }));
+        	}
+        });
+    }
     
+    
+    //UtilityStuff
+    //Button Initialization
     regisButtons = function () {
 
         $("#btnRegister").click( registration );
@@ -120,6 +167,9 @@ function Controller () {
         $("#btnLogOut").click( logOut );
         $("#btnRemove").click( remove );
         $("#btnEndGame").click( endGame );
+        $("#btnAccount").click( account );
+        $("#btnChangeUser").click( changeUser );
+        $("#btnSearchUser").click( searchUser );
     };
     
     function readInputFealds () {

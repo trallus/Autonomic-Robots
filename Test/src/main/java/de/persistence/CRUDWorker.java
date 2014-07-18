@@ -11,7 +11,7 @@ import javax.persistence.Query;
  * Implementation of the CRUDIF
  * 
  * @author Mike Kiekebusch
- * @version 0.4
+ * @version 0.5
  */
 public class CRUDWorker implements CRUDIF {
     
@@ -24,7 +24,7 @@ public class CRUDWorker implements CRUDIF {
 	try {
 	    this.em = em;
 	}
-	catch (Throwable arg0) {
+	catch (Exception arg0) {
 	    throw new PersistenceException(arg0);
 	}
     }
@@ -39,7 +39,7 @@ public class CRUDWorker implements CRUDIF {
 		throw new IllegalStateException("You must begin transaction first");
 	    em.persist(obj);
 	}
-	catch (Throwable arg0) {
+	catch (Exception arg0) {
 	    throw new PersistenceException(arg0);
 	}
     }
@@ -54,7 +54,7 @@ public class CRUDWorker implements CRUDIF {
 		throw new IllegalStateException("You must begin transaction first");
 	    em.merge(obj);
 	}
-	catch (Throwable arg0) {
+	catch (Exception arg0) {
 	    throw new PersistenceException(arg0);
 	}
     }
@@ -69,7 +69,7 @@ public class CRUDWorker implements CRUDIF {
 		throw new IllegalStateException("You must begin transaction first");
 	    em.remove(obj);
 	}
-	catch (Throwable arg0) {
+	catch (Exception arg0) {
 	    throw new PersistenceException(arg0);
 	}
     }
@@ -85,7 +85,7 @@ public class CRUDWorker implements CRUDIF {
 		throw new EntityNotFoundException();
 	    return result;
 	}
-	catch (Throwable arg0) {
+	catch (Exception arg0) {
 	    throw new PersistenceException(arg0);
 	}
     }
@@ -104,7 +104,7 @@ public class CRUDWorker implements CRUDIF {
 	    result.addAll(temp);
 	    return result;
 	}
-	catch (Throwable arg0) {
+	catch (Exception arg0) {
 	    throw new PersistenceException(arg0);
 	}
     }
@@ -126,7 +126,7 @@ public class CRUDWorker implements CRUDIF {
 	    result.addAll(temp);
 	    return result;
 	}
-	catch (Throwable arg0) {
+	catch (Exception arg0) {
 	    throw new PersistenceException(arg0);
 	}
     }

@@ -1,8 +1,10 @@
 package de.data;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -26,6 +28,8 @@ public class DBUser {
     private String name;
     private String eMail;
     private String pwHash;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Statistic statistic;
 
     /**
      * @param name
@@ -39,6 +43,7 @@ public class DBUser {
 	this.name = name;
 	this.pwHash = pwHash;
 	this.eMail = eMail;
+	statistic = new Statistic();
     }
 
     /**
@@ -91,12 +96,15 @@ public class DBUser {
 	return s;
     }
 
-	public Object getEMail() {
-		return eMail;
-	}
+    public Object getEMail() {
+	return eMail;
+    }
 
-	public void setEMail(String eMail) {
-		this.eMail = eMail;
-	}
+    public void setEMail(String eMail) {
+	this.eMail = eMail;
+    }
 
+    public Statistic getStatistic(){
+	return statistic;
+    }
 }

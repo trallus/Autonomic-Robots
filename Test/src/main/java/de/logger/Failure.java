@@ -16,13 +16,16 @@ public class Failure extends RuntimeException {
 	 * Failure Message
 	 */
 	private final String message;
+	
+	private final boolean sendToUser;
 	/**
 	 * @param param Parameter of the methode that issues this failure
 	 * @param message The failure Message for the invking Message
 	 * @param cause Exception that Caused this Failure
 	 */
-	public Failure(HashMap<String, String> param, String message, Exception cause) {
+	public Failure(HashMap<String, String> param, String message, Exception cause, boolean sendToUser) {
 		super(cause);
+		this.sendToUser = sendToUser;
 		this.param = param;
 		this.message = message;
 	}

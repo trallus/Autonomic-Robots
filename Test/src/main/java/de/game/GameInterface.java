@@ -9,12 +9,11 @@ import de.game.exceptions.RobotNotFoundException;
 import de.httpServer.User;
 
 /**
- * @author ko
  * @author Christian Köditz
- * @version class stub
+ * @version 0.1
  * @since 15.10.2014
  */
-public interface ServerInterface {
+public interface GameInterface {
 	/**
 	 * try to enter a Battle
 	 * @param user

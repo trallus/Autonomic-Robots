@@ -20,7 +20,7 @@ public interface PersistenceFacadeIF {
 
     /**
      * Stops the DataBaseSystem
-     * @throws PersistenceException with a nested SQLNonTransientConnectionException when DB shutdown is correctly
+     * @throws PersistenceException
      */
     public void shutdownDBSystem();
     

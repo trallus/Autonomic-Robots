@@ -34,7 +34,7 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	try {
 	    return new CRUDWorker(em);
 	}
-	catch (Throwable arg0) {
+	catch (Exception arg0) {
 	    throw new PersistenceException(arg0);
 	}
     }
@@ -50,7 +50,7 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	    dbStarted = true;
 	    Log.info("Database started");
 	}
-	catch (Throwable arg0) {
+	catch (Exception arg0) {
 	    throw new PersistenceException(arg0);
 	}
     }
@@ -71,7 +71,7 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	     * /DerbyTut/embedded_intro.html
 	     */
 	}
-	catch (Throwable arg0) {
+	catch (Exception arg0) {
 	    throw new PersistenceException(arg0);
 	}
 	finally {
@@ -91,7 +91,7 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	try {
 	    em.getTransaction().begin();
 	}
-	catch (Throwable arg0) {
+	catch (Exception arg0) {
 	    throw new PersistenceException(arg0);
 	}
     }
@@ -112,7 +112,7 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 		em.getTransaction().rollback();
 	    }
 	}
-	catch (Throwable arg0) {
+	catch (Exception arg0) {
 	    Log.errorLog(arg0.getLocalizedMessage());
 	}
     }

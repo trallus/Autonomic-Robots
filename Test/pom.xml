@@ -82,7 +82,7 @@
 		</plugins>
 		<resources>
 			<resource>
-				<directory>/home/mike/SoftwareProjekt/Autonomic-Robots/Test/src/main/resources</directory>
+				<directory>src/main/resources</directory>
 				<includes>
 					<include>**/META-INF/**/*.*</include>
 				</includes>

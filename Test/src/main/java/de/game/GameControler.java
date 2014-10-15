@@ -1,7 +1,6 @@
 package de.game;
 
 import de.httpServer.HTTPServer;
-import de.httpServer.Robot;
 import de.persistence.CRUDIF;
 import de.persistence.PersistenceFacade;
 import de.persistence.PersistenceFacadeIF;
@@ -14,7 +13,6 @@ import de.persistence.PersistenceFacadeIF;
 public class GameControler {
 	final HTTPServer httpServer;
 	final CRUDIF db;
-	public final Robot robot = new Robot ();
 	
 	public GameControler (int portNumber) throws Exception{
 	    	PersistenceFacadeIF persistence = new PersistenceFacade();

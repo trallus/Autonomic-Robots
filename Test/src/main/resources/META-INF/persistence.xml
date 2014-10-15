@@ -4,6 +4,7 @@
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		
 		<class>de.data.DBUser</class>
+		<class>de.data.Statistic</class>
 		<properties>
 			<property name="javax.persistence.jdbc.user" value="master"/>
 			<property name="javax.persistence.jdbc.password" value="12345"/>

@@ -162,7 +162,7 @@ public class ProxydUserManagerTest {
     }
 
     /**
-     * Register many users and Search all how started with man
+     * Be sure that a User can change his values
      * 
      * @throws Exception
      */

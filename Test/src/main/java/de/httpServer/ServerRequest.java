@@ -70,7 +70,12 @@ public class ServerRequest extends Request {
 		}
 
 		final String uri = httpExchange.getRequestURI().toString();
-		handleURICommand(uri, userManager);
+		try{
+			handleURICommand(uri, userManager);
+		}
+		catch(Throwable arg){
+			//TODO Central Exception Handler
+		}
 
 		replyJson.put("logedIn", user.isLogedIn());
 

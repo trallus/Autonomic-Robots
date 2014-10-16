@@ -1,5 +1,10 @@
 package de.game;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import de.httpServer.User;
+
 /**
  * The Battle that in which the Users will fight against each other
  * @author Mike Kiekebusch
@@ -18,7 +23,20 @@ public class Battle {
     /**
      * The identification number of the battle
      */
-    private long id;
+    private final long id;
     
-    //TODO
+    private final List<User> users;
+	
+	public Battle (final long id, final List<User> users) {
+		this.id = id;
+		this.users = this.users;
+	}
+	
+	public List<User> getUsers () {
+		return users;
+	}
+	
+	public long getID () {
+		return id;
+	}
 }

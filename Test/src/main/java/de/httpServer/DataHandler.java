@@ -7,6 +7,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import de.game.GameControler;
+import de.game.GameInterface;
 import de.logger.Log;
 
 /**
@@ -30,16 +31,19 @@ class DateHandler implements HttpHandler {
 	 * if the destination of the request (URI) contains this key, it will be a server request
 	 */
 	private final String keyURI;
+	private final GameInterface gameInterface;
 
 	/**
+	 * @param gameControler 
 	 * @param userManager
 	 * @param httpPath
 	 * @param keyURI
 	 */
-	public DateHandler(UserManager userManager, String httpPath, String keyURI) {
+	public DateHandler(GameInterface gameInterface, UserManager userManager, String httpPath, String keyURI) {
 		this.userManager = userManager;
 		this.httpPath = httpPath;
 		this.keyURI = keyURI;
+		this.gameInterface = gameInterface;
 	}
 
 	/* 

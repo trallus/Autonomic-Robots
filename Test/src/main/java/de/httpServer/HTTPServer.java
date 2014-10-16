@@ -5,6 +5,8 @@ import java.net.InetSocketAddress;
 
 import com.sun.net.httpserver.HttpServer;
 
+import de.game.GameControler;
+import de.game.GameInterface;
 import de.logger.Log;
 
 
@@ -25,6 +27,8 @@ public class HTTPServer {
 	public HTTPServer(String keyURI, String httpPath,
 		    int portNumber) throws Exception {
 
+		final GameInterface gameInterface = new GameControler();
+
 		UserManager plainUserManager = new UserManagerImpl();
 		UserManager proxydUserManager = ( UserManager )
 				Proxy.newProxyInstance(
@@ -34,7 +38,7 @@ public class HTTPServer {
 
 		HttpServer httpServer = HttpServer.create(new InetSocketAddress(
 			portNumber), 0);
-		httpServer.createContext("/", new DateHandler(proxydUserManager, httpPath, keyURI));
+		httpServer.createContext("/", new DateHandler(gameInterface, proxydUserManager, httpPath, keyURI));
 		httpServer.start();
 
 		Log.log("HTTP Server gestartet an port: " + portNumber);

@@ -18,8 +18,9 @@ public interface GameInterface {
 	 * try to enter a Battle
 	 * @param user
 	 * @return
+	 * @throws InterruptedException 
 	 */
-	long joinBattleQuery (User user);
+	long joinBattleQuery (User user) throws InterruptedException;
 	/**
 	 * try to leave the beattle querry
 	 * @param user

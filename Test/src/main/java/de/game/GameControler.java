@@ -33,8 +33,10 @@ public class GameControler implements GameInterface {
 			users.add(battleQerry.get(0));
 			battleQerry.remove(0);
 			final Battle battle = new Battle( battleID, users );
+			battles.add(battle);
+			battle.start();	// start battle
 			battleID ++;
-			if (battleID < 0) {
+			if (battleID < 0) { // max float
 				battleID = 0;
 			}
 			return battleID;
@@ -44,35 +46,30 @@ public class GameControler implements GameInterface {
 			while (battleQerry.indexOf(user) != -1) {
 				Thread.sleep(100);
 			}
-			// suche das battle in welchem user ist
-			for (Battle b : battles) {
-				final List<User> ul = b.getUsers();
-				for (User u : ul) {
-					if (u.getDBUser().getId() == user.getDBUser().getId()) {
-						return b.getID();
-					}
-				}
+			final Battle b = getBattle(user);
+			if (b != null) {
+				return b.getID();
+			} else {
+				return -1;
 			}
-			return -1; // user hat leaveBattleQuery aufgerufen
 		}
 	}
 
 	@Override
 	public void leaveBattleQuery(User user) throws NotInQueryException {
-		// TODO Auto-generated method stub
-		
+		battleQerry.remove(user);
 	}
 
 	@Override
 	public void setNextRobot(User user, Robot robot) {
-		// TODO Auto-generated method stub
-		
+		final Battle battle = getBattle(user);
+		battle.setNextRobot(robot, user);
 	}
 
 	@Override
 	public Battle getGameSituation(long battleID) {
-		// TODO Auto-generated method stub
-		return null;
+		final Battle battle = getBattle(battleID);
+		return battle;
 	}
 
 	@Override
@@ -82,10 +79,31 @@ public class GameControler implements GameInterface {
 	}
 
 	@Override
-	public void setBehaviour(long robotID, String behaviour, long battleID)
-			throws RobotNotFoundException, BehaviorNotFoundException,
-			BattleNotFoundException {
-		// TODO Auto-generated method stub
+	public void setBehaviour(long robotID, String behaviour, long battleID) {
+		final Battle battle = getBattle(battleID);
+		battle.setBehaviour(robotID, behaviour);
+	}
+	
+	private Battle getBattle (final User user) {
 		
+		for (Battle b : battles) {
+			final List<User> ul = b.getUsers();
+			for (User u : ul) {
+				if (u.getDBUser().getId() == user.getDBUser().getId()) {
+					return b;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	private Battle getBattle (final long id) {
+		
+		for (Battle b : battles) {
+			if (b.getID() == id) return b;
+		}
+		
+		return null;
 	}
 }

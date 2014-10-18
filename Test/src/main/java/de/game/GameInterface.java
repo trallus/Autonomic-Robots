@@ -37,7 +37,7 @@ public interface GameInterface {
 	 * @param battleID
 	 * @return
 	 */
-	Battle getGameSituation ( long battleID );
+	Battle getGameSituation ( User user );
 	/**
 	 * get a list of all possible robot behaviours
 	 * @return
@@ -49,5 +49,5 @@ public interface GameInterface {
 	 * @param behaviour
 	 * @param battleID
 	 */
-	void setBehaviour(long robotID, String behaviour,long battleID) throws RobotNotFoundException, BehaviorNotFoundException, BattleNotFoundException;
+	void setBehaviour(long robotID, String behaviour, User user) throws RobotNotFoundException, BehaviorNotFoundException, BattleNotFoundException;
 }

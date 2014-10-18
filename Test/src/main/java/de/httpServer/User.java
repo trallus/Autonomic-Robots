@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.data.DBUser;
+import de.game.Battle;
 import de.game.Robot;
 
 public class User {
@@ -12,6 +13,7 @@ public class User {
 	private boolean logedIn = false;
 	private Robot nextBattleRobot;
 	private List<Robot> battleRobots;
+	private Battle battle;
 
 	public User(String sessionID) {
 		this.sessionID = sessionID;
@@ -48,7 +50,35 @@ public class User {
 		nextBattleRobot = robot;
 	}
 	
+	public Robot getNextRobot () {
+		return nextBattleRobot;
+	}
+	
 	public List<Robot> getBattleRobots () {
 		return battleRobots;
+	}
+	
+	public void addBattleRobot (final Robot robot) {
+		battleRobots.add(robot);
+	}
+	
+	public void removeBattleRobot (final Robot robot) {
+		battleRobots.remove(robot);
+	}
+	
+	public Battle getBattle () {
+		return battle;
+	}
+	
+	public void setBattle (final Battle battle) {
+		this.battle = battle;
+	}
+	
+	public void setBehavior (long robotID, String behaviour) {
+		for (Robot r : battleRobots) {
+			if (r.getID() == robotID) {
+				r.setBehaviour(behaviour);
+			}
+		}
 	}
 }

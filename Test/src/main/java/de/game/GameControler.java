@@ -2,11 +2,7 @@ package de.game;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import de.game.exceptions.BattleNotFoundException;
-import de.game.exceptions.BehaviorNotFoundException;
 import de.game.exceptions.NotInQueryException;
-import de.game.exceptions.RobotNotFoundException;
 import de.httpServer.User;
 
 /**
@@ -46,7 +42,7 @@ public class GameControler implements GameInterface {
 			while (battleQerry.indexOf(user) != -1) {
 				Thread.sleep(100);
 			}
-			final Battle b = getBattle(user);
+			final Battle b = user.getBattle();
 			if (b != null) {
 				return b.getID();
 			} else {
@@ -62,14 +58,12 @@ public class GameControler implements GameInterface {
 
 	@Override
 	public void setNextRobot(User user, Robot robot) {
-		final Battle battle = getBattle(user);
-		battle.setNextRobot(robot, user);
+		user.setNextRobot(robot);
 	}
 
 	@Override
-	public Battle getGameSituation(long battleID) {
-		final Battle battle = getBattle(battleID);
-		return battle;
+	public Battle getGameSituation(User user) {
+		return user.getBattle();
 	}
 
 	@Override
@@ -79,31 +73,7 @@ public class GameControler implements GameInterface {
 	}
 
 	@Override
-	public void setBehaviour(long robotID, String behaviour, long battleID) {
-		final Battle battle = getBattle(battleID);
-		battle.setBehaviour(robotID, behaviour);
-	}
-	
-	private Battle getBattle (final User user) {
-		
-		for (Battle b : battles) {
-			final List<User> ul = b.getUsers();
-			for (User u : ul) {
-				if (u.getDBUser().getId() == user.getDBUser().getId()) {
-					return b;
-				}
-			}
-		}
-		
-		return null;
-	}
-	
-	private Battle getBattle (final long id) {
-		
-		for (Battle b : battles) {
-			if (b.getID() == id) return b;
-		}
-		
-		return null;
+	public void setBehaviour(long robotID, String behaviour, User user) {
+		user.setBehavior(robotID, behaviour);
 	}
 }

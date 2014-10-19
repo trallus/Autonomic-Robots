@@ -1,6 +1,7 @@
 package de.main;
 
 import de.game.GameControler;
+import de.httpServer.HTTPServer;
 
 /**
  * The Entry Point for the Program
@@ -10,19 +11,25 @@ import de.game.GameControler;
  */
 public class Main {
 
-    /**
-     * The Entry Point for the program
-     * 
-     * @param args The First entry is the portnumber
-     */
-    public static void main(String[] args) throws Exception {
-	int portNumber;
-	if (args.length != 1) {
-	    portNumber = 80;
-	} else {
-		portNumber = Integer.parseInt(args[0]);
-	}
-	new GameControler(portNumber);
+	/**
+	 * The Entry Point for the program
+	 * 
+	 * @param args
+	 *            The First entry is the portnumber
+	 */
+	public static void main(String[] args) throws Exception {
+		int portNumber;
+		if (args.length != 1) {
+			portNumber = 80;
+		} else {
+			portNumber = Integer.parseInt(args[0]);
+		}
 
-    }
+		// Start HTTP Server
+
+		String httpPath = System.getProperty("user.dir") + "/http/final/";
+		String keyURI = "serverRequest";
+
+		new HTTPServer(keyURI, httpPath, portNumber);
+	}
 }

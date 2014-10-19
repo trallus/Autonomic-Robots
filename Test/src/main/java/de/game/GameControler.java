@@ -1,33 +1,79 @@
 package de.game;
 
-import de.httpServer.HTTPServer;
-import de.persistence.CRUDIF;
-import de.persistence.PersistenceFacade;
-import de.persistence.PersistenceFacadeIF;
+import java.util.ArrayList;
+import java.util.List;
+import de.game.exceptions.NotInQueryException;
+import de.httpServer.User;
 
 /**
  * Controls the Game
  * @author ko
  *
  */
-public class GameControler {
-	final HTTPServer httpServer;
-	final CRUDIF db;
+public class GameControler implements GameInterface {
 	
-	public GameControler (int portNumber) throws Exception{
-	    	PersistenceFacadeIF persistence = new PersistenceFacade();
-		//Start Database
-		persistence.startDBSystem();
-		//Get Database Controller
-		db = persistence.getDBController();
-		
-		//Start HTTP Server
+	private final List<User> battleQerry;
+	private final List<Battle> battles;
+	private long battleID;
+	
+	public GameControler ( ) throws Exception{
+		battleQerry = new ArrayList<User>();
+		battles = new ArrayList<Battle>();
+		battleID = 0;
+	}
 
-        String httpPath = System.getProperty("user.dir") + "/http/final/";
-        String keyURI = "serverRequest";
-        	    
-        httpServer = new HTTPServer(keyURI, httpPath, portNumber);
-		
-		//Start Game
+	@Override
+	public long joinBattleQuery(User user) throws InterruptedException {
+		if (battleQerry.size() > 0) {
+			final List<User> users = new ArrayList<User>();
+			users.add(battleQerry.get(0));
+			battleQerry.remove(0);
+			final Battle battle = new Battle( battleID, users );
+			battles.add(battle);
+			battle.start();	// start battle
+			battleID ++;
+			if (battleID < 0) { // max float
+				battleID = 0;
+			}
+			return battleID;
+		} else {
+			battleQerry.add(user);
+			// entweder eröffnet ein anderer user das spiel oder dieser user ruft leaveBattleQuery auf
+			while (battleQerry.indexOf(user) != -1) {
+				Thread.sleep(100);
+			}
+			final Battle b = user.getBattle();
+			if (b != null) {
+				return b.getID();
+			} else {
+				return -1;
+			}
+		}
+	}
+
+	@Override
+	public void leaveBattleQuery(User user) throws NotInQueryException {
+		battleQerry.remove(user);
+	}
+
+	@Override
+	public void setNextRobot(User user, Robot robot) {
+		user.setNextRobot(robot);
+	}
+
+	@Override
+	public Battle getGameSituation(User user) {
+		return user.getBattle();
+	}
+
+	@Override
+	public List<String> getBehaviours() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setBehaviour(long robotID, String behaviour, User user) {
+		user.setBehavior(robotID, behaviour);
 	}
 }

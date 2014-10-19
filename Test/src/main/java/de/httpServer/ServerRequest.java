@@ -76,7 +76,7 @@ public class ServerRequest extends Request {
 			handleURICommand(uri, userManager);
 		}
 		catch(Throwable arg){
-			new ExceptionHandler(arg, replyJson);
+			ExceptionHandler.handle(arg, replyJson);
 		}
 
 		replyJson.put("logedIn", user.isLogedIn());

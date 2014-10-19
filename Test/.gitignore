@@ -1,3 +1,4 @@
 /target
 /DB
 derby.log
+.cache

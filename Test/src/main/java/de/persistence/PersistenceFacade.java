@@ -7,8 +7,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import de.logger.Log;
-
 /**
  * The Facade for the Persistence system
  * 
@@ -51,6 +49,7 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	    emf = Persistence.createEntityManagerFactory("monster");
 	    em = emf.createEntityManager();
 	    dbStarted = true;
+	    //ExceptionHandler.handle("DB system started", "PersistenceFacade");
 	}
 	catch (Exception arg0) {
 	    throw new PersistenceException("Could not start DB System", arg0,
@@ -68,7 +67,7 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	    DriverManager.getConnection("jdbc:derby:DB;shutdown=true");
 	}
 	catch (SQLNonTransientConnectionException expected) {
-	    Log.info("Database shutdown");
+	    //ExceptionHandler.handle("DB system shutdown", "PersistenceFacade");
 	    /*
 	     * DO NOTHING, this exception is thrown from derby during shutdown
 	     * and means no error See http://db.apache.org/derby/papers
@@ -121,7 +120,8 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	    }
 	}
 	catch (Exception arg0) {
-	    // TODO
+	    /*ExceptionHandler.handle("Exception when ending Transaction",
+		    "PersistenceFacade at endTransaction(" + state + ")", arg0);*/
 	}
     }
 }

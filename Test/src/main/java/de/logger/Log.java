@@ -2,7 +2,7 @@ package de.logger;
 /**
  * To control the logging
  * @author ko
- *
+ * @deprecated use ExceptionHandler instead
  */
 public class Log {
 	/**

@@ -29,21 +29,23 @@ public class PersistenceFacade implements PersistenceFacadeIF {
     @Override
     public final CRUDIF getDBController() {
 	if (!dbStarted)
-	    throw new PersistenceException(new IllegalStateException(
-		    "DB System not started"));
+	    throw new PersistenceException("DB System not started",
+		    new IllegalStateException(), false);
 	try {
 	    return new CRUDWorker(em);
 	}
 	catch (Exception arg0) {
-	    throw new PersistenceException(arg0);
+	    final PersistenceException pex = new PersistenceException(
+		    "Could not create instance of CRUDWorker", arg0, false);
+	    throw pex;
 	}
     }
 
     @Override
     public final void startDBSystem() {
 	if (dbStarted)
-	    throw new PersistenceException(new IllegalStateException(
-		    "DB System already started"));
+	    throw new PersistenceException("DB System already started",
+		    new IllegalStateException(), dbStarted);
 	try {
 	    emf = Persistence.createEntityManagerFactory("monster");
 	    em = emf.createEntityManager();
@@ -51,15 +53,15 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	    Log.info("Database started");
 	}
 	catch (Exception arg0) {
-	    throw new PersistenceException(arg0);
+	    final PersistenceException pex = new PersistenceException("Could not start DB system", arg0, false);
+	    throw pex;
 	}
     }
 
     @Override
     public final void shutdownDBSystem() {
 	if (!dbStarted)
-	    throw new PersistenceException(new IllegalStateException(
-		    "DB System not started"));
+	    throw new PersistenceException("DB System not started", new IllegalStateException(), dbStarted);
 	try {
 	    DriverManager.getConnection("jdbc:derby:DB;shutdown=true");
 	}
@@ -72,7 +74,8 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	     */
 	}
 	catch (Exception arg0) {
-	    throw new PersistenceException(arg0);
+	    final PersistenceException pex = new PersistenceException("Could not shutdown DB system", arg0, false);
+	    throw pex;
 	}
 	finally {
 	    emf.close();
@@ -86,13 +89,13 @@ public class PersistenceFacade implements PersistenceFacadeIF {
     @Override
     public void beginTransaction() {
 	if (!dbStarted)
-	    throw new PersistenceException(new IllegalStateException(
-		    "DB System not started"));
+	    throw new PersistenceException("DB System not started", new IllegalStateException(), dbStarted);
 	try {
 	    em.getTransaction().begin();
 	}
 	catch (Exception arg0) {
-	    throw new PersistenceException(arg0);
+	    final PersistenceException pex = new PersistenceException("Could not beginn database transaction", arg0, false);
+	    throw pex;
 	}
     }
 
@@ -102,8 +105,7 @@ public class PersistenceFacade implements PersistenceFacadeIF {
     @Override
     public void endTransaction(boolean state) {
 	if (!dbStarted)
-	    throw new PersistenceException(new IllegalStateException(
-		    "DB System not started"));
+	    throw new PersistenceException("DB System not started", new IllegalStateException(), state);
 	try {
 	    if (state) {
 		em.getTransaction().commit();
@@ -113,7 +115,9 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	    }
 	}
 	catch (Exception arg0) {
-	    Log.errorLog(arg0.getLocalizedMessage());
+	    final PersistenceException pex = new PersistenceException("Could not end database transaction", arg0, false);
+	    pex.putParameter("State", state);
+	    throw pex;
 	}
     }
 }

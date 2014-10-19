@@ -25,7 +25,9 @@ public class CRUDWorker implements CRUDIF {
 	    this.em = em;
 	}
 	catch (Exception arg0) {
-	    throw new PersistenceException(arg0);
+	    final PersistenceException pex = new PersistenceException("CRUDWorker could not be initialized", arg0, false);
+	    pex.putParameter("EntityManager", em);
+	    throw pex;
 	}
     }
 
@@ -40,7 +42,9 @@ public class CRUDWorker implements CRUDIF {
 	    em.persist(obj);
 	}
 	catch (Exception arg0) {
-	    throw new PersistenceException(arg0);
+	    final PersistenceException pex = new PersistenceException("Could not insert Object into database", arg0, false);
+	    pex.putParameter("Object", obj);
+	    throw pex;
 	}
     }
 
@@ -55,7 +59,9 @@ public class CRUDWorker implements CRUDIF {
 	    em.merge(obj);
 	}
 	catch (Exception arg0) {
-	    throw new PersistenceException(arg0);
+	    final PersistenceException pex = new PersistenceException("Could not update Object in database", arg0, false);
+	    pex.putParameter("Object", obj);
+	    throw pex;
 	}
     }
 
@@ -70,7 +76,9 @@ public class CRUDWorker implements CRUDIF {
 	    em.remove(obj);
 	}
 	catch (Exception arg0) {
-	    throw new PersistenceException(arg0);
+	    final PersistenceException pex = new PersistenceException("Could not remove Object from database", arg0, false);
+	    pex.putParameter("Object", obj);
+	    throw pex;
 	}
     }
 
@@ -86,7 +94,10 @@ public class CRUDWorker implements CRUDIF {
 	    return result;
 	}
 	catch (Exception arg0) {
-	    throw new PersistenceException(arg0);
+	    final PersistenceException pex = new PersistenceException("Could not read Object from database", arg0, false);
+	    pex.putParameter("Type of Object", arg.getName());
+	    pex.putParameter("Id", id);
+	    throw pex;
 	}
     }
 
@@ -105,7 +116,9 @@ public class CRUDWorker implements CRUDIF {
 	    return result;
 	}
 	catch (Exception arg0) {
-	    throw new PersistenceException(arg0);
+	    final PersistenceException pex = new PersistenceException("Could not read Objects from database", arg0, false);
+	    pex.putParameter("Type of Objects", arg.getName());
+	    throw pex;
 	}
     }
 
@@ -127,7 +140,11 @@ public class CRUDWorker implements CRUDIF {
 	    return result;
 	}
 	catch (Exception arg0) {
-	    throw new PersistenceException(arg0);
+	    final PersistenceException pex = new PersistenceException("Could not read Objects from database", arg0, false);
+	    pex.putParameter("Type of Objects", arg.getName());
+	    pex.putParameter("Attribut Name", attributName);
+	    pex.putParameter("Attribut Value", attributValue);
+	    throw pex;
 	}
     }
 

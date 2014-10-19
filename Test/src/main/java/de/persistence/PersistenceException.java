@@ -1,19 +1,19 @@
 package de.persistence;
 
+import de.logger.Failure;
+
 /**
  * A wrapper exception for all exceptions that occur in the persistence system
  * @author Mike Kiekebusch
- * @version 0.1
+ * @version 0.2
  * @since 15.05.2014
  */
-public class PersistenceException extends RuntimeException {
+public class PersistenceException extends Failure {
 
-    private static final long serialVersionUID = 7433466422648828178L;
-    
-    /**
-     * @param arg0 The Throwable that should be wraped by this exception
-     */
-    public PersistenceException(Throwable arg0){
-	super(arg0);
+    public PersistenceException(String message, Exception cause,
+	    boolean sendToUser) {
+	super(message, cause, sendToUser);
     }
+    
+    
 }

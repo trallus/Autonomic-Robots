@@ -1,3 +1,5 @@
 /target
 /DB
 derby.log
+error.log
+log.log

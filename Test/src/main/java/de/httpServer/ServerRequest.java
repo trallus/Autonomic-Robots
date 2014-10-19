@@ -12,6 +12,7 @@ import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 
 import de.httpServer.ClientClasses.ClientUser;
+import de.logger.ExceptionHandlerFacade;
 import de.logger.Log;
 
 /**
@@ -74,7 +75,7 @@ public class ServerRequest extends Request {
 			handleURICommand(uri, userManager);
 		}
 		catch(Throwable arg){
-			//TODO Central Exception Handler
+			ExceptionHandlerFacade.getExceptionHandler().handle(arg, replyJson);
 		}
 
 		replyJson.put("logedIn", user.isLogedIn());

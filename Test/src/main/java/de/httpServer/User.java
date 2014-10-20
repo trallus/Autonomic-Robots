@@ -6,14 +6,17 @@ import java.util.List;
 import de.data.DBUser;
 import de.game.Battle;
 import de.game.Robot;
+import de.game.RobotPrototype;
+import de.math.Vector2D;
 
 public class User {
 	private DBUser dbUser;
 	public final String sessionID;
 	private boolean logedIn = false;
-	private Robot nextBattleRobot;
+	private RobotPrototype nextBattleRobot;
 	private List<Robot> battleRobots;
 	private Battle battle;
+	private Vector2D startPoint;
 
 	public User(String sessionID) {
 		this.sessionID = sessionID;
@@ -46,11 +49,11 @@ public class User {
 		return "User [sessionID=" + sessionID + ", logedIn=" + logedIn + "]";
 	}
 	
-	public void setNextRobot (final Robot robot) {
-		nextBattleRobot = robot;
+	public void setNextRobot (final RobotPrototype rp) {
+		nextBattleRobot = rp;
 	}
 	
-	public Robot getNextRobot () {
+	public RobotPrototype getNextRobot () {
 		return nextBattleRobot;
 	}
 	
@@ -70,8 +73,13 @@ public class User {
 		return battle;
 	}
 	
-	public void setBattle (final Battle battle) {
+	public void setBattle (final Battle battle, final Vector2D startPoint) {
 		this.battle = battle;
+		this.startPoint = startPoint;
+	}
+	
+	public Vector2D getStartPoint () {
+		return startPoint;
 	}
 	
 	public void setBehavior (long robotID, String behaviour) {

@@ -31,7 +31,7 @@ public interface GameInterface {
 	 * @param user
 	 * @param robot
 	 */
-	void setNextRobot ( User user, Robot robot );
+	void setNextRobot ( User user, RobotPrototype rp );
 	/**
 	 * get a actual snapshot from the battlefald
 	 * @param battleID

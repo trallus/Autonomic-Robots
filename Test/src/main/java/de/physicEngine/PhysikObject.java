@@ -9,6 +9,13 @@ import de.math.Vector2D;
  * @since 07.10.2014
  */
 public abstract class PhysikObject {
+	
+	public PhysikObject (double direction, double speed) {
+		this.direction = direction;
+		this.speed = speed;
+		updateMoveVector();
+	}
+	
     /**
      * The actual position of the PhysikObject
      */
@@ -29,6 +36,14 @@ public abstract class PhysikObject {
      * The LifePoints of this PhysikObject
      */
     private double hitPoints;
+    /**
+     * The move direction
+     */
+    private double direction;
+    /**
+     * The speed of the object
+     */
+    private double speed;
     /**
      * Calculates the Effects that the given PhysikObject has on this one when hit
      * @param po The other PhysicObject
@@ -94,5 +109,35 @@ public abstract class PhysikObject {
     public void setHitPoints(double hitPoints) {
         this.hitPoints = hitPoints;
     }
+    /**
+     * @return return the direction of the object
+     */
+    public double getDirection() {
+        return direction;
+    }
+    /**
+     * @param angle turn the object with this angle
+     */
+    public void turn(double angle) {
+        direction += angle;
+        updateMoveVector();
+    }
+    /**
+     * @param speed with this speed
+     */
+    public void accelerate(double speed) {
+        this.speed += speed;
+        updateMoveVector();
+    }
+	/**
+	 * Move the physical element
+	 * @param elapsedTime Time since last call
+	 */
+	public void move(long elapsedTime) {
+		position.addition(moveVector.mul(elapsedTime));
+	}
     
+	private void updateMoveVector () {
+		moveVector = new Vector2D(speed*Math.sin(direction), speed*Math.cos(direction));
+	}
 }

@@ -1,9 +1,12 @@
 package de.game;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.httpServer.User;
 import de.logger.Log;
+import de.math.Vector2D;
+import de.physicEngine.PhysikObject;
 
 /**
  * The Battle that in which the Users will fight against each other
@@ -30,6 +33,7 @@ public class Battle extends Thread implements Runnable {
     private final long id;
     
     private final List<User> users;
+    private final List<PhysikObject> physicObjects;
     private long timeToNextRobot;
     private long robotIdCounter;
 	
@@ -37,14 +41,16 @@ public class Battle extends Thread implements Runnable {
 		Log.log("Battle Create: "+id);
 		this.id = id;
 		this.users = users;
+		this.physicObjects = new ArrayList<PhysikObject>();
 		robotIdCounter = 0;
 		timeToNextRobot = System.nanoTime();
 		startTimeMs = timeToNextRobot;
 		timeLimitMs = 10000;	// Spiel dauert nun 10 sekunden
 		
 		// add battle to users
-		for (User u : users) {
-			u.setBattle(this);
+		final List<Vector2D> startPoints = calculateStartpoints(users.size());
+		for (int i=0; i<users.size(); i++) {
+			users.get(i).setBattle(this, startPoints.get(i));
 		}
 	}
 	
@@ -66,6 +72,7 @@ public class Battle extends Thread implements Runnable {
 	private void frameLoop () {
 		final long robotIntervall = 10000;
 		final long frameIntervall = 100;	// 1/10 sec
+		final long elapsedTime = 1/frameIntervall;
 		final long currentTime = System.currentTimeMillis();
 		
 		final long battleTimeLeft = startTimeMs + timeLimitMs - currentTime;
@@ -74,12 +81,27 @@ public class Battle extends Thread implements Runnable {
 			return;	// Battle End
 		}
 		
+		// set next robot
 		if (timeToNextRobot < currentTime) {
 			for (User u : users) {
-				u.addBattleRobot(u.getNextRobot().getClone(robotIdCounter));
+				final Robot nextRobot = u.getNextRobot().generateRobot(robotIdCounter, u.getStartPoint());
+				u.addBattleRobot(nextRobot);
+				physicObjects.add(nextRobot);
 				robotIdCounter++;
 			}
 			timeToNextRobot += robotIntervall;
+		}
+		
+		// call onTick methods
+		// move all physical objects
+		for (PhysikObject p : physicObjects) {
+			p.move(elapsedTime);
+		}
+		// handle robots
+		for (User u : users) {
+			for (Robot r : u.getBattleRobots()) {
+				r.onTick(this, elapsedTime);
+			}
 		}
 		
 		try {
@@ -89,5 +111,18 @@ public class Battle extends Thread implements Runnable {
 		}
 		
 		frameLoop();
+	}
+	
+	private List<Vector2D> calculateStartpoints (final int numberOfUsers) {
+		final long angle = (long) (Math.PI / numberOfUsers); // angle between players
+		final long distance = 100; //distance from the center of the battle field
+		final List<Vector2D> vectorList = new ArrayList<Vector2D>();
+		
+		for (int i=0; i<numberOfUsers; i++) {
+			final long actAngle = i*angle;
+			vectorList.add(new Vector2D(Math.sin(actAngle)*distance, Math.cos(actAngle)*distance));
+		}
+		
+		return vectorList;
 	}
 }

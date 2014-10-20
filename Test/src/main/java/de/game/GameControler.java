@@ -57,8 +57,8 @@ public class GameControler implements GameInterface {
 	}
 
 	@Override
-	public void setNextRobot(User user, Robot robot) {
-		user.setNextRobot(robot);
+	public void setNextRobot(User user, RobotPrototype rp) {
+		user.setNextRobot(rp);
 	}
 
 	@Override

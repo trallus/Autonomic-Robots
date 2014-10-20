@@ -62,7 +62,7 @@ class DateHandler implements HttpHandler {
 		try {
 			if (uri.matches(".*" + keyURI + ".*")) {
 
-				request = new ServerRequest(httpExchange, userManager);
+				request = new ServerRequest(httpExchange, userManager, gameInterface);
 			} else {
 				request = new DocumentRequest(httpExchange, httpPath);
 			}

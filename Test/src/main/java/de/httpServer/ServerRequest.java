@@ -11,6 +11,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 
+import de.game.GameInterface;
+import de.game.exceptions.NotInQueryException;
 import de.httpServer.ClientClasses.ClientUser;
 import de.logger.ExceptionHandlerFacade;
 import de.logger.Log;
@@ -55,7 +57,7 @@ public class ServerRequest extends Request {
 	 * @param userManager
 	 * @throws Exception
 	 */
-	public ServerRequest(HttpExchange httpExchange, UserManager userManager)
+	public ServerRequest(HttpExchange httpExchange, UserManager userManager, GameInterface gameInterface)
 			throws Exception {
 
 		mediaType = "application/json";
@@ -72,10 +74,10 @@ public class ServerRequest extends Request {
 
 		final String uri = httpExchange.getRequestURI().toString();
 		try{
-			handleURICommand(uri, userManager);
+			handleURICommand(uri, userManager, gameInterface);
 		}
 		catch(Throwable arg){
-			ExceptionHandlerFacade.getExceptionHandler().handle(arg, replyJson);
+			//TODO Central Exception Handler
 		}
 
 		replyJson.put("logedIn", user.isLogedIn());
@@ -90,11 +92,14 @@ public class ServerRequest extends Request {
 	 * 
 	 * @param uri
 	 * @param userManager
+	 * @param gameInterface 
 	 * @throws Exception
 	 */
-	private void handleURICommand(String uri, UserManager userManager) throws Exception {
+	private void handleURICommand(String uri, UserManager userManager, GameInterface gameInterface) throws Exception {
 
-		if (uri.indexOf("registration") != -1) {
+		if (uri.indexOf("game") != -1) {
+			handleGameCommands(uri, user, gameInterface);
+		} else if (uri.indexOf("registration") != -1) {
 			ClientUser clientUser = readClientUser();
 			String failReason = null;
 			try {
@@ -156,6 +161,21 @@ public class ServerRequest extends Request {
 			replyJson.put("Unexpectrd URI", uri);
 		}
 
+	}
+
+	private void handleGameCommands(String uri, User user,
+			GameInterface gameInterface) throws InterruptedException, NotInQueryException {
+		if (uri.indexOf("getGameSituation") != -1) {
+			// TODO
+		} else if (uri.indexOf("setNextRobot") != -1) {
+			// TODO
+		} else if (uri.indexOf("getBehaviours") != -1) {
+			// TODO
+		} else if (uri.indexOf("leaveBattleQuery") != -1) {
+			gameInterface.leaveBattleQuery(user);
+		} else if (uri.indexOf("joinBattleQuery") != -1) {
+			gameInterface.joinBattleQuery(user);
+		}
 	}
 
 	/**

@@ -1,6 +1,5 @@
 package de.main;
 
-import de.game.GameControler;
 import de.httpServer.HTTPServer;
 
 /**

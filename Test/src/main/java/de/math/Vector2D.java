@@ -136,5 +136,4 @@ public class Vector2D {
 	    return false;
 	return true;
     }
-
 }

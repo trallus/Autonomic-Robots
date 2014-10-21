@@ -87,7 +87,7 @@ public class ServerRequest extends Request {
 			handleURICommand(uri, userManager, gameInterface);
 		}
 		catch(Throwable arg){
-			//TODO Central Exception Handler
+			ExceptionHandlerFacade.getExceptionHandler().handle(arg, replyJson);
 		}
 
 		replyJson.put("logedIn", user.isLogedIn());

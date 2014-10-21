@@ -119,9 +119,7 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	    }
 	}
 	catch (Exception arg0) {
-	    final PersistenceException pex = new PersistenceException("Could not end database transaction", arg0, false);
-	    pex.putParameter("State", state);
-	    throw pex;
+	    ExceptionHandlerFacade.getExceptionHandler().handle("Could not end transaction", "Persitence Facade", arg0);
 	}
     }
 }

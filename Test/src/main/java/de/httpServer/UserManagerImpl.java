@@ -271,13 +271,15 @@ public class UserManagerImpl implements UserManager {
 	private void checkInUse (String eMail, String name) throws EmailInUseException, NameInUseException {
 		// check if email already registered
 		if ( getUserWithEmail (eMail) != null ) {
-			Log.debugLog("Registration failes. Email already registered: " + eMail);
-			throw (new EmailInUseException());
+			final EmailInUseException e = new EmailInUseException("Registration failes. Email already registered.", true);
+			e.putParameter("eMail", eMail);
+			throw (e);
 		}
 		// check if name already registered
 		if ( getUserWithName (name) != null ) {
-			Log.debugLog("Registration failes. Name already registered: " + eMail);
-			throw (new NameInUseException());
+			final NameInUseException e = new NameInUseException("Registration failes. Name already registered.", true);
+			e.putParameter("name", name);
+			throw (e);
 		}
 	}
 }

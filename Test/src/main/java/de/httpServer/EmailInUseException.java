@@ -1,5 +1,13 @@
 package de.httpServer;
 
-public class EmailInUseException extends Exception {
+import java.util.HashMap;
+
+import de.logger.Failure;
+
+public class EmailInUseException extends Failure {
+
+	public EmailInUseException(String message, boolean sendToUser) {
+		super(message, sendToUser);
+	}
 
 }

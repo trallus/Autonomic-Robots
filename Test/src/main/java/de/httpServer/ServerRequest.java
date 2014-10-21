@@ -111,20 +111,7 @@ public class ServerRequest extends Request {
 			handleGameCommands(uri, user, gameInterface);
 		} else if (uri.indexOf("registration") != -1) {
 			ClientUser clientUser = readClientUser();
-			String failReason = null;
-			try {
-				userManager.register(clientUser.name, clientUser.eMail, clientUser.password, user);
-			} catch (EmailInUseException e) {
-				failReason = "Email";
-			} catch (NameInUseException e) {
-				failReason = "Name";
-			}
-			if (failReason != null) {
-				replyJson.put("registered", false);
-				replyJson.put("registration message", failReason + " already in use");
-				return;
-			}
-			
+			userManager.register(clientUser.name, clientUser.eMail, clientUser.password, user);
 			replyJson.put("registered", true);
 		} else if (uri.indexOf("logIn") != -1) {
 			ClientUser clientUser = readClientUser();

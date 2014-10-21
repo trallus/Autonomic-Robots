@@ -19,6 +19,15 @@ public class Failure extends RuntimeException {
 	
 	private final boolean sendToUser;
 	/**
+	 * @param message The failure Message for the invking Message
+	 * @param sendToUser if this Failure should be communicated to the user
+	 */
+	public Failure(String message, boolean sendToUser) {
+		this.sendToUser = sendToUser;
+		this.message = message;
+		this.param = new HashMap<String, String>();
+	}
+	/**
 	 * @param param Parameter of the methode that issues this failure
 	 * @param message The failure Message for the invking Message
 	 * @param cause Exception that Caused this Failure

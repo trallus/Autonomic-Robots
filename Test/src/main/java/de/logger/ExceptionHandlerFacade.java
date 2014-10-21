@@ -22,6 +22,7 @@ public class ExceptionHandlerFacade {
 		}
 		catch(IOException e){
 		    //Shit happens...
+			e.printStackTrace();
 		}
 	    final ExceptionHandler eh = new ExceptionHandler(errorLog, normalLog);
 	    eh.printLog("####Logging started####");

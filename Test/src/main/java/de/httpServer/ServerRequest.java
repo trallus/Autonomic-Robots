@@ -3,19 +3,29 @@ package de.httpServer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+
+import org.omg.PortableInterceptor.ClientRequestInfo;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 
+import de.game.Battle;
 import de.game.GameInterface;
+import de.game.Robot;
+import de.game.RobotPrototype;
+import de.game.WeaponPrototype;
 import de.game.exceptions.NotInQueryException;
+import de.httpServer.ClientClasses.ClientNextRobot;
 import de.httpServer.ClientClasses.ClientUser;
 import de.logger.ExceptionHandlerFacade;
 import de.logger.Log;
+import de.math.Vector2D;
 
 /**
  * Handle requests to the server
@@ -164,13 +174,36 @@ public class ServerRequest extends Request {
 	}
 
 	private void handleGameCommands(String uri, User user,
-			GameInterface gameInterface) throws InterruptedException, NotInQueryException {
+			GameInterface gameInterface) throws InterruptedException, NotInQueryException, IOException {
 		if (uri.indexOf("getGameSituation") != -1) {
-			// TODO
+			final Map<String, Object> gameSituation = new HashMap<String, Object>();
+			final Battle b = user.getBattle();
+			final List<User> ul = b.getUsers();
+			for(User u : ul) {
+				final String un = u.getDBUser().getName();
+				final ArrayList<Map<String, Object>> robotList = new ArrayList<Map<String, Object>>();
+				gameSituation.put(un, robotList);
+				final List<Robot> rl = u.getBattleRobots();
+				for (Robot r : rl) {
+					final Map<String, Object> robot = new HashMap<String, Object>();
+					final Vector2D position = r.getPosition();
+					final double[] posLong = {position.getN1(), position.getN2()};
+					robot.put("position", posLong);
+					robot.put("id", r.getID());
+					robot.put("hitPoints", r.getHitPoints());
+					robotList.add(robot);
+				}
+			}
+			replyJson.put("gameSituation", gameSituation);
 		} else if (uri.indexOf("setNextRobot") != -1) {
-			// TODO
+			final String jsonString = readInputStream();
+			final ClientNextRobot cnr = gsonIn.fromJson(jsonString, ClientNextRobot.class);
+			final WeaponPrototype wp = new WeaponPrototype(cnr.range, cnr.rateOfFire, cnr.damage);
+			final RobotPrototype rp = new RobotPrototype(wp, cnr.armor, cnr.enginePower, cnr.behaviour);
+			user.setNextRobot(rp);
 		} else if (uri.indexOf("getBehaviours") != -1) {
-			// TODO
+			final String[] behaviours = {"gibts noch nicht", "und das auch nicht"};
+			replyJson.put("behaviours", behaviours);
 		} else if (uri.indexOf("leaveBattleQuery") != -1) {
 			gameInterface.leaveBattleQuery(user);
 		} else if (uri.indexOf("joinBattleQuery") != -1) {

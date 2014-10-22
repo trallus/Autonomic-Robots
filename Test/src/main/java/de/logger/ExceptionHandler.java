@@ -39,7 +39,7 @@ public class ExceptionHandler implements ExceptionHandlerIF {
 	    final String message = fail.getMessage();
 	    if(fail.getSendToUser())
 		replyJson.put("failure", message);
-	    printLog(message);
+	    printLog(fail);
 	}
 	else if(throwable instanceof Error){
 	    final Error error = (Error) throwable;

@@ -25,7 +25,7 @@ function GUI ( frameControler, server ) {
     	ctx.width = 200;
     	ctx.height = 400;
     	x = ctx.getContext('2d');
-    	
+    
         canvas = document.getElementById('scene');
         canvas.width = 600;
         canvas.height = 423;

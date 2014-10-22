@@ -95,9 +95,13 @@ function BackendCom ( ) {
                 console.log(b);
                 console.log(c);
             }
-        }).done ( 
-        	callback
-        ).fail ( function ( info ) {
+        }).done (
+    		function (json) {
+    			if (json.failure) {
+    				window.alert(json.failure)
+    			}
+    			callback (json);
+    		}).fail ( function ( info ) {
             console.log(info);
         });
     }

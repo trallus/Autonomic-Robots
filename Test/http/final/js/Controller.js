@@ -15,9 +15,10 @@ function Controller () {
     	$.ajax({
             url: destination
         }).done ( function ( html ) {
-        	$("body").html(html).promise().done(function(){
+        	$("#content").html(html).promise().done(function(){
         		regisButtons();
         	});
+        	
         });
     }
     
@@ -63,25 +64,38 @@ function Controller () {
         	else {
         		backendCom.registration ( name, password, eMail, function ( json ) {
 
-        			if ( json.registered ) {
+        			if ( json.logedIn ) {
         				window.alert('Successfully registered...\n\nWelcome ' + name + '!!!\n\n');
         				logIn();
             	
         			} else {
-        				window.alert("This name or eMail is already chosen");
+        				console.log(json);
         			}
         		});
         	}
         }
     }
     
+    this.overlay = function () {
+        window.alert("sdfsdf");
+        $("body").hide();
+        $.ajax( {
+            url: "signup.html"
+        }).done ( function () {
+            
+        });
+    }
+    
     //Change User Settings
     function changeUser() {
     	readInputFealds();
     	backendCom.changeUser( name, password, eMail, function ( json ) {
-    		window.alert('User settings changed');
-    		thisObj.loadHome();
-    		} );
+    		if (json.userChanged) {
+    			window.alert('User settings changed');
+    			thisObj.loadHome();
+    		}
+                
+        });
     }
     
     //Open Account Settings Form
@@ -98,14 +112,20 @@ function Controller () {
     			thisObj.valid = true;
     			thisObj.loadHome();
     			
-    		} else {
-    			window.alert("Wrong Mail or Password");
-			}
+    		} 
     	});
     }
     
     //Start a Game
     this.startGame = function () {
+        
+        $.ajax({
+            url: "serverRequest/game/joinBattleQuery"
+        }).done ( function ( json ) {
+        	console.log(json);
+        });
+        
+        /*
     	$.ajax({
             url: "robots.html"
         }).done ( function ( html ) {
@@ -113,7 +133,8 @@ function Controller () {
         		GameController.main();
         		regisButtons();
         	});
-        });	
+        });
+        */
     }
     
     //End a Game
@@ -183,6 +204,8 @@ function Controller () {
         eMail = $("#inputUserEMail").val();
     }
     
+    
+    
     //JSON CHECK for 2 values
 	function check ( json, value1, value2) {
 	    for (key in json) {
@@ -203,3 +226,6 @@ var controller;
 function start () {
 	controller = new Controller ();
 };
+
+
+	 

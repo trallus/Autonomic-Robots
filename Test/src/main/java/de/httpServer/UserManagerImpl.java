@@ -128,18 +128,18 @@ public class UserManagerImpl implements UserManager {
 	public void logIn(String eMail, String password, User user)
 			throws NoSuchAlgorithmException, EmailNotFoundException {
 		DBUser dbUser = getUserWithEmail(eMail);
-		final String caller = this.getClass().toString()+".logIn";
 		
 		if ( dbUser != null ) {
 			// test the password
 			final String passwordHash = convertToMD5Hash(password);
 			if (dbUser.getPassword().equals(passwordHash)) {
 				user.logIn(dbUser);
+				final String caller = this.getClass().toString()+".logIn";
 				ExceptionHandlerFacade.getExceptionHandler().handle("Log in erfolgreich.", caller);
 				return;
 			}
 		}
-		EmailNotFoundException e = new EmailNotFoundException("Wrong e-mail or password", caller ,true);
+		EmailNotFoundException e = new EmailNotFoundException("Wrong e-mail or password", true);
 		e.putParameter("eMail", eMail);
 		e.putParameter("password", password);
 		e.putParameter("user", user);
@@ -272,17 +272,16 @@ public class UserManagerImpl implements UserManager {
 	}
 	
 	private void checkInUse (String eMail, String name) throws EmailInUseException, NameInUseException {
-		final String caller = this.getClass().toString()+".checkInUse";
 		// check if email already registered
 		if ( getUserWithEmail (eMail) != null ) {
-			final EmailInUseException e = new EmailInUseException("Registration failes. Email already registered.", caller, true);
+			final EmailInUseException e = new EmailInUseException("Registration failes. Email already registered.", true);
 			e.putParameter("name", name);
 			e.putParameter("eMail", eMail);
 			throw (e);
 		}
 		// check if name already registered
 		if ( getUserWithName (name) != null ) {
-			final NameInUseException e = new NameInUseException("Registration failes. Name already registered.", caller, true);
+			final NameInUseException e = new NameInUseException("Registration failes. Name already registered.", true);
 			e.putParameter("name", name);
 			e.putParameter("eMail", eMail);
 			throw (e);

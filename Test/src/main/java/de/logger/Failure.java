@@ -22,9 +22,9 @@ public class Failure extends RuntimeException {
 	 * @param message The failure Message for the invking Message
 	 * @param sendToUser if this Failure should be communicated to the user
 	 */
-	public Failure(String message, String caller, boolean sendToUser) {
+	public Failure(String message, boolean sendToUser) {
 		this.sendToUser = sendToUser;
-		this.message = caller + " with Message: " + message;
+		this.message = message;
 		this.param = new HashMap<String, String>();
 	}
 	/**

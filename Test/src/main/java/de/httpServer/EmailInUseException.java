@@ -6,8 +6,8 @@ import de.logger.Failure;
 
 public class EmailInUseException extends Failure {
 
-	public EmailInUseException(String message, String caller, boolean sendToUser) {
-		super(message, caller, sendToUser);
+	public EmailInUseException(String message,  boolean sendToUser) {
+		super(message, sendToUser);
 	}
 
 }

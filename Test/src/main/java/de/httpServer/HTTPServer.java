@@ -2,6 +2,7 @@ package de.httpServer;
 
 import java.lang.reflect.Proxy;
 import java.net.InetSocketAddress;
+import java.util.concurrent.Executors;
 
 import com.sun.net.httpserver.HttpServer;
 
@@ -38,6 +39,9 @@ public class HTTPServer {
 
 		HttpServer httpServer = HttpServer.create(new InetSocketAddress(
 			portNumber), 0);
+		
+		httpServer.setExecutor(Executors.newCachedThreadPool());
+		
 		httpServer.createContext("/", new DateHandler(gameInterface, proxydUserManager, httpPath, keyURI));
 		httpServer.start();
 

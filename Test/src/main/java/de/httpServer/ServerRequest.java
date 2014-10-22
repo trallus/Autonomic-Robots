@@ -110,50 +110,33 @@ public class ServerRequest extends Request {
 		if (uri.indexOf("game") != -1) {
 			handleGameCommands(uri, user, gameInterface);
 		} else if (uri.indexOf("registration") != -1) {
+			final String registedKey = "registered";
+			replyJson.put(registedKey, false);
 			ClientUser clientUser = readClientUser();
 			userManager.register(clientUser.name, clientUser.eMail, clientUser.password, user);
-			replyJson.put("registered", true);
+			replyJson.put(registedKey, true);
 		} else if (uri.indexOf("logIn") != -1) {
 			ClientUser clientUser = readClientUser();
-			try {
-				userManager.logIn(clientUser.eMail, clientUser.password, user);
-			} catch (EmailNotFoundException e) {
-				replyJson.put("logIn message", "Wrong e-mail or password");
-			}
+			userManager.logIn(clientUser.eMail, clientUser.password, user);
 		} else if (uri.indexOf("logOut") != -1) {
 			userManager.logOut(user);
 		} else if (uri.indexOf("remove") != -1) {
 			// just work with a new login -> save
 			final ClientUser clientUser = readClientUser();
-			try {
-				userManager.removeUser(clientUser.eMail, clientUser.password, user);
-			} catch (EmailNotFoundException e) {
-				replyJson.put("logIn message", "Wrong e-mail or password");
-				replyJson.put("removed", false);
-				return;
-			}
-			replyJson.put("removed", true);
+			final String removeKey = "removed";
+			replyJson.put(removeKey, false);
+			userManager.removeUser(clientUser.eMail, clientUser.password, user);
+			replyJson.put(removeKey, true);
 		} else if (uri.indexOf("searchUser") != -1) {
 			final ClientUser clientUser = readClientUser();
 			final String[] searchResule = userManager.searchUser(clientUser.name);
 			replyJson.put("searchResult", searchResule);
 		} else if (uri.indexOf("changeUser") != -1) {
+			final String userChangeKey = "userChanged";
+			replyJson.put(userChangeKey, false);
 			ClientUser clientUser = readClientUser();
-			String failReason = null;
-			try {
-				userManager.changeUser(user, clientUser.name, clientUser.eMail, clientUser.password);
-			} catch (EmailInUseException e) {
-				failReason = "Email";
-			} catch (NameInUseException e) {
-				failReason = "Name";
-			}
-			if (failReason != null) {
-				replyJson.put("userChanged", false);
-				replyJson.put("userChanged message", failReason + " already in use");
-				return;
-			}
-			
-			replyJson.put("userChanged", true);
+			userManager.changeUser(user, clientUser.name, clientUser.eMail, clientUser.password);
+			replyJson.put(userChangeKey, true);
 		} else  {
 			replyJson.put("Unexpectrd URI", uri);
 		}

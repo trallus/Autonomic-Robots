@@ -52,11 +52,10 @@ public interface UserManager {
 	 * @param eMail
 	 * @param password
 	 * @param user
-	 * @return
 	 * @throws NoSuchAlgorithmException
 	 * @throws EmailNotFoundException
 	 */
-	String logIn(String eMail, String password, User user)
+	void logIn(String eMail, String password, User user)
 			throws NoSuchAlgorithmException, EmailNotFoundException;
 
 	/**

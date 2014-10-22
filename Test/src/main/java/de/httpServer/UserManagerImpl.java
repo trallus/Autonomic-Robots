@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.data.DBUser;
-import de.logger.Log;
+import de.logger.ExceptionHandlerFacade;
 import de.persistence.CRUDIF;
 import de.persistence.PersistenceFacade;
 
@@ -111,7 +111,7 @@ public class UserManagerImpl implements UserManager {
 		DBUser dbUser = new DBUser(userName, eMail, passwordHash);
 		db.insert(dbUser);
 		user.setDBUser(dbUser);
-		Log.debugLog("User registed: " + userName);
+		ExceptionHandlerFacade.getExceptionHandler().handle("User registed, userName: " + userName, this.getClass().toString()+".register");
 		return "Registrierung erfolgreich";
 	}
 
@@ -125,22 +125,25 @@ public class UserManagerImpl implements UserManager {
 	 * @throws NoSuchAlgorithmException
 	 * @throws EmailNotFoundException
 	 */
-	public String logIn(String eMail, String password, User user)
+	public void logIn(String eMail, String password, User user)
 			throws NoSuchAlgorithmException, EmailNotFoundException {
 		DBUser dbUser = getUserWithEmail(eMail);
+		final String caller = this.getClass().toString()+".logIn";
 		
 		if ( dbUser != null ) {
 			// test the password
 			final String passwordHash = convertToMD5Hash(password);
 			if (dbUser.getPassword().equals(passwordHash)) {
 				user.logIn(dbUser);
-				Log.debugLog("Log in erfolgreich. User: " + user.toString());
-				return ("Log in erfolgreich");
+				ExceptionHandlerFacade.getExceptionHandler().handle("Log in erfolgreich.", caller);
+				return;
 			}
 		}
-
-		Log.debugLog("Log in fehlgeschlagen. User: " + user.toString());
-		throw new EmailNotFoundException();
+		EmailNotFoundException e = new EmailNotFoundException("Wrong e-mail or password", caller ,true);
+		e.putParameter("eMail", eMail);
+		e.putParameter("password", password);
+		e.putParameter("user", user);
+		throw e;
 	}
 
 	/**
@@ -151,7 +154,7 @@ public class UserManagerImpl implements UserManager {
 	public void logOut(User user) {
 		userList.remove(user);
 		user.logOut();
-		Log.debugLog("User loged out");
+		ExceptionHandlerFacade.getExceptionHandler().handle("User loged out, user name: " + user.getDBUser().getName(), this.getClass().toString()+".logOut");
 	}
 	
 	/**
@@ -165,7 +168,7 @@ public class UserManagerImpl implements UserManager {
 		logIn(eMail, password, user);	// to be sure that he will be removed
 		db.remove(user.getDBUser());
 		user.logOut();
-		Log.debugLog("User removed: eMail:" + user.getDBUser().getEMail());
+		ExceptionHandlerFacade.getExceptionHandler().handle("User removed: eMail: " + user.getDBUser().getEMail(), this.getClass().toString()+".register");
 	}
 
 	@Override
@@ -201,7 +204,7 @@ public class UserManagerImpl implements UserManager {
 		
 		db.update(dbu);
 
-		Log.debugLog("Chagne User: " + user.toString());
+		ExceptionHandlerFacade.getExceptionHandler().handle("Chagne User: newName " + newName, this.getClass().toString()+".changeUser");
 	}
 
 	/**
@@ -215,7 +218,7 @@ public class UserManagerImpl implements UserManager {
 		final User u = new User(sessionID);
 		userList.add(u);
 
-		Log.debugLog("create User: " + u.toString());
+		ExceptionHandlerFacade.getExceptionHandler().handle("Chagne User: user " + u.toString(), this.getClass().toString()+".createUser");
 
 		return (u);
 	}
@@ -269,16 +272,19 @@ public class UserManagerImpl implements UserManager {
 	}
 	
 	private void checkInUse (String eMail, String name) throws EmailInUseException, NameInUseException {
+		final String caller = this.getClass().toString()+".checkInUse";
 		// check if email already registered
 		if ( getUserWithEmail (eMail) != null ) {
-			final EmailInUseException e = new EmailInUseException("Registration failes. Email already registered.", true);
+			final EmailInUseException e = new EmailInUseException("Registration failes. Email already registered.", caller, true);
+			e.putParameter("name", name);
 			e.putParameter("eMail", eMail);
 			throw (e);
 		}
 		// check if name already registered
 		if ( getUserWithName (name) != null ) {
-			final NameInUseException e = new NameInUseException("Registration failes. Name already registered.", true);
+			final NameInUseException e = new NameInUseException("Registration failes. Name already registered.", caller, true);
 			e.putParameter("name", name);
+			e.putParameter("eMail", eMail);
 			throw (e);
 		}
 	}

@@ -27,6 +27,7 @@ public class GameControler implements GameInterface {
 		if (battleQerry.size() > 0) {
 			final List<User> users = new ArrayList<User>();
 			users.add(battleQerry.get(0));
+			users.add(user);
 			battleQerry.remove(0);
 			final Battle battle = new Battle( battleID, users );
 			battles.add(battle);

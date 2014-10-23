@@ -119,10 +119,44 @@ function Controller () {
     //Start a Game
     this.startGame = function () {
         
+    	var robot = {
+			weaponPrototype : {
+				range : 100,
+				rateOfFire : 30,
+				damage : 10
+			},
+			armor : 100,
+			enginePower : 100,
+			behaviour : "gibts noch nicht"
+    	};
+    	
         $.ajax({
-            url: "serverRequest/game/joinBattleQuery"
+            type: "POST",
+            data: JSON.stringify ( robot ),
+            dataType: "json",
+            url: "serverRequest/game-setNextRobot"
         }).done ( function ( json ) {
         	console.log(json);
+        
+	        $.ajax({
+	            url: "serverRequest/game-joinBattleQuery"
+	        }).done ( function ( json ) {
+	        	console.log(json);
+	        	var intervallCounter = 20;
+	        	var intervall = window.setInterval(
+		        	function () {
+			            $.ajax({
+			                url: "serverRequest/game-getGameSituation"
+			            }).done ( function ( json ) {
+			            	console.log(json);
+			            });
+			            intervallCounter--;
+			            if (intervallCounter < 0) {
+			            	window.clearInterval(intervall);
+			            }
+		        	}, 1000
+		        );
+	        });
         });
         
         /*
@@ -136,6 +170,8 @@ function Controller () {
         });
         */
     }
+    
+    
     
     //End a Game
     function endGame () {

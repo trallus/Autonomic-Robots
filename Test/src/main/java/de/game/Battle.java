@@ -43,9 +43,9 @@ public class Battle extends Thread implements Runnable {
 		this.users = users;
 		this.physicObjects = new ArrayList<PhysikObject>();
 		robotIdCounter = 0;
-		timeToNextRobot = System.nanoTime();
+		timeToNextRobot = System.currentTimeMillis();
 		startTimeMs = timeToNextRobot;
-		timeLimitMs = 10000;	// Spiel dauert nun 10 sekunden
+		timeLimitMs = 20000;	// Spiel dauert nun 20 sekunden
 		
 		// add battle to users
 		final List<Vector2D> startPoints = calculateStartpoints(users.size());
@@ -88,6 +88,7 @@ public class Battle extends Thread implements Runnable {
 				u.addBattleRobot(nextRobot);
 				physicObjects.add(nextRobot);
 				robotIdCounter++;
+				Log.log("Robot"+robotIdCounter);
 			}
 			timeToNextRobot += robotIntervall;
 		}

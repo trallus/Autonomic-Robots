@@ -133,8 +133,8 @@ public abstract class PhysikObject {
 	 * Move the physical element
 	 * @param elapsedTime Time since last call
 	 */
-	public void move(long elapsedTime) {
-		position.addition(moveVector.mul(elapsedTime));
+	public void move(double elapsedTime) {
+		position = position.addition(moveVector.mul(elapsedTime));
 	}
     
 	private void updateMoveVector () {

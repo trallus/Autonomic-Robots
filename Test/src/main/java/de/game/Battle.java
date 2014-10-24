@@ -72,7 +72,7 @@ public class Battle extends Thread implements Runnable {
 	private void frameLoop () {
 		final long robotIntervall = 10000;
 		final long frameIntervall = 100;	// 1/10 sec
-		final long elapsedTime = 1/frameIntervall;
+		final double elapsedTime = .1;
 		final long currentTime = System.currentTimeMillis();
 		
 		final long battleTimeLeft = startTimeMs + timeLimitMs - currentTime;

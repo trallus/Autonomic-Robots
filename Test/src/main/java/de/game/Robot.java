@@ -21,8 +21,8 @@ public class Robot extends PhysikObject implements Tick {
 		setPosition(position);
 		this.enginePower = rb.getEnginePower();
 		this.armor = rb.getArmor();
-		this.turningSpeed = .01/armor*enginePower;
-		this.acceleration = 1/armor*enginePower;
+		this.turningSpeed = .1/armor*enginePower;
+		this.acceleration = .1/armor*enginePower;
 	}
 	
 	public long getID () {
@@ -67,10 +67,11 @@ public class Robot extends PhysikObject implements Tick {
 	}
 
 	@Override
-	public void onTick(Battle battle, long elapsedTime) {
-		if (turnLeft) turn(turningSpeed);
-		else turn(-turningSpeed);
-		if (accelerate) accelerate(acceleration);
-		else accelerate(-acceleration);
+	public void onTick(Battle battle, double elapsedTime) {
+		if (turnLeft) turn(turningSpeed * elapsedTime);
+		else turn(-turningSpeed * elapsedTime);
+		if (accelerate) accelerate(acceleration * elapsedTime);
+		else accelerate(-acceleration * elapsedTime);
+		move(elapsedTime);
 	}
 }

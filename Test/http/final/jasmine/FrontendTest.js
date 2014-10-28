@@ -67,7 +67,7 @@ describe("BackendCom/ServerCom Test", function () {
             expect(json.removed).toEqual(true);
         });
     });
-    /*
+    
     //Test-Case4
     it("should be able to start a game", function() {
     	var valid;
@@ -83,7 +83,7 @@ describe("BackendCom/ServerCom Test", function () {
             expect(valid).toEqual(true);
         });
     });
-    *//*
+    
     //Test-Case5
     it("should be able to search for other online players", function() {
         var registerResult = new Array();
@@ -153,7 +153,7 @@ describe("BackendCom/ServerCom Test", function () {
     it("should be able to change name, eMail, password of an user", function() {
     	var json = new Object();
         runs(function() {
-            b.registration ( name, password, eMail, function ( json1 ) {
+            b.registration ( name, password, '@eMail', function ( json1 ) {
                 json = json1;
             } );
         }, timeout);
@@ -163,7 +163,7 @@ describe("BackendCom/ServerCom Test", function () {
         }, "JSON registered should be set", timeout);
         
         runs(function() {
-            b.logIn ( password, eMail, function ( json1 ) {
+            b.logIn ( password, '@eMail', function ( json1 ) {
                 json = json1;
             } );
         }, timeout);
@@ -209,4 +209,4 @@ describe("BackendCom/ServerCom Test", function () {
         });
     });
     */
- });
+});

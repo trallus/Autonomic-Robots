@@ -78,7 +78,21 @@ function BackendCom ( ) {
             eMail : eMail
         };
         
-        serverRequest( user, server + "/changeUser", callback );
+        //serverRequest( user, server + "/changeUser", callback );
+        serverRequest( user, server + "/changeUser", function () {
+                thisObj.overlay('Changed into:<br>' + name + '<br>' + password + '<br>'  + eMail)
+        });
+    }
+
+    //open a Info Overlay with a text string value called json
+    this.overlay = function ( json ) {
+        //window.alert("sdfsdf");
+            $(document).ready(function () {
+                var el = $("#overlay").show();
+                $( '<p id="infoText">info!!!<br>' + json + '</p>' ).insertBefore( ".infoPush" );
+                $("#content").hide();
+                //$("body").hide();
+        });
     }
     
     //Method
@@ -97,8 +111,9 @@ function BackendCom ( ) {
             }
         }).done (
     		function (json) {
-    			if (json.failure) {
-    				window.alert(json.failure)
+    			if (json.logedIn == false && json.registered == false) {
+    				//window.alert("Warning:\n" + json.failure);
+                    thisObj.overlay(json.failure);
     			}
     			callback (json);
     		}).fail ( function ( info ) {

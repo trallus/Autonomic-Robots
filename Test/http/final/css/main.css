@@ -11,6 +11,7 @@ img {
 h1 {
 	font-family: Verdana;
 	font-size: 1.7em;
+    text-align: center;
 }
 
 h1 p {	
@@ -32,6 +33,14 @@ body {
 	background-repeat:no-repeat;
 	background-color: #000000;
 			
+}
+#tableNone{
+    margin-top: -10px;
+
+}
+
+#tableNone > td {
+
 }
 
 #header {

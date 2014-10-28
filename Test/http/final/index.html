@@ -32,34 +32,40 @@
         <div id="content">
            <div id="down">
     <div id="wood"></div>
-    <table>
+    <table id="tableNone">
     	<caption>
     	It's Free-To-Play!!!
     	</caption>
+
     	<tr>
     	<th><div id="wood"></div>
     	</tr>
     	
     	<tr>
     	
-    	<th><div id="wood">
-    	<div class="button" onClick="controller.loadRegister()" >signUp</div>
+    	<tr><div id="wood">
+    	<!--<div class="button" onClick="controller.loadRegister()" >signUp</div>-->
+        <td>
+        <div class="button" onClick="controller.loadRegister()" style="cursor: pointer">signUp</div>
     	</div>
-        </th>
-        <th>
-        <div id="wood">
-        <p>or</p></div>
-        </th>
-        <th><div id="wood">
         
-    	<div class="button" onClick="controller.loadLogin()" >logIn</div>
+        </td>
+        <td>
+        <p>or</p>
+        </td>
+        <td>
+        
+    	<div class="button" onClick="controller.loadLogin()" style="cursor: pointer">logIn</div>
         		
         </div>
-        </th>
+        </td>
+    </tr>
    		</table>
    		<div id="wood"></div>
    		</div> 
         </div>
+
+        
            
     
    		
@@ -69,7 +75,10 @@
     
 
 
-    
+    <div id="overlay" class="overlay" style="display: none">
+            <div class="infoPush"></div>
+            <div class="button" onClick="controller.overlayOff()" >close</<div>
+        </div>
     
 	
 	    

@@ -49,23 +49,28 @@ function Controller () {
     	});
     }
     
+    this.endGame = function () {
+    	backendCom.endGame( name, password, eMail, function () { thisObj.loadHome(); } );
+    }
+    
     //handle User
     //
     //Registration
     function registration () {
         readInputFealds();
         if ( name.trim() == '' ) {
-        	window.alert('Your name can\'t be empty');
+        	thisObj.overlay('Your name can\'t be empty');
         }
         else {
         	if ( eMail.indexOf('@') < 0) {
-        	window.alert('This is no valid eMail');
+        	thisObj.overlay('This is no valid eMail');
         	}
         	else {
         		backendCom.registration ( name, password, eMail, function ( json ) {
 
-        			if ( json.logedIn ) {
-        				window.alert('Successfully registered...\n\nWelcome ' + name + '!!!\n\n');
+        			if ( json.registered ) {
+        				var text = 'Successfully registered... <br>Welcome ' + name + '!!!<br>';
+                        thisObj.overlay(text)
         				logIn();
             	
         			} else {
@@ -76,13 +81,22 @@ function Controller () {
         }
     }
     
-    this.overlay = function () {
-        window.alert("sdfsdf");
-        $("body").hide();
-        $.ajax( {
-            url: "signup.html"
-        }).done ( function () {
-            
+    //open a overlay with a text string called json
+    this.overlay = function ( json ) {
+        $(document).ready(function () {
+            $('#content').hide();
+            var el = $("#overlay").show();
+            $( '<p id="infoText">INFO!!!<br><br>' + json + '</p>' ).insertBefore( ".infoPush" );
+        });
+    }
+
+    //close the overlay and remove the tag with id "infoText"
+    this.overlayOff = function () {
+        $(document).ready(function () {
+            $("#content").show();
+            var el = $("#overlay").hide();
+            //el.remove('#infoText');
+            $( "#infoText" ).remove();
         });
     }
     
@@ -91,7 +105,7 @@ function Controller () {
     	readInputFealds();
     	backendCom.changeUser( name, password, eMail, function ( json ) {
     		if (json.userChanged) {
-    			window.alert('User settings changed');
+    			thisObj.overlay(JSON.stringify(json));
     			thisObj.loadHome();
     		}
                 
@@ -112,66 +126,72 @@ function Controller () {
     			thisObj.valid = true;
     			thisObj.loadHome();
     			
-    		} 
+    		} else thisObj.overlay('Wrong mail or password!<br>Please try again!!!');
     	});
     }
     
     //Start a Game
     this.startGame = function () {
+        /*
+        var robot = {
+            weaponPrototype : {
+                range : 100,
+                rateOfFire : 30,
+                damage : 10
+            },
+            armor : 100,
+            enginePower : 100,
+            behaviour : "gibts noch nicht"
+        };
         
-    	var robot = {
-			weaponPrototype : {
-				range : 100,
-				rateOfFire : 30,
-				damage : 10
-			},
-			armor : 100,
-			enginePower : 100,
-			behaviour : "gibts noch nicht"
-    	};
-    	
         $.ajax({
             type: "POST",
             data: JSON.stringify ( robot ),
             dataType: "json",
             url: "serverRequest/game-setNextRobot"
         }).done ( function ( json ) {
-        	console.log(json);
+            console.log(json);
         
-	        $.ajax({
-	            url: "serverRequest/game-joinBattleQuery"
-	        }).done ( function ( json ) {
-	        	console.log(json);
-	        	var intervallCounter = 20;
-	        	var intervall = window.setInterval(
-		        	function () {
-			            $.ajax({
-			                url: "serverRequest/game-getGameSituation"
-			            }).done ( function ( json ) {
-			            	console.log(json);
-			            });
-			            intervallCounter--;
-			            if (intervallCounter < 0) {
-			            	window.clearInterval(intervall);
-			            }
-		        	}, 1000
-		        );
-	        });
+            $.ajax({
+                url: "serverRequest/game-joinBattleQuery"
+            }).done ( function ( json ) {
+                console.log(json);
+                var intervallCounter = 20;
+                var intervall = window.setInterval(
+                    function () {
+                        $.ajax({
+                            url: "serverRequest/game-getGameSituation"
+                        }).done ( function ( json ) {
+                            console.log(json);
+                        });
+                        intervallCounter--;
+                        if (intervallCounter < 0) {
+                            window.clearInterval(intervall);
+                        }
+                    }, 1000
+                );
+            });
         });
-        
         /*
+        $.ajax({
+            url: "serverRequest/game/joinBattleQuery"
+        }).done ( function ( json ) {
+        	console.log(json);
+        }).fail ( function ( info ) {
+            console.log(info);
+        });
+        */
+        
     	$.ajax({
             url: "robots.html"
         }).done ( function ( html ) {
-        	$("body").html(html).promise().done(function(){
+        	$("#content").html(html).promise().done(function(){
         		GameController.main();
         		regisButtons();
         	});
         });
-        */
+        
     }
-    
-    
     
     //End a Game
     function endGame () {
@@ -181,7 +201,7 @@ function Controller () {
     //LogOut
     function logOut () {
     	backendCom.logOut( function () { 
-    		window.alert('You\'ve been logged out!\n')
+    		thisObj.overlay('You\'ve been logged out!')
     		thisObj.loadLogin(); });
     }
     
@@ -197,10 +217,10 @@ function Controller () {
         };
         backendCom.remove(name, password, eMail, function( json ) {
         	if ( json.removed ) {
-        		window.alert( 'User ' + name + ' has been removed' );
+        		thisObj.overlay('User ' + name + ' has been removed' );
         		thisObj.loadRegister();
         	} else {
-        		window.alert( 'There is no User: ' + name + '\n... Please try again...\nType in name, eMail and password' );
+        		thisObj.overlay('There is no User: ' + name + '\n... Please try again...\nType in name, eMail and password' );
         	}
         } );
     }
@@ -227,7 +247,7 @@ function Controller () {
         $("#btnLogIn").click( logIn );
         $("#btnLogOut").click( logOut );
         $("#btnRemove").click( remove );
-        $("#btnEndGame").click( endGame );
+        $("#btnEndGame").click( endGame /*function () {thisObj.loadHome(); }*/);
         $("#btnAccount").click( account );
         $("#btnChangeUser").click( changeUser );
         $("#btnSearchUser").click( searchUser );

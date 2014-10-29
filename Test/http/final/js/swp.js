@@ -10,6 +10,7 @@ function swp () {
                 rateOfFire : 30,
                 damage : 10
             },
+            color: controller.colors[0],
             armor : 100,
             enginePower : 100,
             behaviour : "gibts noch nicht"
@@ -17,7 +18,7 @@ function swp () {
     	//set first robot
     	$.ajax({
             type: "POST",
-            data: JSON.stringify ( robot ),
+            data: JSON.stringify ( robot/*GameController.allRobots*/ ),
             dataType: "json",
             url: "serverRequest/game-setNextRobot"
         }).done ( function ( json ) {
@@ -27,18 +28,20 @@ function swp () {
                 url: "serverRequest/game-joinBattleQuery"
             }).done ( function ( json ) {
                 console.log(json);
-                var intervallCounter = 20;
+                var intervallCounter = 21;
                 var intervall = window.setInterval(
                     function () {
                     	//get game situation in 1/sec up to 20x
                         $.ajax({
                             url: "serverRequest/game-getGameSituation"
                         }).done ( function ( json ) {
-                        	//obj.position = json;
+                        	obj.position = json;
+                        	/*
                         	obj.position = {
                         		posX: json.gameSituation.ich[0].position[0],
                         		posY: json.gameSituation.ich[0].position[1],
-                        	}
+                        	};
+                        	*/
                             //console.log(json.gameSituation.ich[0].position);
                         });
                         intervallCounter--;

@@ -7,15 +7,6 @@
 
 */
 
-* {
-	margin: 0 auto;
-	padding: 0;
-}
-
-img {
-	border: none;
-}
-
 root {
     display: block;
 }
@@ -97,6 +88,10 @@ footer {
 	width: 200px;
 	height: 150px;
 	margin-top: -10px;
+}
+
+.overlay > div {
+	margin-top: -25px;
 }
 
 .overlay > button {

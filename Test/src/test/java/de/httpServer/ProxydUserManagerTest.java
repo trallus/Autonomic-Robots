@@ -40,8 +40,8 @@ public class ProxydUserManagerTest {
 			.getClass().getInterfaces(), new TranactionHandler(
 			plainUserManager));
 	userManager = proxydUserManager;
-	user = userManager.getUser(null);
-	userManager.clareDB();
+	user = userManager.getUser(null, null);
+	userManager.clareDB(null);
     }
 
     /**
@@ -67,10 +67,10 @@ public class ProxydUserManagerTest {
      */
     @Test
     public void logInTestBevore() throws Exception {
-	final User user2 = userManager.getUser(null);
+	final User user2 = userManager.getUser(null, null);
 
 	try {
-	    userManager.logIn(eMail, password, user2);
+	    userManager.logIn(null, eMail, password, user2);
 	    fail("EmailNotFoundException expected");
 	}
 	catch (EmailNotFoundException expected) {
@@ -84,9 +84,9 @@ public class ProxydUserManagerTest {
      */
     @Test
     public void registerRemoveTest() throws Exception {
-	userManager.register(userName, eMail, password, user);
-	userManager.removeUser(eMail, password, user);
-	userManager.register(userName, eMail, password, user);
+	userManager.register(null, userName, eMail, password, user);
+	userManager.removeUser(null, eMail, password, user);
+	userManager.register(null, userName, eMail, password, user);
     }
 
     /**
@@ -96,11 +96,11 @@ public class ProxydUserManagerTest {
      */
     @Test
     public void registerTest2() throws Exception {
-	userManager.register(userName, eMail, password, user);
+	userManager.register(null, userName, eMail, password, user);
 
-	User user2 = userManager.getUser(null);
+	User user2 = userManager.getUser(null, null);
 	try {
-	    userManager.register("anotherName", eMail, password, user2);
+	    userManager.register(null, "anotherName", eMail, password, user2);
 	    fail("expected EmailInUseException");
 	}
 	catch (EmailInUseException e) {
@@ -114,11 +114,11 @@ public class ProxydUserManagerTest {
      */
     @Test
     public void registerTest3() throws Exception {
-	userManager.register(userName, eMail, password, user);
+	userManager.register(null, userName, eMail, password, user);
 
-	User user2 = userManager.getUser(null);
+	User user2 = userManager.getUser(null, null);
 	try {
-	    userManager.register(userName, "amotherEmail", password, user2);
+	    userManager.register(null, userName, "amotherEmail", password, user2);
 	    fail("expected NameInUseException");
 	}
 	catch (NameInUseException e) {
@@ -143,10 +143,10 @@ public class ProxydUserManagerTest {
 	expectedUserNames.add("mantest6");
 	// registrate the users
 	for (int i = 0; i < newUserNames.length; i++) {
-	    userManager.register(newUserNames[i], eMail + i, password, user);
+	    userManager.register(null, newUserNames[i], eMail + i, password, user);
 	}
 
-	final String[] resultUserNames = userManager.searchUser(searchPrefix);
+	final String[] resultUserNames = userManager.searchUser(null, searchPrefix);
 	for (final String resultName : resultUserNames) {
 	    final int i = expectedUserNames.indexOf(resultName);
 	    if (i == -1) {
@@ -173,14 +173,14 @@ public class ProxydUserManagerTest {
 	final String newPassword = "sadfkpadskfsadöfl";
 	final String newPasswordHash = "-25139618-11143-41105-7963-457511621-27-26";
 
-	userManager.register(userName, eMail, password, user);
-	userManager.logIn(eMail, password, user);
-	userManager.changeUser(user, newName, newEMail, newPassword);
+	userManager.register(null, userName, eMail, password, user);
+	userManager.logIn(null, eMail, password, user);
+	userManager.changeUser(null, user, newName, newEMail, newPassword);
 
-	userManager.logOut(user);
+	userManager.logOut(null, user);
 
-	final User testUser = userManager.getUser(null);
-	userManager.logIn(newEMail, newPassword, testUser);
+	final User testUser = userManager.getUser(null, null);
+	userManager.logIn(null, newEMail, newPassword, testUser);
 	final DBUser testBDUser = testUser.getDBUser();
 
 	assertEquals(testBDUser.getName(), newName);
@@ -195,11 +195,11 @@ public class ProxydUserManagerTest {
      */
     @Test
     public void logInTestAfter() throws Exception {
-	userManager.register(userName, eMail, password, user);
+	userManager.register(null, userName, eMail, password, user);
 
-	User user2 = userManager.getUser(null);
+	User user2 = userManager.getUser(null, null);
 
-	userManager.logIn(eMail, password, user2);
+	userManager.logIn(null, eMail, password, user2);
 
 	if (!user2.isLogedIn()) {
 	    fail("Unable to log in with registrated eMail");

@@ -15,14 +15,14 @@ public interface UserManager {
 	/**
 	 * remove all Users from Database
 	 */
-	void clareDB ();
+	void clareDB (CRUDIF db);
 
 	/**
 	 * update a user in database
 	 * 
 	 * @param user
 	 */
-	void upDate(User user);
+	void upDate(CRUDIF db, User user);
 
 	/**
 	 * get the user with this SID or create a new one
@@ -30,7 +30,7 @@ public interface UserManager {
 	 * @param sessionID
 	 * @return
 	 */
-	User getUser(String sessionID);
+	User getUser(CRUDIF db, String sessionID);
 
 	/**
 	 * registrate e new user in database
@@ -44,7 +44,7 @@ public interface UserManager {
 	 * @throws EmailInUseException
 	 * @throws NameInUseException 
 	 */
-	 String register(String userName, String eMail, String password, User user)
+	 String register(CRUDIF db, String userName, String eMail, String password, User user)
 			throws NoSuchAlgorithmException, EmailInUseException, NameInUseException;
 
 	/**
@@ -56,7 +56,7 @@ public interface UserManager {
 	 * @throws NoSuchAlgorithmException
 	 * @throws EmailNotFoundException
 	 */
-	void logIn(String eMail, String password, User user)
+	void logIn(CRUDIF db, String eMail, String password, User user)
 			throws NoSuchAlgorithmException, EmailNotFoundException;
 
 	/**
@@ -64,7 +64,7 @@ public interface UserManager {
 	 * 
 	 * @param user
 	 */
-	void logOut(User user);
+	void logOut(CRUDIF db, User user);
 	
 	/**
 	 * delete a user from database
@@ -73,7 +73,7 @@ public interface UserManager {
 	 * @throws EmailNotFoundException 
 	 * @throws NoSuchAlgorithmException 
 	 */
-	void removeUser ( String eMail, String password, User user )
+	void removeUser (CRUDIF db, String eMail, String password, User user )
 			throws NoSuchAlgorithmException, EmailNotFoundException;
 
 	/**
@@ -89,7 +89,7 @@ public interface UserManager {
 	 * @param userName
 	 * @return list of usernames: String []
 	 */
-	String[] searchUser ( String userName ); 
+	String[] searchUser (CRUDIF db, String userName ); 
 	
 	/**
 	 * Change atributes of a User
@@ -99,5 +99,5 @@ public interface UserManager {
 	 * @throws EmailInUseException 
 	 * @throws NoSuchAlgorithmException 
 	 */
-	void changeUser(User user, String newName, String newEMail, String newPassword) throws EmailInUseException, NameInUseException, NoSuchAlgorithmException; 
+	void changeUser(CRUDIF db, User user, String newName, String newEMail, String newPassword) throws EmailInUseException, NameInUseException, NoSuchAlgorithmException; 
 }

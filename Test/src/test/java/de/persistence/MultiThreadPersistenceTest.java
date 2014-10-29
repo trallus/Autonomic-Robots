@@ -60,7 +60,6 @@ public class MultiThreadPersistenceTest {
 		catch (InterruptedException e) {
 		    e.printStackTrace();
 		}
-		crud.insert(new DBUser());
 		psf.endTransaction(true, crud);
 	    }
 	}

@@ -75,7 +75,7 @@ public class ServerRequest extends Request {
 		this.httpExchange = httpExchange;
 
 		final String SID = getSessionID(httpExchange);
-		user = userManager.getUser(SID);
+		user = userManager.getUser(null, SID);
 		// was a new user created?
 		if (SID == null || !SID.equals(user.sessionID)) {
 			Log.debugLog("Send new SID");
@@ -113,29 +113,29 @@ public class ServerRequest extends Request {
 			final String registedKey = "registered";
 			replyJson.put(registedKey, false);
 			ClientUser clientUser = readClientUser();
-			userManager.register(clientUser.name, clientUser.eMail, clientUser.password, user);
+			userManager.register(null, clientUser.name, clientUser.eMail, clientUser.password, user);
 			replyJson.put(registedKey, true);
 		} else if (uri.indexOf("logIn") != -1) {
 			ClientUser clientUser = readClientUser();
-			userManager.logIn(clientUser.eMail, clientUser.password, user);
+			userManager.logIn(null, clientUser.eMail, clientUser.password, user);
 		} else if (uri.indexOf("logOut") != -1) {
-			userManager.logOut(user);
+			userManager.logOut(null, user);
 		} else if (uri.indexOf("remove") != -1) {
 			// just work with a new login -> save
 			final ClientUser clientUser = readClientUser();
 			final String removeKey = "removed";
 			replyJson.put(removeKey, false);
-			userManager.removeUser(clientUser.eMail, clientUser.password, user);
+			userManager.removeUser(null, clientUser.eMail, clientUser.password, user);
 			replyJson.put(removeKey, true);
 		} else if (uri.indexOf("searchUser") != -1) {
 			final ClientUser clientUser = readClientUser();
-			final String[] searchResule = userManager.searchUser(clientUser.name);
+			final String[] searchResule = userManager.searchUser(null, clientUser.name);
 			replyJson.put("searchResult", searchResule);
 		} else if (uri.indexOf("changeUser") != -1) {
 			final String userChangeKey = "userChanged";
 			replyJson.put(userChangeKey, false);
 			ClientUser clientUser = readClientUser();
-			userManager.changeUser(user, clientUser.name, clientUser.eMail, clientUser.password);
+			userManager.changeUser(null, user, clientUser.name, clientUser.eMail, clientUser.password);
 			replyJson.put(userChangeKey, true);
 		} else  {
 			replyJson.put("Unexpectrd URI", uri);

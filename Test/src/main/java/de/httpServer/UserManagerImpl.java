@@ -21,10 +21,6 @@ public class UserManagerImpl implements UserManager {
 	 */
 	private List<User> userList = new ArrayList<User>();
 	/**
-	 * connection to database
-	 */
-	public final CRUDIF db;
-	/**
 	 *  connection to database
 	 */
 	public final PersistenceFacade persistence;
@@ -42,8 +38,6 @@ public class UserManagerImpl implements UserManager {
 		// Start Database
 		persistence = new PersistenceFacade();
 		persistence.startDBSystem();
-		// Get Database Controller
-		db = persistence.getDBController();
 
 	}
 	
@@ -57,7 +51,7 @@ public class UserManagerImpl implements UserManager {
 	/**
 	 * remove all Users from Database
 	 */
-	public void clareDB () {
+	public void clareDB (final CRUDIF db) {
 		List<DBUser> userList = db.readAll(DBUser.class);
 		for ( DBUser u : userList ) {
 			db.remove(u);
@@ -69,7 +63,7 @@ public class UserManagerImpl implements UserManager {
 	 * 
 	 * @param user
 	 */
-	public void upDate(User user) {
+	public void upDate(final CRUDIF db, User user) {
 		db.update(user.getDBUser());
 	}
 
@@ -79,7 +73,7 @@ public class UserManagerImpl implements UserManager {
 	 * @param sessionID
 	 * @return
 	 */
-	public User getUser(String sessionID) {
+	public User getUser(final CRUDIF db, String sessionID) {
 
 		if (sessionID != null) {
 			for (User u : userList) {
@@ -103,9 +97,9 @@ public class UserManagerImpl implements UserManager {
 	 * @throws NoSuchAlgorithmException
 	 * @throws EmailInUseException
 	 */
-	public String register(String userName, String eMail, String password, User user)
+	public String register(final CRUDIF db, String userName, String eMail, String password, User user)
 			throws NoSuchAlgorithmException, EmailInUseException, NameInUseException {
-		checkInUse(eMail, userName);
+		checkInUse(db, eMail, userName);
 		// create new user in database
 		String passwordHash = convertToMD5Hash(password);
 		DBUser dbUser = new DBUser(userName, eMail, passwordHash);
@@ -125,9 +119,9 @@ public class UserManagerImpl implements UserManager {
 	 * @throws NoSuchAlgorithmException
 	 * @throws EmailNotFoundException
 	 */
-	public void logIn(String eMail, String password, User user)
+	public void logIn(final CRUDIF db, String eMail, String password, User user)
 			throws NoSuchAlgorithmException, EmailNotFoundException {
-		DBUser dbUser = getUserWithEmail(eMail);
+		DBUser dbUser = getUserWithEmail(db, eMail);
 		
 		if ( dbUser != null ) {
 			// test the password
@@ -151,7 +145,7 @@ public class UserManagerImpl implements UserManager {
 	 * 
 	 * @param user
 	 */
-	public void logOut(User user) {
+	public void logOut(final CRUDIF db, User user) {
 		userList.remove(user);
 		user.logOut();
 		ExceptionHandlerFacade.getExceptionHandler().log("User loged out, user name: " + user.getDBUser().getName(), this.getClass().toString()+".logOut");
@@ -164,15 +158,15 @@ public class UserManagerImpl implements UserManager {
 	 * @throws EmailNotFoundException 
 	 * @throws NoSuchAlgorithmException 
 	 */
-	public void removeUser ( String eMail, String password, User user ) throws NoSuchAlgorithmException, EmailNotFoundException {
-		logIn(eMail, password, user);	// to be sure that he will be removed
+	public void removeUser (final CRUDIF db, String eMail, String password, User user ) throws NoSuchAlgorithmException, EmailNotFoundException {
+		logIn(db, eMail, password, user);	// to be sure that he will be removed
 		db.remove(user.getDBUser());
 		user.logOut();
 		ExceptionHandlerFacade.getExceptionHandler().log("User removed: eMail: " + user.getDBUser().getEMail(), this.getClass().toString()+".register");
 	}
 
 	@Override
-	public String[] searchUser(String prefix) {
+	public String[] searchUser(final CRUDIF db, String prefix) {
 		final List<DBUser> allUsers = db.readAll(DBUser.class);
 		final ArrayList<String> nameList = new ArrayList<String>();
 		for (final DBUser u : allUsers) {
@@ -186,8 +180,8 @@ public class UserManagerImpl implements UserManager {
 	}
 
 	@Override
-	public void changeUser(User user, String newName, String newEMail, String newPassword) throws EmailInUseException, NameInUseException, NoSuchAlgorithmException {
-		checkInUse(newEMail, newName);
+	public void changeUser(final CRUDIF db, User user, String newName, String newEMail, String newPassword) throws EmailInUseException, NameInUseException, NoSuchAlgorithmException {
+		checkInUse(db, newEMail, newName);
 		
 		final DBUser dbu = user.getDBUser();
 		
@@ -253,7 +247,7 @@ public class UserManagerImpl implements UserManager {
 		return persistence;
 	}
 	
-	private DBUser getUserWithEmail ( String eMail ) {
+	private DBUser getUserWithEmail (final CRUDIF db, String eMail ) {
 		List<DBUser> userList = db.readAll(DBUser.class, "eMail", eMail);
 		if ( userList.size() == 0 ) {
 			return null;
@@ -262,7 +256,7 @@ public class UserManagerImpl implements UserManager {
 		return userList.get(0);
 	}
 	
-	private DBUser getUserWithName ( String name ) {
+	private DBUser getUserWithName (final CRUDIF db, String name ) {
 		List<DBUser> userList = db.readAll(DBUser.class, "name", name);
 		if ( userList.size() == 0 ) {
 			return null;
@@ -271,16 +265,16 @@ public class UserManagerImpl implements UserManager {
 		return userList.get(0);
 	}
 	
-	private void checkInUse (String eMail, String name) throws EmailInUseException, NameInUseException {
+	private void checkInUse (final CRUDIF db, String eMail, String name) throws EmailInUseException, NameInUseException {
 		// check if email already registered
-		if ( getUserWithEmail (eMail) != null ) {
+		if ( getUserWithEmail (db, eMail) != null ) {
 			final EmailInUseException e = new EmailInUseException("Registration failes. Email already registered.", true);
 			e.putParameter("name", name);
 			e.putParameter("eMail", eMail);
 			throw (e);
 		}
 		// check if name already registered
-		if ( getUserWithName (name) != null ) {
+		if ( getUserWithName (db, name) != null ) {
 			final NameInUseException e = new NameInUseException("Registration failes. Name already registered.", true);
 			e.putParameter("name", name);
 			e.putParameter("eMail", eMail);

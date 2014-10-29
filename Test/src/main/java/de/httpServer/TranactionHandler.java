@@ -21,9 +21,10 @@ public class TranactionHandler implements InvocationHandler {
 		final PersistenceFacade psf = userManager.getPersistence();
 		Object result = null;
 		
-		final CRUDIF crud = psf.getDBController();
+		final CRUDIF db = psf.getDBController();
+		args[0] = db;
 		
-		psf.beginTransaction(crud);
+		psf.beginTransaction(db);
 		
 		boolean correct = false;
 		try {
@@ -34,7 +35,7 @@ public class TranactionHandler implements InvocationHandler {
 			// wir wollen aber das Original
 			throw e.getCause();
 		} finally {
-			psf.endTransaction(correct,crud);
+			psf.endTransaction(correct, db);
 		}
 		
 		return result;

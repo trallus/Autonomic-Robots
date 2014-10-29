@@ -21,14 +21,16 @@ public class CRUDWorker implements CRUDIF {
      * Just Initializing the entityManagerFactory
      */
     protected CRUDWorker(final EntityManager em) {
-	try {
-	    this.em = em;
-	}
-	catch (Exception arg0) {
-	    final PersistenceException pex = new PersistenceException("CRUDWorker could not be initialized", arg0, false);
+	if(em == null){
+	    final PersistenceException pex = new PersistenceException("CRUDWorker could not be initialized", new NullPointerException(), false);
 	    pex.putParameter("EntityManager", em);
 	    throw pex;
 	}
+	this.em = em;
+    }
+    
+    protected EntityManager getEntityManager(){
+	return em;
     }
 
     /**

@@ -9,20 +9,18 @@ import javax.persistence.Persistence;
 
 import de.logger.ExceptionHandlerFacade;
 import de.logger.ExceptionHandlerIF;
-import de.logger.Log;
 
 /**
  * The Facade for the Persistence system
  * 
  * @author Mike Kiekebusch
- * @version 0.2
+ * @version 0.3
  * @since 15.05.2014
  */
 public class PersistenceFacade implements PersistenceFacadeIF {
 
     private boolean dbStarted;
     private EntityManagerFactory emf;
-    private EntityManager em;
     private ExceptionHandlerIF handler;
 
     public PersistenceFacade() {
@@ -36,7 +34,7 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	    throw new PersistenceException("DB System not started",
 		    new IllegalStateException(), false);
 	try {
-	    return new CRUDWorker(em);
+	    return new CRUDWorker(emf.createEntityManager());
 	}
 	catch (Exception arg0) {
 	    final PersistenceException pex = new PersistenceException(
@@ -49,12 +47,12 @@ public class PersistenceFacade implements PersistenceFacadeIF {
     public final void startDBSystem() {
 	if (dbStarted)
 	    throw new PersistenceException("DB System already started",
-		    new IllegalStateException(), dbStarted);
+		    new IllegalStateException(), false);
 	try {
 	    emf = Persistence.createEntityManagerFactory("monster");
-	    em = emf.createEntityManager();
+	    emf.createEntityManager(); //Check if DB really is started, will throw Exception otherwise
 	    dbStarted = true;
-	    handler.handle("DB system started", "PersistenceFacade");
+	    handler.log("DB system started", "PersistenceFacade");
 	}
 	catch (Exception arg0) {
 	    final PersistenceException pex = new PersistenceException("Could not start DB system", arg0, false);
@@ -65,12 +63,12 @@ public class PersistenceFacade implements PersistenceFacadeIF {
     @Override
     public final void shutdownDBSystem() {
 	if (!dbStarted)
-	    throw new PersistenceException("DB System not started", new IllegalStateException(), dbStarted);
+	    throw new PersistenceException("DB System not started", new IllegalStateException(), false);
 	try {
 	    DriverManager.getConnection("jdbc:derby:DB;shutdown=true");
 	}
 	catch (SQLNonTransientConnectionException expected) {
-	    handler.handle("DB system shutdown", "PersistenceFacade");
+	    handler.log("DB system shutdown", "PersistenceFacade");
 	    /*
 	     * DO NOTHING, this exception is thrown from derby during shutdown
 	     * and means no error See http://db.apache.org/derby/papers
@@ -88,29 +86,32 @@ public class PersistenceFacade implements PersistenceFacadeIF {
     }
 
     /**
-     * @see de.persistence.PersistenceFacadeIF#beginTransaction()
+     * @see de.persistence.PersistenceFacadeIF#beginTransaction(CRUDIF)
      */
     @Override
-    public void beginTransaction() {
+    public void beginTransaction(CRUDIF dbcontroller) {
 	if (!dbStarted)
-	    throw new PersistenceException("DB System not started", new IllegalStateException(), dbStarted);
+	    throw new PersistenceException("DB System not started", new IllegalStateException(), false);
 	try {
+	    EntityManager em = ((CRUDWorker) dbcontroller).getEntityManager();
 	    em.getTransaction().begin();
 	}
 	catch (Exception arg0) {
 	    final PersistenceException pex = new PersistenceException("Could not beginn database transaction", arg0, false);
+	    pex.putParameter("dbcontroller", dbcontroller);
 	    throw pex;
 	}
     }
 
     /**
-     * @see de.persistence.PersistenceFacadeIF#endTransaction(boolean)
+     * @see de.persistence.PersistenceFacadeIF#endTransaction(boolean, CRUDIF)
      */
     @Override
-    public void endTransaction(boolean state) {
+    public void endTransaction(boolean state,CRUDIF dbcontroller) {
 	if (!dbStarted)
-	    throw new PersistenceException("DB System not started", new IllegalStateException(), state);
+	    throw new PersistenceException("DB System not started", new IllegalStateException(), false);
 	try {
+	    EntityManager em = ((CRUDWorker) dbcontroller).getEntityManager();
 	    if (state) {
 		em.getTransaction().commit();
 	    }
@@ -119,7 +120,7 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	    }
 	}
 	catch (Exception arg0) {
-	    ExceptionHandlerFacade.getExceptionHandler().handle("Could not end transaction", "Persitence Facade", arg0);
+	    ExceptionHandlerFacade.getExceptionHandler().log("Could not end transaction", "Persitence Facade", arg0);
 	}
     }
 }

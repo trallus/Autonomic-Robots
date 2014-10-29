@@ -2,6 +2,7 @@ package de.httpServer;
 
 import java.security.NoSuchAlgorithmException;
 
+import de.persistence.CRUDIF;
 import de.persistence.PersistenceFacade;
 
 public interface UserManager {

@@ -111,7 +111,7 @@ public class UserManagerImpl implements UserManager {
 		DBUser dbUser = new DBUser(userName, eMail, passwordHash);
 		db.insert(dbUser);
 		user.setDBUser(dbUser);
-		ExceptionHandlerFacade.getExceptionHandler().handle("User registed, userName: " + userName, this.getClass().toString()+".register");
+		ExceptionHandlerFacade.getExceptionHandler().log("User registed, userName: " + userName, this.getClass().toString()+".register");
 		return "Registrierung erfolgreich";
 	}
 
@@ -135,7 +135,7 @@ public class UserManagerImpl implements UserManager {
 			if (dbUser.getPassword().equals(passwordHash)) {
 				user.logIn(dbUser);
 				final String caller = this.getClass().toString()+".logIn";
-				ExceptionHandlerFacade.getExceptionHandler().handle("Log in erfolgreich.", caller);
+				ExceptionHandlerFacade.getExceptionHandler().log("Log in erfolgreich.", caller);
 				return;
 			}
 		}
@@ -154,7 +154,7 @@ public class UserManagerImpl implements UserManager {
 	public void logOut(User user) {
 		userList.remove(user);
 		user.logOut();
-		ExceptionHandlerFacade.getExceptionHandler().handle("User loged out, user name: " + user.getDBUser().getName(), this.getClass().toString()+".logOut");
+		ExceptionHandlerFacade.getExceptionHandler().log("User loged out, user name: " + user.getDBUser().getName(), this.getClass().toString()+".logOut");
 	}
 	
 	/**
@@ -168,7 +168,7 @@ public class UserManagerImpl implements UserManager {
 		logIn(eMail, password, user);	// to be sure that he will be removed
 		db.remove(user.getDBUser());
 		user.logOut();
-		ExceptionHandlerFacade.getExceptionHandler().handle("User removed: eMail: " + user.getDBUser().getEMail(), this.getClass().toString()+".register");
+		ExceptionHandlerFacade.getExceptionHandler().log("User removed: eMail: " + user.getDBUser().getEMail(), this.getClass().toString()+".register");
 	}
 
 	@Override
@@ -204,7 +204,7 @@ public class UserManagerImpl implements UserManager {
 		
 		db.update(dbu);
 
-		ExceptionHandlerFacade.getExceptionHandler().handle("Chagne User: newName " + newName, this.getClass().toString()+".changeUser");
+		ExceptionHandlerFacade.getExceptionHandler().log("Chagne User: newName " + newName, this.getClass().toString()+".changeUser");
 	}
 
 	/**
@@ -218,7 +218,7 @@ public class UserManagerImpl implements UserManager {
 		final User u = new User(sessionID);
 		userList.add(u);
 
-		ExceptionHandlerFacade.getExceptionHandler().handle("Chagne User: user " + u.toString(), this.getClass().toString()+".createUser");
+		ExceptionHandlerFacade.getExceptionHandler().log("Chagne User: user " + u.toString(), this.getClass().toString()+".createUser");
 
 		return (u);
 	}

@@ -8,6 +8,7 @@ import de.logger.Failure;
  * @version 0.2
  * @since 15.05.2014
  */
+@SuppressWarnings("serial")
 public class PersistenceException extends Failure {
 
     public PersistenceException(String message, Exception cause,

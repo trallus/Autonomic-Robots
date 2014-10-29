@@ -30,7 +30,7 @@ public interface ExceptionHandlerIF {
      * @param caller
      *            Caller of this methode
      */
-    void handle(String message, String caller);
+    void log(String message, String caller);
 
     /**
      * Logs the given message, caller and cause information but will not inform
@@ -43,6 +43,6 @@ public interface ExceptionHandlerIF {
      * @param cause
      *            The cause for the logging
      */
-    void handle(String message, String caller, Throwable cause);
+    void log(String message, String caller, Throwable cause);
 
 }

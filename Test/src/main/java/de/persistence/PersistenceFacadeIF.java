@@ -26,13 +26,15 @@ public interface PersistenceFacadeIF {
     
     /**
      * Beginns a new Transaction
+     * @param dbcontroller The DB Controller for which the Transaction should be started
      */
-    public void beginTransaction();
+    public void beginTransaction(CRUDIF dbcontroller);
     
     /**
      * Ends the Transaction with the specified state
      * @param state	true := commit
      * 			false := rollback
+     * @param dbcontroller The DB Controller for which the Transaction should be ended
      */
-    public void endTransaction(boolean state);
+    public void endTransaction(boolean state, CRUDIF dbcontroller);
 }

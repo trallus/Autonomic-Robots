@@ -51,20 +51,20 @@ public class ExceptionHandler implements ExceptionHandlerIF {
     }
 
     /**
-     * @see de.logger.ExceptionHandlerIF#handle(java.lang.String,
+     * @see de.logger.ExceptionHandlerIF#log(java.lang.String,
      *      java.lang.String)
      */
     @Override
-    public void handle(String message, String caller) {
-	handle(message, caller, null);
+    public void log(String message, String caller) {
+	log(message, caller, null);
     }
 
     /**
-     * @see de.logger.ExceptionHandlerIF#handle(java.lang.String,
+     * @see de.logger.ExceptionHandlerIF#log(java.lang.String,
      *      java.lang.String, java.lang.Throwable)
      */
     @Override
-    public void handle(String message, String caller, Throwable cause) {
+    public void log(String message, String caller, Throwable cause) {
 	final String temp = caller+" with Message: "+message;
 	if(cause == null){
 	    printLog(temp);

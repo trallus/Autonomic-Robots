@@ -53,16 +53,16 @@ public class PersistenceTest {
     @After
     public void tearDown() throws Exception {
 	final List<DBUser> temp = crud.readAll(DBUser.class);
-	persistence.beginTransaction();
+	persistence.beginTransaction(crud);
 	for (DBUser u : temp) {
 	    crud.remove(u);
 	}
-	persistence.endTransaction(true);
+	persistence.endTransaction(true,crud);
     }
 
     @Test
     public void nullTest() {
-	persistence.beginTransaction();
+	persistence.beginTransaction(crud);
 	try {
 	    crud.insert(null);
 	    fail("No exception for insert(null)");
@@ -71,7 +71,7 @@ public class PersistenceTest {
 	    // Must throw this exception
 	}
 	finally {
-	    persistence.endTransaction(false);
+	    persistence.endTransaction(false,crud);
 	}
     }
     
@@ -79,7 +79,7 @@ public class PersistenceTest {
     public void stopAndRestartDBTest(){
 	persistence.shutdownDBSystem();
 	try{
-	    persistence.beginTransaction();
+	    persistence.beginTransaction(crud);
 	    fail("Expected IllegalStateException was not thrown");
 	}
 	catch(PersistenceException expected){
@@ -93,50 +93,50 @@ public class PersistenceTest {
 
     @Test
     public void insertReadTest() {
-	persistence.beginTransaction();
+	persistence.beginTransaction(crud);
 	crud.insert(user);
-	persistence.endTransaction(true);
+	persistence.endTransaction(true,crud);
 	assertEquals(user, crud.readID(user.getClass(), user.getId()));
     }
 
     @Test
     public void updateTest() {
-	persistence.beginTransaction();
+	persistence.beginTransaction(crud);
 	crud.insert(user);
-	persistence.endTransaction(true);
+	persistence.endTransaction(true,crud);
 	user.setName("Updated");
-	persistence.beginTransaction();
+	persistence.beginTransaction(crud);
 	crud.update(user);
-	persistence.endTransaction(true);
+	persistence.endTransaction(true,crud);
 	assertEquals(user, crud.readID(user.getClass(), user.getId()));
     }
 
     @Test
     public void removeTest() {
-	persistence.beginTransaction();
+	persistence.beginTransaction(crud);
 	crud.insert(user);
-	persistence.endTransaction(true);
+	persistence.endTransaction(true,crud);
 	assertEquals(1, crud.readAll(user.getClass()).size());
-	persistence.beginTransaction();
+	persistence.beginTransaction(crud);
 	crud.remove(user);
-	persistence.endTransaction(true);
+	persistence.endTransaction(true,crud);
 	assertEquals(0, crud.readAll(user.getClass()).size());
     }
 
     @Test
     public void readWhereTest() {
-	persistence.beginTransaction();
+	persistence.beginTransaction(crud);
 	crud.insert(user);
-	persistence.endTransaction(true);
+	persistence.endTransaction(true,crud);
 	assertEquals(1, crud.readAll(user.getClass(), "pwHash", "1245").size());
     }
 
     @Test
     public void transactionRolledBackTest() throws Exception {
 	assertEquals(0, crud.readAll(user.getClass()).size());
-	persistence.beginTransaction();
+	persistence.beginTransaction(crud);
 	crud.insert(user);
-	persistence.endTransaction(false);
+	persistence.endTransaction(false,crud);
 	assertEquals(0, crud.readAll(user.getClass()).size());
     }
 }

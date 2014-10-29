@@ -3,6 +3,7 @@ package de.httpServer;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
+import de.persistence.CRUDIF;
 import de.persistence.PersistenceFacade;
 
 public class TranactionHandler implements InvocationHandler {
@@ -20,7 +21,9 @@ public class TranactionHandler implements InvocationHandler {
 		final PersistenceFacade psf = userManager.getPersistence();
 		Object result = null;
 		
-		psf.beginTransaction();
+		final CRUDIF crud = psf.getDBController();
+		
+		psf.beginTransaction(crud);
 		
 		boolean correct = false;
 		try {
@@ -31,7 +34,7 @@ public class TranactionHandler implements InvocationHandler {
 			// wir wollen aber das Original
 			throw e.getCause();
 		} finally {
-			psf.endTransaction(correct);
+			psf.endTransaction(correct,crud);
 		}
 		
 		return result;

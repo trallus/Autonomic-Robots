@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BehaviourFactory>
+	<Fully_callified_class_names>
+		<!-- This means the class name with package for example de.game.behaviour.BehaviourFactory 
+			ofcourse the named class should implement the Behaviour Interface -->
+		<Behaviour>de.game.behaviour.DefaultBehaviour</Behaviour>
+	</Fully_callified_class_names>
+</BehaviourFactory>

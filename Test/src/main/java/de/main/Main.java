@@ -1,5 +1,6 @@
 package de.main;
 
+import de.game.behaviour.BehaviourFactory;
 import de.httpServer.HTTPServer;
 
 /**
@@ -24,6 +25,9 @@ public class Main {
 			portNumber = Integer.parseInt(args[0]);
 		}
 
+		//BehaviourFactory starten (XML wird geladen)
+		BehaviourFactory.getBehaviourFactory();
+		
 		// Start HTTP Server
 
 		String httpPath = System.getProperty("user.dir") + "/http/final/";

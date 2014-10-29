@@ -11,8 +11,8 @@ import de.logger.Failure;
 @SuppressWarnings("serial")
 public class PersistenceException extends Failure {
 
-    public PersistenceException(String message, Exception cause,
-	    boolean sendToUser) {
+    public PersistenceException(final String message, final Exception cause,
+	    final boolean sendToUser) {
 	super(message, cause, sendToUser);
     }
     

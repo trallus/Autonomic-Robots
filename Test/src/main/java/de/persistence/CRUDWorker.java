@@ -37,7 +37,7 @@ public class CRUDWorker implements CRUDIF {
      * @see de.persistence.CRUDIF#insert(java.lang.Object)
      */
     @Override
-    public void insert(Object obj) {
+    public void insert(final Object obj) {
 	try {
 	    if(!em.getTransaction().isActive())
 		throw new IllegalStateException("You must begin transaction first");
@@ -54,7 +54,7 @@ public class CRUDWorker implements CRUDIF {
      * @see de.persistence.CRUDIF#update(java.lang.Object)
      */
     @Override
-    public void update(Object obj) {
+    public void update(final Object obj) {
 	try {
 	    if(!em.getTransaction().isActive())
 		throw new IllegalStateException("You must begin transaction first");
@@ -71,7 +71,7 @@ public class CRUDWorker implements CRUDIF {
      * @see de.persistence.CRUDIF#remove(java.lang.Object)
      */
     @Override
-    public void remove(Object obj) {
+    public void remove(final Object obj) {
 	try {
 	    if(!em.getTransaction().isActive())
 		throw new IllegalStateException("You must begin transaction first");
@@ -88,7 +88,7 @@ public class CRUDWorker implements CRUDIF {
      * @see de.persistence.CRUDIF#readID(java.lang.Class, long)
      */
     @Override
-    public <T> T readID(Class<T> arg, long id) {
+    public <T> T readID(final Class<T> arg, final long id) {
 	try {
 	    final T result = em.find(arg, id);
 	    if (result == null)
@@ -107,7 +107,7 @@ public class CRUDWorker implements CRUDIF {
      * @see de.persistence.CRUDIF#readAll(java.lang.Class)
      */
     @Override
-    public <T> List<T> readAll(Class<T> arg) {
+    public <T> List<T> readAll(final Class<T> arg) {
 	try {
 	    final List<T> result = new ArrayList<>();
 	    final Query query = em.createQuery("SELECT x FROM " + arg.getName()
@@ -129,7 +129,7 @@ public class CRUDWorker implements CRUDIF {
      *      java.lang.Object)
      */
     @Override
-    public <T> List<T> readAll(Class<T> arg, String attributName,
+    public <T> List<T> readAll(final Class<T> arg, final String attributName,
 	    Object attributValue) {
 	try {
 	    final List<T> result = new ArrayList<>();

@@ -28,7 +28,7 @@ public interface PersistenceFacadeIF {
      * Beginns a new Transaction
      * @param dbcontroller The DB Controller for which the Transaction should be started
      */
-    public void beginTransaction(CRUDIF dbcontroller);
+    public void beginTransaction(final CRUDIF dbcontroller);
     
     /**
      * Ends the Transaction with the specified state
@@ -36,5 +36,5 @@ public interface PersistenceFacadeIF {
      * 			false := rollback
      * @param dbcontroller The DB Controller for which the Transaction should be ended
      */
-    public void endTransaction(boolean state, CRUDIF dbcontroller);
+    public void endTransaction(final boolean state, final CRUDIF dbcontroller);
 }

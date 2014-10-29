@@ -89,7 +89,7 @@ public class PersistenceFacade implements PersistenceFacadeIF {
      * @see de.persistence.PersistenceFacadeIF#beginTransaction(CRUDIF)
      */
     @Override
-    public void beginTransaction(CRUDIF dbcontroller) {
+    public void beginTransaction(final CRUDIF dbcontroller) {
 	if (!dbStarted)
 	    throw new PersistenceException("DB System not started", new IllegalStateException(), false);
 	try {
@@ -107,7 +107,7 @@ public class PersistenceFacade implements PersistenceFacadeIF {
      * @see de.persistence.PersistenceFacadeIF#endTransaction(boolean, CRUDIF)
      */
     @Override
-    public void endTransaction(boolean state,CRUDIF dbcontroller) {
+    public void endTransaction(final boolean state,final CRUDIF dbcontroller) {
 	if (!dbStarted)
 	    throw new PersistenceException("DB System not started", new IllegalStateException(), false);
 	try {

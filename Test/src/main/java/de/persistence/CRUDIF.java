@@ -16,7 +16,7 @@ public interface CRUDIF {
      * @param obj
      *            The Entity that should be inserted
      */
-    void insert(Object obj);
+    void insert(final Object obj);
 
     /**
      * Updates the given Entity that already exist in the DataBase
@@ -24,7 +24,7 @@ public interface CRUDIF {
      * @param obj
      *            The Entity which should be upgraded
      */
-    void update(Object obj);
+    void update(final Object obj);
 
     /**
      * Removes the given Entity from the Database
@@ -32,7 +32,7 @@ public interface CRUDIF {
      * @param obj
      *            The Entity that should be removed
      */
-    void remove(Object obj);
+    void remove(final Object obj);
 
     /**
      * Read the Entity of the given class with the given id from the DataBase
@@ -43,7 +43,7 @@ public interface CRUDIF {
      *            The id of the desired Entity
      * @return The desired Entity
      */
-    <T> T readID(Class<T> arg, long id);
+    <T> T readID(final Class<T> arg, long id);
 
     /**
      * Reads all Entities of the given class from the DataBase
@@ -52,7 +52,7 @@ public interface CRUDIF {
      *            The class of the desired Entities
      * @return List of all found Entities
      */
-    <T> List<T> readAll(Class<T> arg);
+    <T> List<T> readAll(final Class<T> arg);
 
     /**
      * Reads all Entities of the given class with the attribut Name-Value pair
@@ -66,5 +66,5 @@ public interface CRUDIF {
      *            The value of the attribute
      * @return List of all found Entities
      */
-    <T> List<T> readAll(Class<T> arg, String attributName, Object attributValue);
+    <T> List<T> readAll(final Class<T> arg, String attributName, Object attributValue);
 }

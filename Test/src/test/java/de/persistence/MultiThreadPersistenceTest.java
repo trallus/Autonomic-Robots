@@ -49,6 +49,7 @@ public class MultiThreadPersistenceTest {
 	    crud = psf.getDBController();
 	}
 	
+	@SuppressWarnings("static-access")
 	@Override
 	public void run(){
 	    for(int i=0;i<1000;i++){

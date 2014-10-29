@@ -1,14 +1,16 @@
-function Robot ( frameControler, server ) {
-    var posX = 575;
-    var posY = 375;
+function Robot ( frameControler, server, id ) {
+    //var posX = 575;
+    //var posY = 375;
+    var posX = 100;
+    var posY = 100;
     var speed = 0; // pix / sec
     var direction = Math.PI;
-    var destinationX = 100;
+    var random = Math.random()*3;
+    var destinationX = 100*random;
     var destinationY = 100;
     var acceleration = 10; // pix / (sec*sec)
     //var color = getColor();
-    var color = getColor();
-    this.getRobotColor = color;
+    //this.getRobotColor = color;
     var radius = 10;
     var moveVector = new Array(0, 0);
     var mass = 1; // Gewicht des Robot
@@ -34,12 +36,25 @@ function Robot ( frameControler, server ) {
         posX = p[0];
         posY = p[1];
     };
+    this.getRoboColor = function () {
+        return controller.colors[id];
+    };
     
     function onFrame ( context, timeSinceLastDraw ) {
 
         if (server.position) {
+       /*
             destinationX = server.position.posX;
             destinationY = server.position.posY;
+            var name = Object.getOwnPropertyNames ( server.position.gameSituation)[0];
+    	var size = Object.keys(server.position.gameSituation[name]).length;
+           */
+           var name = Object.getOwnPropertyNames ( server.position.gameSituation)[0];
+           destinationX = server.position.gameSituation[name][id].position[0];
+           destinationY = server.position.gameSituation[name][id].position[1];
+           //console.log(destinationX + '   '  + destinationY);
+           //console.log(server.position);
+           
         }
         
         calcPosition ( timeSinceLastDraw );
@@ -63,7 +78,7 @@ function Robot ( frameControler, server ) {
         
         // set drawing style
         context.lineWidth = 2;
-        context.strokeStyle =  color;
+        context.strokeStyle =  controller.colors[id];
         
         // actually start drawing
         context.stroke(); 

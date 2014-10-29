@@ -30,7 +30,7 @@ function GUI ( frameControler, server ) {
         canvas.width = 600;
         canvas.height = 423;
         obj.context = canvas.getContext("2d");
-        fillSelect();
+        //fillSelect();
         
         frameControler.addOnNewFrame ( draw );
         
@@ -39,33 +39,57 @@ function GUI ( frameControler, server ) {
     };
     
     this.newRobot = function () {
-    	robo = new Robot ( frameControler, server );
-    	color = robo.getRobotColor;
+    	var id = robotNum-1;
+    	robo = new Robot ( frameControler, server, id );
+    	color = controller.colors[id];
+    	
         allRobots.push(robo);
     };
     
     
     function fillSelect() {
-    	var data = [ {'1':'Robot ' + robotNum} ];
+    	var data = [ {'1':'Robot ' + (robotNum-1)} ];
     	$select = $('#robots');
 		$.each(data, function(i, val){
-			$select.append($('<option />', { value: (i+1), text: val[i+1] }));
+			$select.append($('<option />', { value: (i), text: val[i+1] }));
 		});
 		
     };
     
     function timer() {
+    /*
     	count = count-1;
     	if (count == 0)
     		{
     		obj.newRobot();
     		robotNum++;
     		fillSelect();
+    		console.log(server.position.gameSituation.ich);
     		
-    		
-    		count = 10;
+    		count = 13;
     		timer();
     		}
+    		*/
+    		count--;
+    		//console.log(Object.getOwnPropertyNames ( server.position.gameSituation)[0]);
+    if(server.position.gameSituation == undefined){
+    }
+    else{
+    	var name = Object.getOwnPropertyNames ( server.position.gameSituation)[0];
+    	var size = Object.keys(server.position.gameSituation[name]).length;
+		//console.log(size);
+    	if (size == robotNum) {
+    		obj.newRobot();
+    		robotNum++;
+    		fillSelect();
+    		count=10;
+    		if(size < 2) { 
+    			timer();
+    		} else { 
+    			clearInterval(counter);		
+    			}
+    		}
+    	}
     }
     
     
@@ -97,15 +121,19 @@ function GUI ( frameControler, server ) {
         x.fillStyle = '#FFFFFF';
         x.fillText( 'Playtime:  ' + msToTime(time), 15, 30);
         x.fillText( 'New Robot in:       ' + count, 15, 75);
-        x.fillText( 'Count of Robots:   ' + robotNum, 15, 120)
-        /**
-        e = document.getElementById("robots");
-		selectedItem = e.options[e.selectedIndex].text;
+        x.fillText( 'Count of Robots:   ' + (robotNum-1), 15, 120);
+        
+        //e = document.getElementById("#robots");
+        e = $("#robots").children(":selected").text();
+        if(e != ''){
+		//selectedItem = e.options[e.selectedIndex].text;
 		
-		x.fillText( 'Selected:     ' + selectedItem, 15, 165)
-		**/
+		x.fillText( 'Selected:     ' + e, 15, 165);
+		e = '';
+		}
 		x.fillStyle = color;
-		x.fillText( 'LAST ROBOT COLOR', 15, 360)
+		//console.log(color);
+		x.fillText( 'LAST ROBOT COLOR', 15, 360);
         
     }
     

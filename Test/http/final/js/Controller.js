@@ -3,10 +3,12 @@ function Controller () {
 	var thisObj = this;
     var server = "serverRequest";
     var backendCom = new BackendCom ();
-    var name;
+    thisObj.name;
     var password;
     var eMail;
     var user;
+    var $select;
+	thisObj.colors = [];
     
     //Get Html Parts
     //
@@ -25,33 +27,33 @@ function Controller () {
     //LoadAccountPage
     this.loadAccount = function () {
     	getAJAX ( "account.html" );
-    }
+    };
     
     //LoadRegistrationPage
     this.loadRegister = function () {
     	getAJAX ( "signup.html" );
-    }
+    };
     
     //LoadHomePage
     this.loadHome = function () {
     	getAJAX ( "home.html" );
-    }
+    };
     
     //LoadLoginPage
     this.loadLogin = function () {
     	getAJAX ( "login.html" );
-    }
+    };
     
     //LogOut
     this.logOut = function () {
     	backendCom.logOut( function () {
     		thisObj.loadLogin();
     	});
-    }
+    };
     
     this.endGame = function () {
     	backendCom.endGame( name, password, eMail, function () { thisObj.loadHome(); } );
-    }
+    };
     
     //handle User
     //
@@ -70,7 +72,7 @@ function Controller () {
 
         			if ( json.registered ) {
         				var text = 'Successfully registered... <br>Welcome ' + name + '!!!<br>';
-                        thisObj.overlay(text)
+                        thisObj.overlay(text);
         				logIn();
             	
         			} else {
@@ -88,7 +90,7 @@ function Controller () {
             var el = $("#overlay").show();
             $( '<p id="infoText">INFO!!!<br><br>' + json + '</p>' ).insertBefore( ".infoPush" );
         });
-    }
+    };
 
     //close the overlay and remove the tag with id "infoText"
     this.overlayOff = function () {
@@ -97,8 +99,12 @@ function Controller () {
             var el = $("#overlay").hide();
             //el.remove('#infoText');
             $( "#infoText" ).remove();
+            $( "#btnOverlayOff" ).show();
+            $( "#btnStartGame" ).remove();
+            $( "#setRobot" ).remove();
+            $("#overlay p").remove();
         });
-    }
+    };
     
     //Change User Settings
     function changeUser() {
@@ -190,8 +196,16 @@ function Controller () {
         		regisButtons();
         	});
         });
-        
-    }
+    };
+    
+    
+    this.setRobot = function () {
+    $( "#btnOverlayOff" ).hide();
+    	thisObj.overlay('<div id="setRobot"><select id="robot1"><option value="#F00">red</option><option value="#green">green</option><option value="#blue">blue</option><option value="#black">black</option></select>'
+    	+ '<select id="robot2"><option value="#0F0">green</option><option value="#F00">red</option><option value="#blue">blue</option><option value="#black">black</option></select>'
+    	+ '<div class="button" id="btnStartGame" style="cursor: pointer" onClick="controller.setRoboColor();controller.startGame();controller.overlayOff()">startGame</div></div>'
+    	);
+    };
     
     //End a Game
     function endGame () {
@@ -201,7 +215,7 @@ function Controller () {
     //LogOut
     function logOut () {
     	backendCom.logOut( function () { 
-    		thisObj.overlay('You\'ve been logged out!')
+    		thisObj.overlay('You\'ve been logged out!');
     		thisObj.loadLogin(); });
     }
     
@@ -247,7 +261,7 @@ function Controller () {
         $("#btnLogIn").click( logIn );
         $("#btnLogOut").click( logOut );
         $("#btnRemove").click( remove );
-        $("#btnEndGame").click( endGame /*function () {thisObj.loadHome(); }*/);
+        $("#btnEndGame").click( endGame );
         $("#btnAccount").click( account );
         $("#btnChangeUser").click( changeUser );
         $("#btnSearchUser").click( searchUser );
@@ -273,7 +287,13 @@ function Controller () {
 	        }
 	    }
 	    return false;
-	}    
+	}
+	//sets first two robot colors
+	this.setRoboColor = function () {
+		thisObj.colors[0] = $( "#robot1" ).val();
+		thisObj.colors[1] = $( "#robot2" ).val();
+		//console.log(thisObj.colors[0]+ ' ' + thisObj.colors[1]);
+	}; 
 };
 
 //HTML ACCESS
@@ -282,6 +302,9 @@ var controller;
 function start () {
 	controller = new Controller ();
 };
+
+;
+
 
 
 	 

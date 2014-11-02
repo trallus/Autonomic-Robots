@@ -1,0 +1,129 @@
+* {
+	margin: 0 auto;
+	padding: 0;
+	
+}
+
+img {
+	border: none;
+}
+
+h1 {
+	font-family: Verdana;
+	font-size: 1.7em;
+    text-align: center;
+}
+
+h1 p {	
+}
+
+
+
+caption {
+	font-style: bold;
+	font-family: Verdana;
+	font-size: 1.8em;
+	
+}
+
+body {
+	color: #ffffff;
+	font-family:   Andale Mono, Courier New, Sans-serif;
+	font-size: 100%;
+	background: url("images/background.png");
+	background-size: 100%;
+	background-repeat:no-repeat;
+	background-color: #000000;
+			
+}
+#tableNone{
+    margin-top: -10px;
+
+}
+
+#tableNone > td {
+
+}
+
+#header {
+	font-size: 2em;
+}
+
+#down {
+	margin-top: 100px;
+	
+	width: 250px;
+	border-top-left-radius: 7px;
+	border-top-right-radius: 7px;
+	border-bottom-left-radius: 7px;
+	border-bottom-right-radius: 7px;
+	background: rgba(256,256,256, 0.3);
+}
+
+#wood {
+	height: 14px;
+}
+
+//neu util als hover für nachrichten ab hier
+#wrap {
+    width:300px;
+    padding:64px 0;
+    position: absolute;
+    top:50%;
+    left:50%;
+    margin:-100px 0 0 -150px;
+    text-align:center;
+}
+
+
+#wrap a {
+    font-family: 'Pathway Gothic One', sans-serif;
+    font-size:72px;
+    color:#000;
+    text-transform:uppercase;
+    -webkit-transition: .25s ease;
+            transition: .25s ease;
+}
+
+#popup {
+    display: none;
+    position: absolute;
+    z-index: 1000;
+    text-align: center;
+    top:50%;
+    left:50%;
+    margin:-100px 0 0 -150px;
+    background:#fff;
+    width:240px;
+    height:140px;
+    padding:30px;
+    -webkit-box-shadow:
+        0 0 125px 0 rgba(0,0,0,1),
+        0 0 10000px 500px rgba(0,0,0,.75);
+            box-shadow:
+        0 0 125px 0 rgba(0,0,0,1),
+        0 0 10000px 500px rgba(0,0,0,.75);
+    border-radius:5px;
+   
+    
+}
+
+#popup h2 {
+    font-family: 'Pathway Gothic One', sans-serif;
+    font-size:36px;
+    color:#000;
+    text-transform:uppercase;
+}
+
+#popup a{
+    font-family: 'Pathway Gothic One', sans-serif;
+    font-size:16px;
+    color:#000;
+    text-transform:uppercase;
+    -webkit-transition: .25s ease;
+            transition: .25s ease;
+}
+
+#wrap a:hover, #popup a:hover {
+    color:#b42b25; 
+}

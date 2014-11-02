@@ -77,6 +77,11 @@ public class Battle extends Thread implements Runnable {
 		
 		final long battleTimeLeft = startTimeMs + timeLimitMs - currentTime;
 		if (battleTimeLeft < 0) {
+			for (User u : users) {
+				for(Robot r : u.getBattleRobots()) {
+					u.removeBattleRobot(r);
+				}
+			}
 			Log.log("Battle End: "+id);
 			return;	// Battle End
 		}

@@ -4,8 +4,8 @@ function GUI(frameControler, server) {
 	var ctx;
 	this.context;
 	var x;
-	var start;
-	var count = 10;
+	//var start;
+	var count = 1;
 	var counter = setInterval(timer, 1000);
 	var robotNum = 1;
 	var data;
@@ -15,7 +15,9 @@ function GUI(frameControler, server) {
 	var e;
 	var selectedItem;
 	var allRobots = [];
+	var RIP = [];
 	var physic;
+	var start = new Date();
 
 	//mouse on canvas detection (using robot.hitTest)
 	//setting request animation frame for different browser
@@ -71,6 +73,14 @@ function GUI(frameControler, server) {
 			if (allRobots[i].hitTest(pt.x, pt.y)) {
 				allRobots[i].color = "#ffffff";
 				console.log("AUSGEWAEHLTER ROBOT: " + i);
+				//allRobots.push({id: i});
+				//console.log(allRobots[i]);
+				s = document.createElement("article");
+				s.setAttribute("class", "pushSelection");
+				var e = document.createElement("P");
+				e.innerHTML="robot " + i + " selected";
+				s.appendChild(e);
+				document.getElementById("gameSelect").appendChild(s);
 			}
 			// Set the color to red to demonstrate the "hit"
 		}
@@ -172,7 +182,7 @@ function GUI(frameControler, server) {
 				clearInterval(counter);
 			}
 		}
-		requestAnimFrame(timer);
+		//requestAnimFrame(timer);
 		//timer();
 	}
 
@@ -216,20 +226,20 @@ function GUI(frameControler, server) {
        // context.fill();
         // actually start drawing
         x.stroke();
-        x.strokeStyle = "#000"
+        x.strokeStyle = "#000";
 		//ctx.width = ctx.width;
-		/*
+		
 		var time = parseInt((new Date().getTime() - start), 10);
 
 		//x.fillText( ((time / (60 * 1000)) % 60) + ':' +  ((time / 1000) % 60) + '<br/>' , 10, 10);
-		x.font = "15px Verdana";
+		x.font = "13px Verdana";
 		//x.font = "16px Andale Mono";
 		x.fillStyle = '#FFFFFF';
-		x.fillText('Playtime:  ' + msToTime(time), 15, 30);
-		x.fillText('New Robot in:       ' + count, 15, 75);
-		x.fillText('Count of Robots:   ' + (robotNum - 1), 15, 120);
-
-		//e = document.getElementById("#robots");
+		x.fillText('Playtime:  ' + msToTime(time), 469, 10);
+		x.fillText('New Robot in:   ' + count, 0, 10);
+		//x.fillText('Count of Robots:   ' + (robotNum - 1), 15, 120);
+		
+		/*//e = document.getElementById("#robots");
 		e = $("#robots").children(":selected").text();
 		if (e != '') {
 			//selectedItem = e.options[e.selectedIndex].text;
@@ -237,9 +247,9 @@ function GUI(frameControler, server) {
 			x.fillText('Selected:     ' + e, 15, 165);
 			e = '';
 		}
-		x.fillStyle = color;
+		//x.fillStyle = color;
 		//console.log(color);
-		x.fillText('LAST ROBOT COLOR', 15, 360);
+		//x.fillText('LAST ROBOT COLOR', 15, 360);
 		*/
 
 	}

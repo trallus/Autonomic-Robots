@@ -111,7 +111,7 @@ function Robot ( frameControler, server, id ) {
         context.arc( posX, posY, radius/2, 0, 2 * Math.PI, false);
         
         // set drawing style
-        context.lineWidth = 2;
+        context.lineWidth = 1;
         context.strokeStyle =  controller.colors[id];
         context.fillStyle= "#0f0";
         context.fill();

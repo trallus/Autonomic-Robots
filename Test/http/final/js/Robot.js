@@ -11,11 +11,14 @@ function Robot ( frameControler, server, id ) {
     var destinationX = 100*random;
     var destinationY = 100;
     var acceleration = 10; // pix / (sec*sec)
-    //var color = getColor();
-    //this.getRobotColor = color;
     var radius = 10;
     var moveVector = new Array(0, 0);
     var mass = 1; // Gewicht des Robot
+    var canvaswidth = 600;
+    var canvasheight = 423;
+    posX = posX + canvaswidth/2; 
+    posY = posY + canvasheight/2;
+    var colors = ["#0f0", "red"];
     
    
     function construct () {
@@ -49,32 +52,25 @@ function Robot ( frameControler, server, id ) {
         var dy = y - posY;
         return dx * dx + dy * dy <= radius * radius;
     };
-    
-    
-
 
     
     //onframe
     function onFrame ( context, timeSinceLastDraw ) {
-
+		var i = 0;
         if (server.position.gameSituation) {
-       /*
-            destinationX = server.position.posX;
-            destinationY = server.position.posY;
-            
-    	var size = Object.keys(server.position.gameSituation[name]).length;
-           */ 
-           var name = Object.getOwnPropertyNames ( server.position.gameSituation)[0];  
-           if(server.position.gameSituation[name][id]) {
-	           var name = Object.getOwnPropertyNames ( server.position.gameSituation)[0];
-	           destinationX = server.position.gameSituation[name][id].position[0];
-	           destinationY = server.position.gameSituation[name][id].position[1];
-	           //console.log(destinationX + '   '  + destinationY);
-	           //console.log(server.position);
-         	} 		
-         	else {return;}  
-        }
-        
+        	for(var keys in server.position.gameSituation){
+           		var name = Object.getOwnPropertyNames ( server.position.gameSituation)[i];  
+           		if(server.position.gameSituation[name][id]) {
+	           		var name = Object.getOwnPropertyNames ( server.position.gameSituation)[0];
+	           		destinationX = server.position.gameSituation[name][id].position[0] + canvaswidth/2;
+	           		destinationY = server.position.gameSituation[name][id].position[1] + canvasheight/2;
+	           		//console.log(destinationX + '   '  + destinationY);
+	           		//console.log(server.position);
+	         	} 		
+	         	else {return;}  
+	        	}
+	        }
+	        
         calcPosition ( timeSinceLastDraw );
         draw ( context );
     }
@@ -90,7 +86,8 @@ function Robot ( frameControler, server, id ) {
     
     
     function draw ( context ) {
-    
+    	
+    	//context.translate(canvaswidth/2,canvasheight/2);
     	context.beginPath();
     	context.fillStyle = '#000000';
     	context.fillRect(posX-16,posY-24,32,15);
@@ -112,8 +109,9 @@ function Robot ( frameControler, server, id ) {
         
         // set drawing style
         context.lineWidth = 1;
-        context.strokeStyle =  controller.colors[id];
-        context.fillStyle= "#0f0";
+        context.strokeStyle =  "#000";
+        //context.fillStyle= "#0f0";
+        context.fillStyle= colors[id%2];
         context.fill();
         // actually start drawing
         context.stroke(); 

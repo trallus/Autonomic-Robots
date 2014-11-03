@@ -1,11 +1,12 @@
-function swp () {
+function swp (controller) {
     var obj = this;
-    var robot;
+    this.robot=false;
     this.position = false;
-    
-    this.serverRobo = function  (roboSet) {
-    	/*
-    	robot = {
+ 
+    this.serverRobo =  function () {
+    	//controller.getRobot();
+    	roboSet = controller.roboSet;
+    	var r = {
             weaponPrototype : {
                 range : roboSet[0],
                 rateOfFire : roboSet[1],
@@ -15,15 +16,15 @@ function swp () {
             enginePower : roboSet[4],
             behaviour : roboSet[5]
         };
-        */
-        //console.log(robot);
+        obj.robot = r;
+        console.log(obj.robot);
+        
     };
-    
+ 
     
     function getNextServerFrame () {
-    	//obj.serverRobo(controller.roboSet);
     	//prototype robot (set new Robot() give back) - SET ROBOT FORM
-    	///*
+    	/*
     	var robot = {
             weaponPrototype : {
                 range : 100,
@@ -35,12 +36,12 @@ function swp () {
             enginePower : 100,
             behaviour : "gibts noch nicht"
         };
-        //*/
-        //robot = this.robot;
-    	//set first robot
+        */
+    	obj.serverRobo();
+        
     	$.ajax({
             type: "POST",
-            data: JSON.stringify ( robot/*GameController.allRobots*/ ),
+            data: JSON.stringify ( obj.robot/*GameController.allRobots*/ ),
             dataType: "json",
             url: "serverRequest/game-setNextRobot"
         }).done ( function ( json ) {

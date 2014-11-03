@@ -12,11 +12,14 @@ root {
 }
 
 table {
+	/*//box-shadow: 0 0 125px 0 rgba(0, 0, 0, 1), 0 0 10000px 500px rgba(0, 0, 0, 0.25);
 	
-	/*
 	margin-top: 100px;
 	background-color: gray;
 	*/
+}
+tr{
+	//box-shadow: 0 0 125px 0 rgba(0, 0, 0, 1), 0 0 10000px 500px rgba(0, 0, 0, 0.15);
 }
 caption { 
 	font-size: 1.3em;
@@ -38,9 +41,9 @@ caption {
 	
 }
 .selection {
-	position: relative;
-	margin-top:  500 px;
-	//width: 300px;
+	//position: relative;
+	//margin-top:  500 px;
+	//width: 100px;
 }  
 
 .selection > .pushSelection {

@@ -8,10 +8,12 @@ function Controller() {
 	var eMail;
 	var user;
 	var $select;
-	thisObj.colors = [];
-	thisObj.roboSet;
+	//access for changed robot values by user
+	thisObj.roboSet = [];
+	//control values for upgrade a robot
 	var control = 0;
 	var upgrade = 5;
+	//default robo issue names & values
 	var roboName = ["range", "rateOfFire", "damage", "armor", "enginePower", "behavior"];
 	var roboVal = [100, 30, 10, 100, 100, "gibts noch nicht"];
 
@@ -29,7 +31,7 @@ function Controller() {
 		});
 	}
 
-
+	//open debug file - auto.html - in a new window
 	this.loadDebug = function() {
 		window.open("auto.html");
 	};
@@ -69,6 +71,30 @@ function Controller() {
 
 	//handle User
 	//
+	//Start a Game
+	this.startGame = function() {
+
+		$.ajax({
+			url : "robots.html"
+		}).done(function(html) {
+			$("#content").html(html).promise().done(function() {
+				GameController.main(thisObj);
+				document.getElementById("setNext").appendChild(setNext());
+				$("#setNext").show();
+				regisButtons();
+			});
+		});
+	};
+	
+	//End a Game
+	function endGame() {
+		backendCom.endGame(name, password, eMail, function() {
+			thisObj.loadHome();
+			//$("#overlay").hide();
+			$("#setNext").hide();
+		});
+	}
+	
 	//Registration
 	function registration() {
 		readInputFealds();
@@ -92,29 +118,6 @@ function Controller() {
 			}
 		}
 	}
-
-	//open a overlay with a text string called json
-	this.overlay = function(json) {
-		$(document).ready(function() {
-			$('#content').hide();
-			var el = $("#overlay").show();
-			$('<p id="infoText">INFO!<br><br>' + json + '</p>').insertBefore(".infoPush");
-		});
-	};
-
-	//close the overlay and remove the tag with id "infoText"
-	this.overlayOff = function() {
-		$(document).ready(function() {
-			$("#content").show();
-			var el = $("#overlay").hide();
-			//el.remove('#infoText');
-			$("#infoText").remove();
-			$("#btnOverlayOff").show();
-			$("#btnStartGame").remove();
-			$("#setRobot").remove();
-			$("#overlay p").remove();
-		});
-	};
 
 	//Change User Settings
 	function changeUser() {
@@ -143,132 +146,6 @@ function Controller() {
 
 			} else
 				thisObj.overlay('Wrong mail or password!<br>Please try again!!!');
-		});
-	}
-
-	//Start a Game
-	this.startGame = function() {
-
-		$.ajax({
-			url : "robots.html"
-		}).done(function(html) {
-			$("#content").html(html).promise().done(function() {
-				GameController.main(thisObj);
-				document.getElementById("setNext").appendChild(setNext());
-				$("#setNext").show();
-				regisButtons();
-			});
-		});
-	};
-	//set next robot div element builder
-	function setNext() {
-
-		$("#btnOverlayOff").hide();
-		var div = document.createElement("div");
-		div.id = "setRobot";
-		div.setAttribute("class", "setRobot");
-		var x = document.createElement("LABEL");
-		x.innerHTML = "Set next robot via arrow up or down for changes on selected numbers - MAX => +5<br><br>";//" + "<br>" + "
-		div.appendChild(x);
-		for (var i = 0; i < 6; i++) {
-
-			//var plus = document.createElement("p");
-			//var min = document.createElement("p");
-			//plus.innerHTML="+";
-			//plus.setAttribute("cursor", "pointer");
-			//min.innerHTML="-";
-			//div.appendChild(plus+min);
-			//div.appendChild(min);
-
-			var e = document.createElement("input");
-			//e.appendChild(plus);
-			//e.appendChild(min);
-			e.addEventListener("keydown", function(event) {
-				//$("[id*='setter']")
-				//Right click
-				console.log(event);
-				if (event.which == 38) {
-					thisObj.upgrade(0,event);
-					//event.explicitOriginalTarget.value++;
-				}
-				if (event.which == 40)//1: left, 2: middle, 3: right
-				{
-					//event.explicitOriginalTarget.value--;
-					thisObj.upgrade(1,event);
-					//Do something
-				}
-			});
-
-			e.id = roboName[i] + "-setter";
-			var n = document.createElement('br');
-			//e.readyOnly = true;
-			
-			e.setAttribute("class","inputRobo");
-			
-			e.appendChild(n);
-			e.value = roboVal[i];
-			e.name = "number";
-			e.title = roboName[i];
-			e.setAttribute("readonly", "");
-			//e.contentEditable = "false";
-			//div.appendChild(n);
-			div.appendChild(e);
-		}
-		var min = document.createElement("p");
-		div.appendChild(min);
-		return div;
-	}
-	
-	this.upgrade = function (mode, event) {
-	 //console.log(control);
-		if(upgrade <= 0 && control >= 5 && mode == 0) {
-		/*
-			thisObj.overlayOff();
-			thisObj.overlay("NO CHEATIN!!!");
-			return;
-			*/
-			window.alert('NO CHEATIN!!!');
-		}
-		else if(mode % 2 == 0) {
-			
-			upgrade--;
-			event.explicitOriginalTarget.value++;
-			control++;
-			console.log('up  ' + control + '  ' + upgrade);
-		} else {
-			upgrade++;
-			event.explicitOriginalTarget.value--;
-			control--;
-			console.log('down  ' + control + '  ' + upgrade);
-		}
-	};
-
-
-	this.setRobot = function() {
-		var div = setNext();
-		document.getElementById("overlay").appendChild(div);
-		document.getElementById("overlay").insertBefore(div, document.getElementById("infoPush"));
-		//thisObj.overlay('<div class="button" id="btnStartGame" style="cursor: pointer" onClick="controller.setRoboColor();controller.startGame();controller.overlayOff()">startGame</div></div>');
-		var e = document.createElement("div");
-		e.setAttribute("class","button");
-		e.setAttribute("onClick", "controller.setRoboColor();controller.startGame();controller.overlayOff()");
-		e.innerHTML="startGame";
-		e.setAttribute("style","cursor: pointer");
-		style="cursor: pointer";
-		e.id="btnStartGame";
-		///$("#overlay").add(e);
-		document.getElementById("overlay").insertBefore(e, document.getElementById("infoPush"));
-		$("#overlay").remove("#infoText");
-		$('#content').hide();
-		$("#overlay").show();
-	};
-
-	//End a Game
-	function endGame() {
-		backendCom.endGame(name, password, eMail, function() {
-			thisObj.loadHome();
-			//$("#overlay").hide();
-			$("#setNext").hide();
 		});
 	}
 
@@ -312,8 +189,103 @@ function Controller() {
 			}
 		});
 	}
+	
+	//Robot Stuff
+	//
+	//set next robot div element builder
+	function setNext() {
+		$("#btnOverlayOff").hide();
+		var div = document.createElement("div");
+		div.id = "setRobot";
+		div.setAttribute("class", "setRobot");
+		var x = document.createElement("LABEL");
+		x.innerHTML = "Set next robot via arrow up or down for changes on selected numbers - MAX => +5<br><br>";//" + "<br>" + "
+		div.appendChild(x);
+		for (var i = 0; i < 6; i++) {
+			var e = document.createElement("input");
+			e.addEventListener("keydown", function(event) {
+				if (event.which == 38) {
+					thisObj.upgrade(0,event);
+				}
+				if (event.which == 40)
+				{
+					thisObj.upgrade(1,event);
+				}
+			});
+			e.id = roboName[i] + "-setter";
+			var n = document.createElement('br');
+			e.setAttribute("class","inputRobo");
+			e.appendChild(n);
+			e.value = roboVal[i];
+			e.name = "number";
+			e.title = roboName[i];
+			e.setAttribute("readonly", "");
+			div.appendChild(e);
+		}
+		var min = document.createElement("p");
+		min.id="setRobotControl";
+		div.appendChild(min);
+		return div;
+	}
 
-	var l =
+	//get the values and behavior of the next robot from document inputs
+	this.getRobot = function() {
+	/*
+		thisObj.roboSet = {
+			weaponPrototype : {
+				range : $("#range").val(),
+				rateOfFire : $("#rateOfFire").val(),
+				damage : $("#damage").val()
+			},
+			armor : $("#armor").val(),
+			enginePower : $("#enginePower").val(),
+			behaviour : $("#behavior").val()
+		};
+		*/
+		thisObj.roboSet[0] = $("#range-setter").val();
+		thisObj.roboSet[1] = $("#rateOfFire-setter").val();
+		thisObj.roboSet[2] = $("#damage-setter").val();
+		thisObj.roboSet[3] = $("#armor-setter").val();
+		thisObj.roboSet[4] = $("#enginePower-setter").val();
+		thisObj.roboSet[5] = $("#behavior-setter").val();
+		//console.log(thisObj.roboSet);
+		//return thisObj.roboSet;
+	};
+	
+	//function for setting the first robot via function overlay
+	this.setRobot = function() {
+		var div = setNext();
+		document.getElementById("overlay").appendChild(div);
+		document.getElementById("overlay").insertBefore(div, document.getElementById("infoPush"));
+		//thisObj.overlay('<div class="button" id="btnStartGame" style="cursor: pointer" onClick="controller.setRoboColor();controller.startGame();controller.overlayOff()">startGame</div></div>');
+		var e = document.createElement("div");
+		e.setAttribute("class","button");
+		e.setAttribute("onClick", "controller.getRobot();controller.overlayOff();controller.startGame();");
+		e.innerHTML="startGame";
+		e.setAttribute("style","cursor: pointer");
+		style="cursor: pointer";
+		e.id="btnStartGame";
+		document.getElementById("overlay").insertBefore(e, document.getElementById("infoPush"));
+		$("#overlay").remove("#infoText");
+		$('#content').hide();
+		$("#overlay").show();
+	};
+
+	//control and check the allowed upgrade
+	this.upgrade = function (mode, event) {
+		if(upgrade <= 0 && control >= 5 && mode == 0) {
+			window.alert('NO CHEATIN!!!');
+		}
+		else if(mode % 2 == 0) {
+			upgrade--;
+			event.explicitOriginalTarget.value++;
+			control++;
+		} else {
+			upgrade++;
+			event.explicitOriginalTarget.value--;
+			control--;
+		}
+	};
 
 	//UtilityStuff
 	//
@@ -349,22 +321,31 @@ function Controller() {
 		}
 		return false;
 	}
+	
+	//open a overlay with a text string called json
+	this.overlay = function(json) {
+		$(document).ready(function() {
+			$('#content').hide();
+			var el = $("#overlay").show();
+			$('<p id="infoText">INFO!<br><br>' + json + '</p>').insertBefore(".infoPush");
+		});
+	};
 
-	//set the value and behavior of the next robot
-	this.setRoboColor = function() {
-		thisObj.roboSet = {
-			weaponPrototype : {
-				range : $("#range").val(),
-				rateOfFire : $("#rateOfFire").val(),
-				damage : $("#damage").val()
-			},
-			armor : $("#armor").val(),
-			enginePower : $("#enginePower").val(),
-			behaviour : $("#behavior").val()
-		};
+	//close the overlay and remove the tag with id "infoText"
+	this.overlayOff = function() {
+		$(document).ready(function() {
+			$("#content").show();
+			var el = $("#overlay").hide();
+			//el.remove('#infoText');
+			$("#infoText").remove();
+			$("#btnOverlayOff").show();
+			$("#btnStartGame").remove();
+			$("#setRobot").remove();
+			$("#overlay p").remove();
+		});
 	};
 };
-
+	
 //HTML ACCESS
 var controller;
 

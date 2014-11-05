@@ -7,6 +7,8 @@ var GameController = {
         //server.serverRobo(controller.roboSet);
         var gui = new GUI ( frameControler, server, controller );
         
+        
+        
         frameControler.setGUI ( gui );
         frameControler.start();
 

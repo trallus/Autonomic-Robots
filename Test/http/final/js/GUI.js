@@ -1,22 +1,12 @@
 function GUI(frameControler, server, controller) {
 	var obj = this;
-	var canvas;
-	var ctx;
-	this.context;
-	var x;
+	var canvas, physic, ctx, x, data, $select, color, robo, e, selectedItem;
 	var count = 1;
 	var robotNum = 1;
-	var data;
-	var $select;
-	var color;
-	var robo;
-	var e;
-	var selectedItem;
-	var colors = [];	
+	this.context;
+	var colors = [];
 	var allRobots = [];
-	//var enemyRobots= [];
 	var RIP = [];
-	var physic;
 	//default values
 	var counter = setInterval(timer, 1000);
 	var start = new Date();
@@ -31,8 +21,6 @@ function GUI(frameControler, server, controller) {
 	stylePaddingTop = parseInt(document.defaultView.getComputedStyle(canvas, null)['paddingTop'], 10) || 0;
 	styleBorderLeft = parseInt(document.defaultView.getComputedStyle(canvas, null)['borderLeftWidth'], 10) || 0;
 	styleBorderTop = parseInt(document.defaultView.getComputedStyle(canvas, null)['borderTopWidth'], 10) || 0;
-	
-	
 	
 	//Construct
 	//setting up the default attributes

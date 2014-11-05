@@ -47,12 +47,13 @@ caption {
 }  
 
 .selection > .pushSelection {
-	text-align: right;
 	vertical-align: top;
 	//margin-top: 100px;
 }
 
 .setRobot > .inputRobo{
+	text-align: center;
+	//width: 100px;
 	position: relative;
 	margin-top: -15px;
 	margin-left: 18px;
@@ -60,6 +61,7 @@ caption {
 }
 
 .setRobot > label {
+	text-align: center;
 	margin-left: 10px;
 	display: block;
 }

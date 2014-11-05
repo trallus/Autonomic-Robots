@@ -75,8 +75,8 @@ function Robot ( frameControler, server, id ) {
         draw ( context );
     }
     
+    
     function getColor() {
-    	var letters = "0123456789ABCDEF".split("");
     	var hold = "#";
     	for ( var i = 0; i < 6; i++) {
     		hold += letters[Math.floor(Math.random() * 16)];
@@ -91,7 +91,7 @@ function Robot ( frameControler, server, id ) {
     	context.beginPath();
     	context.fillStyle = '#000000';
     	context.fillRect(posX-16,posY-24,32,15);
-    	context.beginPath();
+    	//context.beginPath();
     	context.fillStyle = '#0F0';
     	context.fillRect(posX-15,posY-23,Math.floor(health*0.3),13);
     	
@@ -104,7 +104,7 @@ function Robot ( frameControler, server, id ) {
     
     
        
-        context.beginPath();
+       // context.beginPath();
         context.arc( posX, posY, radius/2, 0, 2 * Math.PI, false);
         
         // set drawing style
@@ -119,14 +119,14 @@ function Robot ( frameControler, server, id ) {
         
         // draw destination
         //context.beginPath();
-        //context.arc( destinationX, destinationY, 2, 0, 2 * Math.PI, false);
+        context.arc( destinationX, destinationY, 2, 0, 2 * Math.PI, false);
         
         // set drawing style
         //context.lineWidth = 2;
         //(context.strokeStyle = "#00FF00";;
         
         // actually start drawing
-        //context.stroke();    
+        context.stroke();    
     }
     
     function calcPosition ( timeSinceLastDraw ) {

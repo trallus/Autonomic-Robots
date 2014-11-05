@@ -203,6 +203,7 @@ function Controller() {
 		div.appendChild(x);
 		for (var i = 0; i < 6; i++) {
 			var e = document.createElement("input");
+			/*
 			e.addEventListener("keydown", function(event) {
 				if (event.which == 38) {
 					thisObj.upgrade(0,event);
@@ -212,6 +213,7 @@ function Controller() {
 					thisObj.upgrade(1,event);
 				}
 			});
+			*/
 			e.id = roboName[i] + "-setter";
 			var n = document.createElement('br');
 			e.setAttribute("class","inputRobo");
@@ -219,7 +221,7 @@ function Controller() {
 			e.value = roboVal[i];
 			e.name = "number";
 			e.title = roboName[i];
-			e.setAttribute("readonly", "");
+			//e.setAttribute("readonly", "");
 			div.appendChild(e);
 		}
 		var min = document.createElement("p");
@@ -270,7 +272,7 @@ function Controller() {
 		$('#content').hide();
 		$("#overlay").show();
 	};
-
+	/*
 	//control and check the allowed upgrade
 	this.upgrade = function (mode, event) {
 		if(upgrade <= 0 && control >= 5 && mode == 0) {
@@ -286,7 +288,7 @@ function Controller() {
 			control--;
 		}
 	};
-
+	*/
 	//UtilityStuff
 	//
 	//Button Initialization

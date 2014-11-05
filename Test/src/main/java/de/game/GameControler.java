@@ -24,12 +24,14 @@ public class GameControler implements GameInterface {
 
 	@Override
 	public long joinBattleQuery(User user) throws InterruptedException {
-		//if (battleQerry.size() > 0) { // two player
-		if (battleQerry.size() > 0 || true) {
+		if (battleQerry.size() > 0) { // two player
+		//if (battleQerry.size() > 0 || true) {
 			final List<User> users = new ArrayList<User>();
 			users.add(user);
 			for (User u : battleQerry) {
 				users.add(u);
+			}
+			for(User u : users) {
 				battleQerry.remove(u);
 			}
 			final Battle battle = new Battle( battleID, users );

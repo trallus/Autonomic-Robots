@@ -1,8 +1,7 @@
 function swp (controller) {
     var obj = this;
-    this.robot=false;
+    this.robot;
     this.position = false;
- 
     this.serverRobo =  function () {
     	//controller.getRobot();
     	roboSet = controller.roboSet;
@@ -20,8 +19,8 @@ function swp (controller) {
         console.log(obj.robot);
         
     };
- 
-    
+    obj.serverRobo();
+
     function getNextServerFrame () {
     	//prototype robot (set new Robot() give back) - SET ROBOT FORM
     	/*
@@ -37,7 +36,7 @@ function swp (controller) {
             behaviour : "gibts noch nicht"
         };
         */
-    	obj.serverRobo();
+    	//obj.serverRobo();
         
     	$.ajax({
             type: "POST",
@@ -51,7 +50,7 @@ function swp (controller) {
                 url: "serverRequest/game-joinBattleQuery"
             }).done ( function ( json ) {
                 console.log(json);
-                var intervallCounter = 20;
+               //var intervallCounter = 20;
                 var intervall = window.setInterval(
                     function () {
                     	//get game situation in 1/sec up to 20x
@@ -67,9 +66,9 @@ function swp (controller) {
                         	*/
                             //console.log(json.gameSituation.ich[0].position);
                         });
-                        intervallCounter--;
+                        //intervallCounter--;
                         //end game after 20x
-                        if (intervallCounter < 0) {
+                        if (obj.position && ! obj.position.gameSituation.ich) {
                             window.clearInterval(intervall);
                             
                             $.ajax({

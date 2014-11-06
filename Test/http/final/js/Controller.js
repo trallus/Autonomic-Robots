@@ -3,7 +3,7 @@ function Controller() {
 	var thisObj = this;
 	var server = "serverRequest";
 	var backendCom = new BackendCom();
-	thisObj.name;
+	thisObj.name
 	var password;
 	var eMail;
 	var user;
@@ -73,19 +73,39 @@ function Controller() {
 	//
 	//Start a Game
 	this.startGame = function() {
+		//var e = document.getElementById("users");
+		if($("#users :selected")){
+			var e = $("#users :selected").text();//.children("[:selected]").text();
+			console.log(e);
+			thisObj.name = e;
+		}
+		if (thisObj.name) {
+			backendCom.logIn("", thisObj.name, function(json) {
 
-		$.ajax({
-			url : "robots.html"
-		}).done(function(html) {
-			$("#content").html(html).promise().done(function() {
-				GameController.main(thisObj);
-				document.getElementById("setNext").appendChild(setNext());
-				$("#setNext").show();
-				regisButtons();
+				if (json.logedIn) {
+					$.ajax({
+						url : "robots.html"
+					}).done(function(html) {
+						$("#content").html(html).promise().done(function() {
+							
+							//console.log(controller.name);
+							GameController.main(thisObj);
+							document.getElementById("setNext").appendChild(setNext());
+							$("#setNext").show();
+							regisButtons();
+						});
+					});
+
+				} else
+					thisObj.overlay('Wrong mail or password!<br>Please try again!!!');
 			});
-		});
+			//selectedItem = e.options[e.selectedIndex].text;
+
+			e = '';
+		}
+
 	};
-	
+
 	//End a Game
 	function endGame() {
 		backendCom.endGame(name, password, eMail, function() {
@@ -94,7 +114,7 @@ function Controller() {
 			$("#setNext").hide();
 		});
 	}
-	
+
 	//Registration
 	function registration() {
 		readInputFealds();
@@ -189,7 +209,59 @@ function Controller() {
 			}
 		});
 	}
-	
+
+	//loadPlayer default users select
+	this.loadPlayer = function(users) {
+		var e = document.createElement("select");
+		e.setAttribute("name", "users");
+		//e.setAttribute("onClick", "controller.getRobot();controller.startGame();controller.overlayOff();");
+		//e.innerHTML = "startGame";
+		e.setAttribute("style", "cursor: pointer");
+		//style = "cursor: pointer";
+		e.id = "users";
+		document.getElementById("overlay").insertBefore(e, document.getElementById("infoPush"));
+		//$("#overlay").remove("#infoText");
+		//$('#content').hide();
+		//$("#overlay").show();
+		$select = $('#users');
+		for (var key in users) {
+			$select.append($('<option />', {
+				value : (key),
+				text : users[key] + "@"
+			}));
+		}
+
+	};
+	/*
+	* <fieldset style="border: none;">
+	<legend>Select a user:</legend>
+	<select name="users" id="users"></select>
+	</fieldset>
+
+	var data = [{
+	'1' : 'Robot ' + (robotNum - 1)
+	}];
+	$select = $('#users');
+	$.each(data, function(i, val) {
+	$select.append($('<option />', {
+	value : (i),
+	text : val[i + 1]
+	}));
+	});
+
+	};
+	/*
+	var e = document.getElementById("#users");
+	e = $("#users").children(":selected").text();
+	if (e != '') {
+	//selectedItem = e.options[e.selectedIndex].text;
+
+	x.fillText('Selected:     ' + e, 15, 165);
+	e = '';
+	}
+	*/
+	//};
+
 	//Robot Stuff
 	//
 	//set next robot div element builder
@@ -199,24 +271,25 @@ function Controller() {
 		div.id = "setRobot";
 		div.setAttribute("class", "setRobot");
 		var x = document.createElement("LABEL");
-		x.innerHTML = "Set next robot via arrow up or down for changes on selected numbers - MAX => +5<br><br>";//" + "<br>" + "
+		x.innerHTML = "Set next robot via arrow up or down for changes on selected numbers - MAX => +5<br><br>";
+		//" + "<br>" + "
 		div.appendChild(x);
 		for (var i = 0; i < 6; i++) {
 			var e = document.createElement("input");
 			/*
-			e.addEventListener("keydown", function(event) {
-				if (event.which == 38) {
-					thisObj.upgrade(0,event);
-				}
-				if (event.which == 40)
-				{
-					thisObj.upgrade(1,event);
-				}
-			});
-			*/
+			 e.addEventListener("keydown", function(event) {
+			 if (event.which == 38) {
+			 thisObj.upgrade(0,event);
+			 }
+			 if (event.which == 40)
+			 {
+			 thisObj.upgrade(1,event);
+			 }
+			 });
+			 */
 			e.id = roboName[i] + "-setter";
 			var n = document.createElement('br');
-			e.setAttribute("class","inputRobo");
+			e.setAttribute("class", "inputRobo");
 			e.appendChild(n);
 			e.value = roboVal[i];
 			e.name = "number";
@@ -225,25 +298,25 @@ function Controller() {
 			div.appendChild(e);
 		}
 		var min = document.createElement("p");
-		min.id="setRobotControl";
+		min.id = "setRobotControl";
 		div.appendChild(min);
 		return div;
 	}
 
 	//get the values and behavior of the next robot from document inputs
 	this.getRobot = function() {
-	/*
-		thisObj.roboSet = {
-			weaponPrototype : {
-				range : $("#range").val(),
-				rateOfFire : $("#rateOfFire").val(),
-				damage : $("#damage").val()
-			},
-			armor : $("#armor").val(),
-			enginePower : $("#enginePower").val(),
-			behaviour : $("#behavior").val()
-		};
-		*/
+		/*
+		 thisObj.roboSet = {
+		 weaponPrototype : {
+		 range : $("#range").val(),
+		 rateOfFire : $("#rateOfFire").val(),
+		 damage : $("#damage").val()
+		 },
+		 armor : $("#armor").val(),
+		 enginePower : $("#enginePower").val(),
+		 behaviour : $("#behavior").val()
+		 };
+		 */
 		thisObj.roboSet[0] = $("#range-setter").val();
 		thisObj.roboSet[1] = $("#rateOfFire-setter").val();
 		thisObj.roboSet[2] = $("#damage-setter").val();
@@ -253,7 +326,7 @@ function Controller() {
 		//console.log(thisObj.roboSet);
 		//return thisObj.roboSet;
 	};
-	
+
 	//function for setting the first robot via function overlay
 	this.setRobot = function() {
 		var div = setNext();
@@ -261,12 +334,12 @@ function Controller() {
 		document.getElementById("overlay").insertBefore(div, document.getElementById("infoPush"));
 		//thisObj.overlay('<div class="button" id="btnStartGame" style="cursor: pointer" onClick="controller.setRoboColor();controller.startGame();controller.overlayOff()">startGame</div></div>');
 		var e = document.createElement("div");
-		e.setAttribute("class","button");
-		e.setAttribute("onClick", "controller.getRobot();controller.overlayOff();controller.startGame();");
-		e.innerHTML="startGame";
-		e.setAttribute("style","cursor: pointer");
-		style="cursor: pointer";
-		e.id="btnStartGame";
+		e.setAttribute("class", "button");
+		e.setAttribute("onClick", "controller.getRobot();controller.startGame();controller.overlayOff();");
+		e.innerHTML = "startGame";
+		e.setAttribute("style", "cursor: pointer");
+		style = "cursor: pointer";
+		e.id = "btnStartGame";
 		document.getElementById("overlay").insertBefore(e, document.getElementById("infoPush"));
 		$("#overlay").remove("#infoText");
 		$('#content').hide();
@@ -275,18 +348,18 @@ function Controller() {
 	/*
 	//control and check the allowed upgrade
 	this.upgrade = function (mode, event) {
-		if(upgrade <= 0 && control >= 5 && mode == 0) {
-			window.alert('NO CHEATIN!!!');
-		}
-		else if(mode % 2 == 0) {
-			upgrade--;
-			event.explicitOriginalTarget.value++;
-			control++;
-		} else {
-			upgrade++;
-			event.explicitOriginalTarget.value--;
-			control--;
-		}
+	if(upgrade <= 0 && control >= 5 && mode == 0) {
+	window.alert('NO CHEATIN!!!');
+	}
+	else if(mode % 2 == 0) {
+	upgrade--;
+	event.explicitOriginalTarget.value++;
+	control++;
+	} else {
+	upgrade++;
+	event.explicitOriginalTarget.value--;
+	control--;
+	}
 	};
 	*/
 	//UtilityStuff
@@ -323,7 +396,7 @@ function Controller() {
 		}
 		return false;
 	}
-	
+
 	//open a overlay with a text string called json
 	this.overlay = function(json) {
 		$(document).ready(function() {
@@ -344,31 +417,40 @@ function Controller() {
 			$("#btnStartGame").remove();
 			$("#setRobot").remove();
 			$("#overlay p").remove();
+			$("#setNext").remove();
+			$('#users').remove();
 		});
 	};
 };
-	
+
 //HTML ACCESS
+var users = ["a", "b", "c", "d", "e", "f", "g", "h"];
 var controller;
 
+function regist() {
+
+	var backendCom = new BackendCom();
+	for (var i in users) {
+		backendCom.registration(users[i] + '@', "", users[i] + '@', function(json) {
+			//console.log(json);
+
+		});
+	}
+};
+
 function start() {
+	//AUTODB
+	//regist();
+
 	controller = new Controller();
 };
 
 function startDebug() {
+
+	regist();
+
 	controller = new Controller();
-	//console.log('nichts');
-	var backendCom = new BackendCom();
-	backendCom.logIn('', '@', function(json) {
-
-		if (json.logedIn) {
-			console.log(json.logedIn);
-			controller.valid = true;
-			controller.setRobot();
-
-		} else
-			controller.overlay('Wrong mail or password!<br>Please try again!!!');
-			
-	});
+	controller.setRobot();
+	controller.loadPlayer(users);
 };
 

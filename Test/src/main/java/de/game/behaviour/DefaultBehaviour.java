@@ -9,6 +9,8 @@ import de.game.Robot;
  * @version stub
  */
 public class DefaultBehaviour extends Behaviour {
+    
+    private double elapsedTimeSinceLastBehaviourChange;
 
     public DefaultBehaviour(Robot robot) {
 	super(robot);
@@ -19,7 +21,19 @@ public class DefaultBehaviour extends Behaviour {
      */
     @Override
     public void onTick(final Battle battle, final double elapsedTime) {
-	// TODO Auto-generated method stub
+	elapsedTimeSinceLastBehaviourChange += elapsedTime;
+	if(elapsedTimeSinceLastBehaviourChange <4){
+	    robot.accelerate();
+	}
+	else if(elapsedTimeSinceLastBehaviourChange <8){
+	    robot.turnLeft();
+	}
+	else if(elapsedTimeSinceLastBehaviourChange < 12){
+	    robot.breack();
+	}
+	else{
+	    elapsedTimeSinceLastBehaviourChange = 0;
+	}
     }
 
     /**

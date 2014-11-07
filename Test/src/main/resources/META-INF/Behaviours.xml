@@ -3,6 +3,6 @@
 	<Fully_callified_class_names>
 		<!-- This means the class name with package for example de.game.behaviour.BehaviourFactory 
 			ofcourse the named class should implement the Behaviour Interface -->
-		<Behaviour>de.game.behaviour.DefaultBehaviour</Behaviour>
+		<Behaviour>de.game.behaviour.DefaultBehaviour</Behaviour> <!-- DO NOT REMOVE -->
 	</Fully_callified_class_names>
 </BehaviourFactory>

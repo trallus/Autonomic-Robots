@@ -2,6 +2,7 @@ package de.game;
 
 import de.game.behaviour.Behaviour;
 import de.game.behaviour.BehaviourFactory;
+import de.game.behaviour.DefaultBehaviour;
 import de.game.weapon.Weapon;
 import de.logger.Log;
 import de.math.Vector2D;
@@ -30,6 +31,8 @@ public class Robot extends PhysikObject implements Tick {
 	this.turningSpeed = .1 / armor * enginePower;
 	this.acceleration = .1 / armor * enginePower;
 	this.weapon = weapon;
+	this.behaviour = new DefaultBehaviour(this); // So every robot has a
+						     // (stupid) behaviour
     }
 
     public long getID() {
@@ -41,12 +44,12 @@ public class Robot extends PhysikObject implements Tick {
      * 
      * @param name
      *            the name of the Behaviour ask BehaviourFactory for a list of
-     *            all Behaviours 
+     *            all Behaviours
      * @see de.game.behaviour.BehaviourFactory#getBehaviours()
      */
     public void setBehaviour(String name) {
 	final BehaviourFactory bf = BehaviourFactory.getBehaviourFactory();
-	behaviour = bf.getInstanceOfBehaviour(name,this);
+	behaviour = bf.getInstanceOfBehaviour(name, this);
     }
 
     public void shoot(Vector2D targetPosition) {
@@ -84,13 +87,14 @@ public class Robot extends PhysikObject implements Tick {
 
     private void die() {
 	Log.log("Robot die: " + id);
-	behaviour = null; //Break the bidirectional association so that gc can clean both
+	behaviour = null; // Break the bidirectional association so that gc can
+			  // clean both, needs confirmation of necessarity
     }
 
     @Override
     public void onTick(Battle battle, double elapsedTime) {
-	// null at the moment behaviour.onTick(battle, elapsedTime); //Must be
-	// first so the Behaviour can say what to do
+	behaviour.onTick(battle, elapsedTime); // Must be first so the Behaviour
+					       // can say what to do
 	if (turnLeft)
 	    turn(turningSpeed * elapsedTime);
 	else

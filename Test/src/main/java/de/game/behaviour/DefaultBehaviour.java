@@ -18,7 +18,7 @@ public class DefaultBehaviour extends Behaviour {
      * @see de.game.Tick#onTick(de.game.Battle, double)
      */
     @Override
-    public void onTick(Battle battle, double elapsedTime) {
+    public void onTick(final Battle battle, final double elapsedTime) {
 	// TODO Auto-generated method stub
     }
 

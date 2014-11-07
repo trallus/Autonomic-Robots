@@ -13,7 +13,7 @@ public abstract class Behaviour implements Tick {
     
     protected final Robot robot;
     
-    public Behaviour(Robot robot) {
+    public Behaviour(final Robot robot) {
 	this.robot = robot;
     }
     

@@ -1,39 +1,36 @@
 package de.game.behaviour;
 
-import java.util.List;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
 import de.game.Robot;
 
 /**
  * A Factory that returns Behaviour Instances
  * 
  * @author mike
- * @version 0.1
+ * @version 0.2
  */
-@XmlRootElement(name = "BehaviourFactory")
 public class BehaviourFactory {
 
-    @XmlTransient
     private static BehaviourFactory factory;
 
     public static BehaviourFactory getBehaviourFactory() {
 	if (factory == null) {
 	    try {
 		final JAXBContext jc = JAXBContext
-			.newInstance(BehaviourFactory.class);
+			.newInstance(BehaviourMap.class);
 		final Unmarshaller um = jc.createUnmarshaller();
 		final String location = "/META-INF/Behaviours.xml";
-		final BehaviourFactory bf = (BehaviourFactory) um
-			.unmarshal(BehaviourFactory.class.getClass()
-				.getResource(location));
-		factory = bf;
+		final URL url = BehaviourFactory.class.getClass().getResource(location);
+		final BehaviourMap map = (BehaviourMap) um.unmarshal(url);
+		factory = new BehaviourFactory(map);
 	    }
 	    catch (Exception e) {
 		e.printStackTrace();
@@ -41,23 +38,21 @@ public class BehaviourFactory {
 	}
 	return factory;
     }
+    
+    private final Map<String,String> behaviours;
 
-    @XmlElementWrapper(name = "Fully_callified_class_names")
-    @XmlElement(name = "Behaviour")
-    private List<String> behaviours;
-
-    private BehaviourFactory() {
-	// For JAXB only
+    private BehaviourFactory(final BehaviourMap map) {
+	behaviours = map.behaviours; //Unmarshall Wrapper no longer needed so unwrapping the map
     }
 
-    public List<String> getBehaviours() {
-	return behaviours;
+    public Collection<String> getBehaviours() {
+	return behaviours.keySet();
     }
     
     public Behaviour getInstanceOfBehaviour(String name, Robot robot){
 	Behaviour behaviour = null;
 	try {
-	    behaviour = (Behaviour) Class.forName(name).getConstructor(Robot.class).newInstance(robot);
+	    behaviour = (Behaviour) Class.forName(behaviours.get(name)).getConstructor(Robot.class,String.class).newInstance(robot,name);
 	}
 	catch(Exception e){
 	    CouldNotCreateBehaviourException exception;
@@ -67,5 +62,17 @@ public class BehaviourFactory {
 	    throw exception;
 	}
 	return behaviour;
+    }
+    
+    /**
+     * A Wrapper of Map for the unmarshalling of Behaviours.xml
+     * @author mike
+     * @version 0.1
+     */
+    @XmlRootElement(name = "BehaviourFactory-Map")
+    @XmlAccessorType(XmlAccessType.FIELD)
+    private static class BehaviourMap{
+	
+	private Map<String,String> behaviours;
     }
 }

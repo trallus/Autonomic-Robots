@@ -6,14 +6,14 @@ import de.game.Robot;
 /**
  * A default implementation of Behaviour for Robot
  * @author mike
- * @version stub
+ * @version 0.1
  */
 public class DefaultBehaviour extends Behaviour {
     
     private double elapsedTimeSinceLastBehaviourChange;
 
-    public DefaultBehaviour(Robot robot) {
-	super(robot);
+    public DefaultBehaviour(final Robot robot, final String name) {
+	super(robot,name);
     }
 
     /**
@@ -35,13 +35,4 @@ public class DefaultBehaviour extends Behaviour {
 	    elapsedTimeSinceLastBehaviourChange = 0;
 	}
     }
-
-    /**
-     * @see de.game.behaviour.Behaviour#getName()
-     */
-    @Override
-    public String getName() {
-	return getClass().getName();
-    }
-
 }

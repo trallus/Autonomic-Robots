@@ -31,8 +31,8 @@ public class Robot extends PhysikObject implements Tick {
 	this.turningSpeed = .1 / armor * enginePower;
 	this.acceleration = .1 / armor * enginePower;
 	this.weapon = weapon;
-	this.behaviour = new DefaultBehaviour(this); // So every robot has a
-						     // (stupid) behaviour
+	// So every robot has a (stupid) behaviour
+	this.behaviour = new DefaultBehaviour(this, "DefaultBehaviour");
     }
 
     public long getID() {

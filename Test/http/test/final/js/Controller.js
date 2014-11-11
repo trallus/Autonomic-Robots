@@ -2,14 +2,18 @@ function Controller() {
 	//Global var's
 	var thisObj = this;
 	var server = "serverRequest";
-	var backendCom = new BackendCom ();
-	thisObj.name;
+	var backendCom = new BackendCom();
+	thisObj.name
 	var password;
 	var eMail;
 	var user;
 	var $select;
-	thisObj.colors = [];
-	thisObj.roboSet;
+	//access for changed robot values by user
+	thisObj.roboSet = [];
+	//control values for upgrade a robot
+	var control = 0;
+	var upgrade = 5;
+	//default robo issue names & values
 	var roboName = ["range", "rateOfFire", "damage", "armor", "enginePower", "behavior"];
 	var roboVal = [100, 30, 10, 100, 100, "gibts noch nicht"];
 
@@ -27,10 +31,9 @@ function Controller() {
 		});
 	}
 
-
+	//open debug file - auto.html - in a new window
 	this.loadDebug = function() {
 		window.open("auto.html");
-
 	};
 
 	//LoadAccountPage
@@ -68,6 +71,48 @@ function Controller() {
 
 	//handle User
 	//
+	//Start a Game
+	this.startGame = function() {
+		//var e = document.getElementById("users");
+		if($("#users :selected")){
+			var e = $("#users :selected").text();//.children("[:selected]").text();
+			console.log(e);
+			thisObj.name = e;
+		}
+		if (thisObj.name) {
+			backendCom.logIn("", thisObj.name, function(json) {
+
+				if (json.logedIn) {
+					$.ajax({
+						url : "robots.html"
+					}).done(function(html) {
+						$("#content").html(html).promise().done(function() {
+							//console.log(controller.name);
+							GameController.main(thisObj);
+							document.getElementById("setNext").appendChild(setNext());
+							$("#setNext").show();
+							regisButtons();
+						});
+					});
+				} else
+					thisObj.overlay('Wrong mail or password!<br>Please try again!!!');
+			});
+			//selectedItem = e.options[e.selectedIndex].text;
+
+			e = '';
+		}
+
+	};
+
+	//End a Game
+	function endGame() {
+		backendCom.endGame(name, password, eMail, function() {
+			thisObj.loadHome();
+			//$("#overlay").hide();
+			$("#setNext").hide();
+		});
+	}
+
 	//Registration
 	function registration() {
 		readInputFealds();
@@ -92,29 +137,6 @@ function Controller() {
 		}
 	}
 
-	//open a overlay with a text string called json
-	this.overlay = function(json) {
-		$(document).ready(function() {
-			$('#content').hide();
-			var el = $("#overlay").show();
-			$('<p id="infoText">INFO!!!<br><br>' + json + '</p>').insertBefore(".infoPush");
-		});
-	};
-
-	//close the overlay and remove the tag with id "infoText"
-	this.overlayOff = function() {
-		$(document).ready(function() {
-			$("#content").show();
-			var el = $("#overlay").hide();
-			//el.remove('#infoText');
-			$("#infoText").remove();
-			$("#btnOverlayOff").show();
-			$("#btnStartGame").remove();
-			$("#setRobot").remove();
-			$("#overlay p").remove();
-		});
-	};
-
 	//Change User Settings
 	function changeUser() {
 		readInputFealds();
@@ -123,7 +145,6 @@ function Controller() {
 				thisObj.overlay(JSON.stringify(json));
 				thisObj.loadHome();
 			}
-
 		});
 	}
 
@@ -146,119 +167,6 @@ function Controller() {
 		});
 	}
 
-	//Start a Game
-	this.startGame = function() {
-		/*
-		 var robot = {
-		 weaponPrototype : {
-		 range : 100,
-		 rateOfFire : 30,
-		 damage : 10
-		 },
-		 armor : 100,
-		 enginePower : 100,
-		 behaviour : "gibts noch nicht"
-		 };
-
-		 $.ajax({
-		 type: "POST",
-		 data: JSON.stringify ( robot ),
-		 dataType: "json",
-		 url: "serverRequest/game-setNextRobot"
-		 }).done ( function ( json ) {
-		 console.log(json);
-
-		 $.ajax({
-		 url: "serverRequest/game-joinBattleQuery"
-		 }).done ( function ( json ) {
-		 console.log(json);
-		 var intervallCounter = 20;
-		 var intervall = window.setInterval(
-		 function () {
-		 $.ajax({
-		 url: "serverRequest/game-getGameSituation"
-		 }).done ( function ( json ) {
-		 console.log(json);
-		 });
-		 intervallCounter--;
-		 if (intervallCounter < 0) {
-		 window.clearInterval(intervall);
-		 }
-		 }, 1000
-		 );
-		 });
-		 });
-		 /*
-		 $.ajax({
-		 url: "serverRequest/game/joinBattleQuery"
-		 }).done ( function ( json ) {
-		 console.log(json);
-		 }).fail ( function ( info ) {
-		 console.log(info);
-		 });
-		 */
-
-		$.ajax({
-			url : "robots.html"
-		}).done(function(html) {
-			$("#content").html(html).promise().done(function() {
-				GameController.main(thisObj);
-				document.getElementById("setNext").appendChild(setNext());
-				$("#setNext").show();
-				regisButtons();
-			});
-		});
-	};
-	
-	function setNext () {
-		$("#btnOverlayOff").hide();
-		var div = document.createElement("div");
-		div.id = "setRobot";
-		div.class = "setRobot";
-		var x = document.createElement("LABEL");
-		x.innerHTML = "Set next robot:";
-		div.appendChild(x);
-		for (var i = 0; i < 6; i++) {
-			var e = document.createElement("input");
-			e.id = roboName[i];
-			var n = document.createElement('br');
-			//e.readyOnly = true;
-			//e.appendChild(n);
-			e.value = roboVal[i];
-			e.name = "number";
-			e.title = roboName[i];
-			e.contentEditable = "false";
-			div.appendChild(n);
-			div.appendChild(e);
-			
-		}
-		return div;
-	}
-
-	this.setRobot = function() {
-
-		//thisObj.roboSet= [100, 30, 10, 100 ,100, "gibts noch nicht"];
-
-		var div = setNext();
-		document.getElementById("overlay").appendChild(div);
-		document.getElementById("overlay").insertBefore(div, document.getElementById("infoPush"));
-		thisObj.overlay('<div class="button" id="btnStartGame" style="cursor: pointer" onClick="controller.setRoboColor();controller.startGame();controller.overlayOff()">startGame</div></div>');
-		/*
-		 thisObj.overlay('<div id="setRobot"><select id="robot1"><option id value="#F00">weapon range</option><option value="#0F0">rat of fire</option><option value="#blue">dmg</option><option value="#black">armor</option></select>'
-		 + '<select id="robot2"><option value="#0F0">green</option><option value="#F00">red</option><option value="#blue">blue</option><option value="#black">black</option></select>'
-		 + '<div class="button" id="btnStartGame" style="cursor: pointer" onClick="controller.setRoboColor();controller.startGame();controller.overlayOff()">startGame</div></div>'
-		 );
-		 */
-
-	};
-
-	//End a Game
-	function endGame() {
-		backendCom.endGame(name, password, eMail, function() {
-			thisObj.loadHome();
-		});
-	}
-
 	//LogOut
 	function logOut() {
 		backendCom.logOut(function() {
@@ -269,8 +177,6 @@ function Controller() {
 
 	//Remove an User
 	function remove() {
-		//window.alert( 'User: ' + name + ' has been removed' );
-		//window.alert('For remove an user: \nType in name, eMail and password of the user')
 		readInputFealds();
 		user = {
 			name : name,
@@ -302,6 +208,158 @@ function Controller() {
 		});
 	}
 
+	//loadPlayer default users select
+	this.loadPlayer = function(users) {
+		var e = document.createElement("select");
+		e.setAttribute("name", "users");
+		//e.setAttribute("onClick", "controller.getRobot();controller.startGame();controller.overlayOff();");
+		//e.innerHTML = "startGame";
+		e.setAttribute("style", "cursor: pointer");
+		//style = "cursor: pointer";
+		e.id = "users";
+		document.getElementById("overlay").insertBefore(e, document.getElementById("infoPush"));
+		//$("#overlay").remove("#infoText");
+		//$('#content').hide();
+		//$("#overlay").show();
+		$select = $('#users');
+		for (var key in users) {
+			$select.append($('<option />', {
+				value : (key),
+				text : users[key] + "@"
+			}));
+		}
+
+	};
+	/*
+	* <fieldset style="border: none;">
+	<legend>Select a user:</legend>
+	<select name="users" id="users"></select>
+	</fieldset>
+
+	var data = [{
+	'1' : 'Robot ' + (robotNum - 1)
+	}];
+	$select = $('#users');
+	$.each(data, function(i, val) {
+	$select.append($('<option />', {
+	value : (i),
+	text : val[i + 1]
+	}));
+	});
+
+	};
+	/*
+	var e = document.getElementById("#users");
+	e = $("#users").children(":selected").text();
+	if (e != '') {
+	//selectedItem = e.options[e.selectedIndex].text;
+
+	x.fillText('Selected:     ' + e, 15, 165);
+	e = '';
+	}
+	*/
+	//};
+
+	//Robot Stuff
+	//
+	//set next robot div element builder
+	function setNext() {
+		$("#btnOverlayOff").hide();
+		var div = document.createElement("div");
+		div.id = "setRobot";
+		div.setAttribute("class", "setRobot");
+		var x = document.createElement("LABEL");
+		x.innerHTML = "Set next robot via arrow up or down for changes on selected numbers - MAX => +5<br><br>";
+		//" + "<br>" + "
+		div.appendChild(x);
+		for (var i = 0; i < 6; i++) {
+			var e = document.createElement("input");
+			/*
+			 e.addEventListener("keydown", function(event) {
+			 if (event.which == 38) {
+			 thisObj.upgrade(0,event);
+			 }
+			 if (event.which == 40)
+			 {
+			 thisObj.upgrade(1,event);
+			 }
+			 });
+			 */
+			e.id = roboName[i] + "-setter";
+			var n = document.createElement('br');
+			e.setAttribute("class", "inputRobo");
+			e.appendChild(n);
+			e.value = roboVal[i];
+			e.name = "number";
+			e.title = roboName[i];
+			//e.setAttribute("readonly", "");
+			div.appendChild(e);
+		}
+		var min = document.createElement("p");
+		min.id = "setRobotControl";
+		div.appendChild(min);
+		return div;
+	}
+
+	//get the values and behavior of the next robot from document inputs
+	this.getRobot = function() {
+		/*
+		 thisObj.roboSet = {
+		 weaponPrototype : {
+		 range : $("#range").val(),
+		 rateOfFire : $("#rateOfFire").val(),
+		 damage : $("#damage").val()
+		 },
+		 armor : $("#armor").val(),
+		 enginePower : $("#enginePower").val(),
+		 behaviour : $("#behavior").val()
+		 };
+		 */
+		thisObj.roboSet[0] = $("#range-setter").val();
+		thisObj.roboSet[1] = $("#rateOfFire-setter").val();
+		thisObj.roboSet[2] = $("#damage-setter").val();
+		thisObj.roboSet[3] = $("#armor-setter").val();
+		thisObj.roboSet[4] = $("#enginePower-setter").val();
+		thisObj.roboSet[5] = $("#behavior-setter").val();
+		//console.log(thisObj.roboSet);
+		//return thisObj.roboSet;
+	};
+
+	//function for setting the first robot via function overlay
+	this.setRobot = function() {
+		var div = setNext();
+		document.getElementById("overlay").appendChild(div);
+		document.getElementById("overlay").insertBefore(div, document.getElementById("infoPush"));
+		//thisObj.overlay('<div class="button" id="btnStartGame" style="cursor: pointer" onClick="controller.setRoboColor();controller.startGame();controller.overlayOff()">startGame</div></div>');
+		var e = document.createElement("div");
+		e.setAttribute("class", "button");
+		e.setAttribute("onClick", "controller.getRobot();controller.startGame();controller.overlayOff();");
+		e.innerHTML = "startGame";
+		e.setAttribute("style", "cursor: pointer");
+		style = "cursor: pointer";
+		e.id = "btnStartGame";
+		document.getElementById("overlay").insertBefore(e, document.getElementById("infoPush"));
+		$("#overlay").remove("#infoText");
+		$('#content').hide();
+		$("#overlay").show();
+	};
+	/*
+	//control and check the allowed upgrade
+	this.upgrade = function (mode, event) {
+	if(upgrade <= 0 && control >= 5 && mode == 0) {
+	window.alert('NO CHEATIN!!!');
+	}
+	else if(mode % 2 == 0) {
+	upgrade--;
+	event.explicitOriginalTarget.value++;
+	control++;
+	} else {
+	upgrade++;
+	event.explicitOriginalTarget.value--;
+	control--;
+	}
+	};
+	*/
 	//UtilityStuff
 	//
 	//Button Initialization
@@ -337,41 +395,60 @@ function Controller() {
 		return false;
 	}
 
-	//set the value and behavior of the next robot
-	this.setRoboColor = function() {
-	thisObj.roboSet = {
-            weaponPrototype : {
-                range : $("#range").val(),
-                rateOfFire : $("#rateOfFire").val(),
-                damage : $("#damage").val()
-            },
-            armor : $("#armor").val(),
-            enginePower :$("#enginePower").val(),
-            behaviour : $("#behavior").val()
-        };
+	//open a overlay with a text string called json
+	this.overlay = function(json) {
+		$(document).ready(function() {
+			$('#content').hide();
+			var el = $("#overlay").show();
+			$('<p id="infoText">INFO!<br><br>' + json + '</p>').insertBefore(".infoPush");
+		});
+	};
+
+	//close the overlay and remove the tag with id "infoText"
+	this.overlayOff = function() {
+		$(document).ready(function() {
+			$("#content").show();
+			var el = $("#overlay").hide();
+			//el.remove('#infoText');
+			$("#infoText").remove();
+			$("#btnOverlayOff").show();
+			$("#btnStartGame").remove();
+			$("#setRobot").remove();
+			$("#overlay p").remove();
+			$("#setNext").remove();
+			$('#users').remove();
+		});
 	};
 };
 
 //HTML ACCESS
+var users = ["a", "b", "c", "d", "e", "f", "g", "h"];
 var controller;
 
+function regist() {
+
+	var backendCom = new BackendCom();
+	for (var i in users) {
+		backendCom.registration(users[i] + '@', "", users[i] + '@', function(json) {
+			//console.log(json);
+
+		});
+	}
+};
+
 function start() {
+	//AUTODB
+	//regist();
+
 	controller = new Controller();
 };
 
 function startDebug() {
+
+	//regist();
+
 	controller = new Controller();
-	//console.log('nichts');
-	var backendCom = new BackendCom();
-	backendCom.logIn('', '@', function(json) {
-
-		if (json.logedIn) {
-			console.log(json.logedIn);
-			controller.valid = true;
-			controller.setRobot();
-
-		} else
-			thisObj.overlay('Wrong mail or password!<br>Please try again!!!');
-	});
+	controller.setRobot();
+	controller.loadPlayer(users);
 };
 

@@ -1,117 +1,118 @@
-function GUI(frameControler, server) {
+function GUI(frameControler, server, controllerName) {
 	var obj = this;
-	var canvas;
-	var ctx;
-	this.context;
-	var x;
-	var start;
-	var count = 10;
-	var counter = setInterval(timer, 1000);
+	var canvas, physic, ctx, x, data, $select, color, e, selectedItem;
+	var count = 1;
 	var robotNum = 1;
-	var data;
-	var $select;
-	var color;
-	var robo;
-	var e;
-	var selectedItem;
-	var allRobots = [];
-	var physic;
-
-	//mouse on canvas detection (using robot.hitTest)
-	//setting request animation frame for different browser
-	window.requestAnimFrame = (function() {
-		return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
-		function(callback) {
-			window.setTimeout(callback, 1000 / 60);
-		};
-	})();
+	this.context;
+	var colors = [];
+	//var allRobots = [];
+	var myBots = [];
+	var enemyBots = [];
+	var RIP = [];
+	//default values
+	var counter = setInterval(timer, 1000);
+	var start = new Date();
+	var	canvas = document.getElementById('scene');
 	//correct top/left navi bar offset
+	
 	var html = document.body.parentNode;
 	htmlTop = html.offsetTop;
 	htmlLeft = html.offsetLeft;
-	canvas = document.getElementById('scene');
 	//correct mouse position to the canavs
 	stylePaddingLeft = parseInt(document.defaultView.getComputedStyle(canvas, null)['paddingLeft'], 10) || 0;
 	stylePaddingTop = parseInt(document.defaultView.getComputedStyle(canvas, null)['paddingTop'], 10) || 0;
 	styleBorderLeft = parseInt(document.defaultView.getComputedStyle(canvas, null)['borderLeftWidth'], 10) || 0;
 	styleBorderTop = parseInt(document.defaultView.getComputedStyle(canvas, null)['borderTopWidth'], 10) || 0;
-	//return a set of x & y coordinates
-	function getMouse(e, canvas) {
-		var element = canvas, offsetX = 0, offsetY = 0, mx, my;
-
-		// Compute the total offset. It's possible to cache this if you want
-		if (element.offsetParent !== undefined) {
-			do {
-				offsetX += element.offsetLeft;
-				offsetY += element.offsetTop;
-			} while ((element = element.offsetParent));
-		}
-
-		// Add padding and border style widths to offset
-		// Also add the <html> offsets in case there's a position:fixed bar (like the stumbleupon bar)
-		// This part is not strictly necessary, it depends on your styling
-		offsetX += stylePaddingLeft + styleBorderLeft + htmlLeft;
-		offsetY += stylePaddingTop + styleBorderTop + htmlTop;
-
-		mx = e.pageX - offsetX;
-		my = e.pageY - offsetY;
-
-		//return a simple javascript object with x and y defined
-		return {
-			x : mx,
-			y : my
-		};
-	};
-	/*canvas.onmousemove*/
-	//detect mouse over robot
-	canvas.onmousedown = function(e) {
-		var pt = getMouse(e, canvas);
-		console.log(pt);
-		for (var i = 0, l = allRobots.length; i < l; i++) {
-			if (allRobots[i].hitTest(pt.x, pt.y)) {
-				allRobots[i].color = "#ffffff";
-				console.log("AUSGEWAEHLTER ROBOT: " + i);
-			}
-			// Set the color to red to demonstrate the "hit"
-		}
-	};
-	//END mouse detection
 	
-	
+	//Construct
 	//setting up the default attributes
+	//add physics and gui function draw to framecontrollerNameName
 	function construct() {
-		
-
-		//start = new Date();
-		//ctx = document.getElementById('info');
-		//ctx.width = 200;
-		//ctx.height = 400;
-		//x = ctx.getContext('2d');
-
 		canvas.width = 600;
 		canvas.height = 423;
 		obj.context = canvas.getContext("2d");
-		//fillSelect();
-
 		frameControler.addOnNewFrame(draw);
-
-		physic = new CollisionControler(allRobots);
+		physic = new CollisionControler(getAllRobots());
 		frameControler.addOnNewFrame(physic.onFrame);
 	};
 	
+	function getAllRobots() {
+		var allRobots = [];
+		for(var keys in myBots) {
+			allRobots.push(keys);
+		}
+		for(var keys in enemyBots) {
+			allRobots.push(keys);
+		}
+		return allRobots;
+	}
+	
 	//create a new robot
-	this.newRobot = function(id/*, pos*/) {
-		var id = robotNum - 1;
-		server.serverRobo(controller.roboSet);
-		//console.log(server.serverRobo(controller.roboSet));
+	this.newRobot = function(/*, pos*/) {
+		//var id = robotNum;
+		//server.serverRobo(controllerNameName.getRobot);
+		//console.log(controllerNameName.getRobot());
+		//server.serverRobo(controllerNameName.getRobot());
+		//console.log(server.serverRobo(controllerName.roboSet));
+		
+		
+		//
+		//create two robots one for user, one for enemy
 		//each robot knows the server and get an id
-		robo = new Robot(frameControler, server, id /*, pos*/ );
-		//server.robot = robo.serverRobo(contoller.roboSet);
-    	
-		//color = controller.colors[id];
+		
+		//robo = new Robot(frameControler, server, id + 'enemy');
+		//enemyRobots.push(robo);
+		//allRobots.push(robo);
+		var robo = new Robot(frameControler, 0, robotNum );
+		//robotNum++;
 		//push robot into robot list
-		allRobots.push(robo);
+		myBots.push(robo);
+		robo = new Robot(frameControler, 1, robotNum);
+		robotNum++;
+		//push robot into robot list
+		enemyBots.push(robo);
+		
+		//console.log(allRobots);
 	};
+	
+	//global ticker	
+	function timer() {
+		count--;
+		if (server.position.gameSituation == undefined) {
+		} else {                                                           
+			//get name of player to check current size of server.gameSituation-player list
+			//var name = Object.getOwnPropertyNames(server.position.gameSituation)[0];
+			//represent the server number of robot
+			var size = Object.keys(server.position.gameSituation[controllerName]).length;
+			//console.log(controllerName.name);
+			//size triggers the point of robot creation for the gui
+			if (size == robotNum) {
+			//if(allRobots.length == robotNum-1){
+			/*
+				var gameSituation = server.position.gameSituation;
+				//check for changes!!!
+				console.log(server.position.gameSituation);
+				for (var key in gameSituation) {
+					var robots = gameSituation[key];
+					for (var robot in robots) {
+						//here check for robot id, changes
+						//setRobot if new id new robt()
+					}
+				}
+				*/
+				//console.log(server.position.gameSituation);
+				//create a new robot
+				obj.newRobot();
+				//robotNum++;
+				count = 10;
+			}
+			if (size > 1) {
+				clearInterval(counter);
+			}
+		}
+		//requestAnimFrame(timer);
+		//timer();
+	}
 	
 	//WORK
 	//
@@ -143,38 +144,67 @@ function GUI(frameControler, server) {
 		});
 
 	};
+	
+	//Gui Utility
+	//
+	//mouse on canvas detection (using robot.hitTest)
+	//setting request animation frame for different browser
+	window.requestAnimFrame = (function() {
+		return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+		function(callback) {
+			window.setTimeout(callback, 1000 / 60);
+		};})();
+	
+	//return a set of x & y coordinates
+	function getMouse(e, canvas) {
+		var element = canvas, offsetX = 0, offsetY = 0, mx, my;
 
-	function timer() {
-		count--;
-		if (server.position.gameSituation == undefined) {
-		} else {
-			var name = Object.getOwnPropertyNames (server.position.gameSituation)[0];
-			//represent the server number of robot
-			var size = Object.keys(server.position.gameSituation[name]).length;
-			//size triggers the point of robot creation for the gui
-			if (size == robotNum) {
-				var gameSituation = server.position.gameSituation;
-				//check for changes!!!
-				for (var key in gameSituation) {
-					var robots = gameSituation[key];
-					for (var robot in robots) {
-						//here check for robot id, changes
-						//setRobot if new id new robt()
-					}
-				}
-				//create a new robot
-				obj.newRobot();
-				robotNum++;
-				fillSelect();
-				count = 10;
-			}
-			if (size > 1) {
-				clearInterval(counter);
-			}
+		// Compute the total offset. It's possible to cache this if you want
+		if (element.offsetParent !== undefined) {
+			do {
+				offsetX += element.offsetLeft;
+				offsetY += element.offsetTop;
+			} while ((element = element.offsetParent));
 		}
-		requestAnimFrame(timer);
-		//timer();
-	}
+
+		// Add padding and border style widths to offset
+		// Also add the <html> offsets in case there's a position:fixed bar (like the stumbleupon bar)
+		// This part is not strictly necessary, it depends on your styling
+		offsetX += stylePaddingLeft + styleBorderLeft + htmlLeft;
+		offsetY += stylePaddingTop + styleBorderTop + htmlTop;
+
+		mx = e.pageX - offsetX;
+		my = e.pageY - offsetY;
+
+		//return a simple javascript object with x and y defined
+		return {
+			x : mx,
+			y : my
+		};
+	};
+	//detect mouse over robot
+	canvas.onmousedown = function(e) {
+	 	var allRobots = getAllRobbots();
+		var pt = getMouse(e, canvas);
+		console.log(pt);
+		for (var i = 0, l = allRobots.length; i < l; i++) {
+			if (allRobots[i].hitTest(pt.x, pt.y)) {
+				allRobots[i].color = "#ffffff";
+				console.log("AUSGEWAEHLTER ROBOT: " + i);
+				//allRobots.push({id: i});
+				//console.log(allRobots[i]);
+				console.log(pt);
+				s = document.createElement("article");
+				s.setAttribute("class", "pushSelection");
+				var e = document.createElement("P");
+				e.innerHTML="robot " + i + " selected";
+				s.appendChild(e);
+				document.getElementById("gameSelect").appendChild(s);
+			}
+			// Set the color to red to demonstrate the "hit"
+		}
+	};
+	//END mouse detection
 
 	function msToTime(s) {
 
@@ -194,6 +224,25 @@ function GUI(frameControler, server) {
 	}
 
 	function draw() {
+		var i = 0;
+		if (server.position.gameSituation) {
+        	for (var names in server.position.gameSituation) {
+        		for (var keys in server.position.gameSituation[names]) {
+        			if(names == controllerName) {
+        				if(myBots[i]) {
+        					myBots[i].setDestination(server.position.gameSituation[names][keys].position);
+        				}
+        			} else {
+        				if(enemyBots[i]) {
+        					enemyBots[i].setDestination(server.position.gameSituation[names][keys].position);
+        				}
+        			}	
+        			i++;
+        		}
+        		i = 0;
+        	}
+        }
+		
 		canvas.width = canvas.width;
 		canvas.height = canvas.height;
 		x = canvas.getContext("2d");
@@ -201,35 +250,26 @@ function GUI(frameControler, server) {
 		x.moveTo(canvas.width/2, 0);
 		x.lineTo(canvas.width/2, canvas.height);
 		x.lineWidth = 1;
+		
 		// set drawing style
         x.strokeStyle = "#0f0";
-       // context.fill();
-        // actually start drawing
-        //x.stroke();
-        
-        //x.beginPath();
 		x.moveTo(0, canvas.height/2);
 		x.lineTo(canvas.width, canvas.height/2);
-		//x.lineWidth = 1;
-		// set drawing style
-        x.strokeStyle = "#0f0";
-       // context.fill();
+        //x.strokeStyle = "#0f0";
+        
         // actually start drawing
         x.stroke();
-        x.strokeStyle = "#000"
-		//ctx.width = ctx.width;
-		/*
+        x.strokeStyle = "#000";
+		
 		var time = parseInt((new Date().getTime() - start), 10);
 
-		//x.fillText( ((time / (60 * 1000)) % 60) + ':' +  ((time / 1000) % 60) + '<br/>' , 10, 10);
-		x.font = "15px Verdana";
-		//x.font = "16px Andale Mono";
+		x.font = "13px Verdana";
 		x.fillStyle = '#FFFFFF';
-		x.fillText('Playtime:  ' + msToTime(time), 15, 30);
-		x.fillText('New Robot in:       ' + count, 15, 75);
-		x.fillText('Count of Robots:   ' + (robotNum - 1), 15, 120);
-
-		//e = document.getElementById("#robots");
+		x.fillText('Playtime:  ' + msToTime(time), 469, 10);
+		x.fillText('New Robot in:   ' + count, 0, 10);
+		//x.fillText('Count of Robots:   ' + (robotNum - 1), 15, 120);
+		
+		/*//e = document.getElementById("#robots");
 		e = $("#robots").children(":selected").text();
 		if (e != '') {
 			//selectedItem = e.options[e.selectedIndex].text;
@@ -237,9 +277,9 @@ function GUI(frameControler, server) {
 			x.fillText('Selected:     ' + e, 15, 165);
 			e = '';
 		}
-		x.fillStyle = color;
+		//x.fillStyle = color;
 		//console.log(color);
-		x.fillText('LAST ROBOT COLOR', 15, 360);
+		//x.fillText('LAST ROBOT COLOR', 15, 360);
 		*/
 
 	}

@@ -1,6 +1,4 @@
 function Robot ( frameControler, color, id) {
-    //var posX = 575;
-    //var posY = 375;
     var thisObj = this;
     var health = 100;
     var posX = 0;
@@ -15,23 +13,17 @@ function Robot ( frameControler, color, id) {
     var moveVector = new Array(0, 0);
     var mass = 1; // Gewicht des Robot
     var canvaswidth = 600;
-    var canvasheight = 423;
-    /*
-    posX = posX + canvaswidth/2; 
-    posY = posY + canvasheight/2;
-    */
-   	//posX = destinationX;
-    //posY = destinationY;
+    var canvasheight = 600;
     var colors = ["#0f0", "red"];
     startPosition();
     
     function startPosition () {
-    	if(color == 0) {
+    	if(id%2 == 1){
     		posX=0+ canvaswidth/2;
     		posY=100+ canvasheight/2;
-    	} else {
-    		posX=100+ canvaswidth/2;
-    		posY=0+ canvasheight/2;
+    	}else{
+    		posX=84+ canvaswidth/2;
+    		posY=50+ canvasheight/2;
     	}
     	
     }
@@ -54,22 +46,22 @@ function Robot ( frameControler, color, id) {
         speed = s;
     };
     thisObj.setPosition = function ( p ) {
-        posX = p[0]+ canvaswidth/2;
-        posY = p[1]+ canvasheight/2;
+        posX = p[0];
+        posY = p[1];
     };
     thisObj.setDestination = function ( p ) {
         destinationX = p[0]+ canvaswidth/2;
         destinationY = p[1]+ canvasheight/2;
     };
-    thisObj.getRoboColor = function () {
-        return controller.colors[id];
+    thisObj.getId = function () {
+        return id;
     };
     
     //HIT TEST
      thisObj.hitTest = function (x, y) {
         var dx = x - posX;
         var dy = y - posY;
-        return dx * dx + dy * dy <= radius * radius;
+        return dx * dx + dy * dy <= radius/2 * radius;
     };
 
 	
@@ -77,47 +69,6 @@ function Robot ( frameControler, color, id) {
     
     //onframe
     function onFrame ( context, timeSinceLastDraw ) {
-    /*
-		var i = 0;
-		
-        if (server.position.gameSituation) {
-        	for (var names in server.position.gameSituation) {
-        		for (var keys in server.position.gameSituation[names]) {
-        			i++;
-        			if(i == id) {
-	        		//var name = Object.getOwnPropertyNames ( server.position.gameSituation)[1];
-	        		//if (server.position.gameSituation[name][id]) {
-	        			console.log(keys + '    ' + names);
-	        			destinationX = server.position.gameSituation[names][keys].position[0] + canvaswidth/2;
-		           		destinationY = server.position.gameSituation[names][keys].position[1] + canvasheight/2;
-	        		}
-	           		//var name = Object.getOwnPropertyNames ( server.position.gameSituation)[i]; 
-	           		/* 
-	           		if(server.position.gameSituation[name][id]) {
-		           		var name = Object.getOwnPropertyNames ( server.position.gameSituation)[0];
-		           		destinationX = server.position.gameSituation[name][id].position[0] + canvaswidth/2;
-		           		destinationY = server.position.gameSituation[name][id].position[1] + canvasheight/2;
-		           		//console.log(destinationX + '   '  + destinationY);
-		           		console.log(server.position);
-		         	} 		
-		         	else {return;} 
-		         	
-		        }
-		        //push robot into robot list
-		        
-		      } 
-		        
-		}
-		*/
-		/*
-		if (server.allRobots) {
-			if (server.allRobots[id-1]) {
-				var r = server.allRobots[id-1];
-				destinationX = r[0] + canvaswidth/2;
-		        destinationY = r[1] + canvasheight/2;	
-			}
-		}
-		  */ 
         calcPosition ( timeSinceLastDraw );
         draw ( context );
     }
@@ -133,7 +84,6 @@ function Robot ( frameControler, color, id) {
     
     
     function draw ( context ) {
-    	
     	//context.translate(canvaswidth/2,canvasheight/2);
     	context.beginPath();
     	context.fillStyle = '#000000';

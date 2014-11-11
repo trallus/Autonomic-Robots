@@ -5,7 +5,7 @@ function FrameControler ( ) {
     var minFrameLength = 1000 / maxFrameRate;
     var onNewFrameFunctions = [];
     var gui;
-    var pause = false;;
+    var pause = false;
     
     function construct () {
     }
@@ -36,7 +36,7 @@ function FrameControler ( ) {
         var timeSinceLastDraw = ( new Date().getTime() - lastFrameTime ) / 1000;    // sec
         lastFrameTime = new Date().getTime();
         
-        // Eigentliche Frame tätigkeit
+        // Eigentliche Frame-tätigkeit
         for (var i in onNewFrameFunctions) {
             onNewFrameFunctions[i]( gui.context, timeSinceLastDraw );
         }

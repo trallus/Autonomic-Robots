@@ -18,7 +18,6 @@ function FrameControler ( ) {
         nextFrame (  );
     };
     
-    
     this.pauseButton = function pauseButton () {
         if (pause) {
             pause = false;
@@ -37,7 +36,7 @@ function FrameControler ( ) {
         var timeSinceLastDraw = ( new Date().getTime() - lastFrameTime ) / 1000;    // sec
         lastFrameTime = new Date().getTime();
         
-        // Eigentliche Frame tätigkeit
+        // Eigentliche Frame-tätigkeit
         for (var i in onNewFrameFunctions) {
             onNewFrameFunctions[i]( gui.context, timeSinceLastDraw );
         }

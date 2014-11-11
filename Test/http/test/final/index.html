@@ -4,9 +4,12 @@
 		<title>Automatic Robots</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="shortcut icon" type="image/x-icon" href="css/images/logo.ico">
+		<!--
+
 		<link rel="stylesheet" href="css/main.css" type="text/css"/>
 		<link rel="stylesheet" type="text/css" href="css/style.css"/>
-
+		-->
+		<link rel="stylesheet" type="text/css" href="css/rampage.css"/>
 		<script type="text/javascript" src="js/Controller.js"></script>
 		<script type="text/javascript" src="js/BackendCom.js"></script>
 		<script type="text/javascript" src="js/jquery-1.7.1.js"></script>
@@ -22,58 +25,65 @@
 		<script type="text/javascript" src="js/ckFrameWork/vector.js"></script>
 
 	</head>
-
-	<body onload="start();">
+	<header>
 		<h1> Automatic Robots is a Free-Online-Game-Adventure... </h1>
-		<div id="content">
-			<div id="down">
-				<div id="wood"></div>
-				<table id="tableNone">
-					<caption>
-						It's Free-To-Play!!!
-					</caption>
+	</header>
 
-					<tr>
-						<th><div id="wood"></div>
-					</tr>
+	<div class="flex-area">
 
-					<tr>
+		<body onload="start();">
 
-					<tr>
-						<div id="wood">
+			<section>
+
+				<article class='featured-article'>
+					<div class="contentLayer">
+
+						<div id="content">
+							<h2> It's Free-To-Play!!!</h2>
+
 							<!--<div class="button" onClick="controller.loadRegister()" >signUp</div>-->
-							<td>
-							<div class="button" onClick="controller.loadRegister()" style="cursor: pointer">
-								signUp
+							<div id="buttonField">
+								<div class="button" onClick="controller.loadRegister()" style="cursor: pointer">
+									signUp
+								</div>
+
+								<div class="button" onClick="controller.loadLogin()" style="cursor: pointer">
+									logIn
+								</div>
+
+								<div class="button" onClick="controller.loadDebug()" style="cursor: pointer">
+									debug
+								</div>
 							</div>
 						</div>
+					</div>
+				</article>
+			</section>
+			<aside>
+				<h1></h1>
+				<div class="box">
 
-						</td>
-						<td>
-						<p>
-							or
-						</p></td>
-						<td>
-						<div class="button" onClick="controller.loadLogin()" style="cursor: pointer">
-							logIn
-						</div>
-			</div>
-			</td>
-			</tr>
-			</table>
+				</div>
+				<div class="box">
+					Coming
+				</div>
+				<div class="box">
+					Soooon
+				</div>
+				<div class="box">
+					...
+				</div>
+			</aside>
 
-			<div class="button" onClick="controller.loadDebug()" style="cursor: pointer">
-				debug
-			</div>
-			<div id="wood"></div>
-		</div>
-		</div>
+	</div>
 
 	</body>
 
 	<div id="overlay" class="overlay" style="display: none">
 		<div class="infoPush"></div>
 		<div id="btnOverlayOff" align="center" class="button" onClick="controller.overlayOff()" >
-			close</<div></div>
+			close
+		</div>
+	</div>
 
 </html>

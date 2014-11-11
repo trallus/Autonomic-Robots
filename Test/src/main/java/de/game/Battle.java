@@ -31,12 +31,27 @@ public class Battle extends Thread implements Runnable {
      * The identification number of the battle
      */
     private final long id;
-    
+    /**
+     * The playing users
+     */
     private final List<User> users;
+    /**
+     * All Physic Objects in the "map"
+     */
     private final List<PhysikObject> physicObjects;
+    /**
+     * Time betwen create new robots
+     */
     private long timeToNextRobot;
+    /**
+     * To be sure that all Robots has unique id
+     */
     private long robotIdCounter;
 	
+	/**
+	 * @param id
+	 * @param users
+	 */
 	public Battle (final long id, final List<User> users) {
 		Log.log("Battle Create: "+id);
 		this.id = id;
@@ -54,27 +69,42 @@ public class Battle extends Thread implements Runnable {
 		}
 	}
 	
+	/**
+	 * Get the users in the battle
+	 * @return
+	 */
 	public List<User> getUsers () {
 		return users;
 	}
 	
+	/**
+	 * get the id of the battle
+	 * @return
+	 */
 	public long getID () {
 		return id;
 	}
 
 	// start the battle
+	/* (non-Javadoc)
+	 * @see java.lang.Thread#run()
+	 */
 	@Override
 	public void run() {
 		Log.log("Battle Start: "+id);
 		frameLoop();
 	}
 	
+	/**
+	 * Calculate the battle situation per frame
+	 */
 	private void frameLoop () {
 		final long robotIntervall = 10000;
 		final long frameIntervall = 100;	// 1/10 sec
 		final double elapsedTime = .1;
 		final long currentTime = System.currentTimeMillis();
 		
+		// if the battle is over?
 		final long battleTimeLeft = startTimeMs + timeLimitMs - currentTime;
 		if (battleTimeLeft < 0) {
 			for (User u : users) {
@@ -91,7 +121,7 @@ public class Battle extends Thread implements Runnable {
 		
 		// set next robot
 		if (timeToNextRobot < currentTime) {
-			for (User u : users) {
+			for (final User u : users) {
 				final Robot nextRobot = u.getNextRobot().generateRobot(robotIdCounter, u.getStartPoint());
 				u.addBattleRobot(nextRobot);
 				physicObjects.add(nextRobot);
@@ -103,12 +133,12 @@ public class Battle extends Thread implements Runnable {
 		
 		// call onTick methods
 		// move all physical objects
-		for (PhysikObject p : physicObjects) {
+		for (final PhysikObject p : physicObjects) {
 			p.move(elapsedTime);
 		}
 		// handle robots
-		for (User u : users) {
-			for (Robot r : u.getBattleRobots()) {
+		for (final User u : users) {
+			for (final Robot r : u.getBattleRobots()) {
 				r.onTick(this, elapsedTime);
 			}
 		}
@@ -122,8 +152,13 @@ public class Battle extends Thread implements Runnable {
 		frameLoop();
 	}
 	
+	/**
+	 * Calculate the start points of the users on the battle field
+	 * @param int numberOfUsers
+	 * @return List<Vector2D>
+	 */
 	private List<Vector2D> calculateStartpoints (final int numberOfUsers) {
-		final long angle = (long) (Math.PI / numberOfUsers); // angle between players
+		final long angle = (long) (2 * Math.PI / numberOfUsers); // angle between players
 		final long distance = 100; //distance from the center of the battle field
 		final List<Vector2D> vectorList = new ArrayList<Vector2D>();
 		

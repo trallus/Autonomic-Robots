@@ -10,7 +10,7 @@ import de.math.Vector2D;
  */
 public abstract class PhysikObject {
 	
-	public PhysikObject (double direction, double speed) {
+	public PhysikObject (final double direction, final double speed) {
 		this.direction = direction;
 		this.speed = speed;
 		updateMoveVector();
@@ -48,7 +48,7 @@ public abstract class PhysikObject {
      * Calculates the Effects that the given PhysikObject has on this one when hit
      * @param po The other PhysicObject
      */
-    public abstract void onHit(PhysikObject po);
+    public abstract void onHit(final PhysikObject po);
     /**
      * @return the position
      */
@@ -58,7 +58,7 @@ public abstract class PhysikObject {
     /**
      * @param position the position to set
      */
-    public void setPosition(Vector2D position) {
+    public void setPosition(final Vector2D position) {
         this.position = position;
     }
     /**
@@ -70,7 +70,7 @@ public abstract class PhysikObject {
     /**
      * @param moveVector the moveVector to set
      */
-    public void setMoveVector(Vector2D moveVector) {
+    public void setMoveVector(final Vector2D moveVector) {
         this.moveVector = moveVector;
     }
     /**
@@ -82,7 +82,7 @@ public abstract class PhysikObject {
     /**
      * @param radius the radius to set
      */
-    public void setRadius(double radius) {
+    public void setRadius(final double radius) {
         this.radius = radius;
     }
     /**
@@ -94,7 +94,7 @@ public abstract class PhysikObject {
     /**
      * @param mass the mass to set
      */
-    public void setMass(double mass) {
+    public void setMass(final double mass) {
         this.mass = mass;
     }
     /**
@@ -106,7 +106,7 @@ public abstract class PhysikObject {
     /**
      * @param hitPoints the hitPoints to set
      */
-    public void setHitPoints(double hitPoints) {
+    public void setHitPoints(final double hitPoints) {
         this.hitPoints = hitPoints;
     }
     /**
@@ -118,14 +118,14 @@ public abstract class PhysikObject {
     /**
      * @param angle turn the object with this angle
      */
-    public void turn(double angle) {
+    public void turn(final double angle) {
         direction += angle;
         updateMoveVector();
     }
     /**
      * @param speed with this speed
      */
-    public void accelerate(double speed) {
+    public void accelerate(final double speed) {
         this.speed += speed;
         updateMoveVector();
     }
@@ -133,7 +133,7 @@ public abstract class PhysikObject {
 	 * Move the physical element
 	 * @param elapsedTime Time since last call
 	 */
-	public void move(double elapsedTime) {
+	public void move(final double elapsedTime) {
 		position = position.addition(moveVector.mul(elapsedTime));
 	}
     

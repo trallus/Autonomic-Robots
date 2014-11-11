@@ -47,17 +47,17 @@ public class Robot extends PhysikObject implements Tick {
      *            all Behaviours
      * @see de.game.behaviour.BehaviourFactory#getBehaviours()
      */
-    public void setBehaviour(String name) {
+    public void setBehaviour(final String name) {
 	final BehaviourFactory bf = BehaviourFactory.getBehaviourFactory();
 	behaviour = bf.getInstanceOfBehaviour(name, this);
     }
 
-    public void shoot(Vector2D targetPosition) {
+    public void shoot(final Vector2D targetPosition) {
 	// TODO Behaviour will invoke this methode so the robot fires its weapon
     }
 
     @Override
-    public void onHit(PhysikObject po) {
+    public void onHit(final PhysikObject po) {
 	// TODO noch keine physik, nur ph abzug durch kollision
 	final double power = po.getMoveVector().getMagnitude() * po.getMass();
 	final double hp = getHitPoints() - power;
@@ -92,7 +92,7 @@ public class Robot extends PhysikObject implements Tick {
     }
 
     @Override
-    public void onTick(Battle battle, double elapsedTime) {
+    public void onTick(final Battle battle, final double elapsedTime) {
 	behaviour.onTick(battle, elapsedTime); // Must be first so the Behaviour
 					       // can say what to do
 	if (turnLeft)

@@ -13,5 +13,5 @@ public interface Tick {
      * @param battle The Battle which send the tick
      * @param elapsedTime The time in 1/x sec since last call
      */
-    void onTick(final Battle battle, final double elapsedTime);
+    void onTick(Battle battle, double elapsedTime);
 }

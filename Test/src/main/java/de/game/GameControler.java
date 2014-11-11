@@ -23,15 +23,15 @@ public class GameControler implements GameInterface {
 	}
 
 	@Override
-	public long joinBattleQuery(User user) throws InterruptedException {
+	public long joinBattleQuery(final User user) throws InterruptedException {
 		if (battleQerry.size() > 0) { // two player
 		//if (battleQerry.size() > 0 || true) {
 			final List<User> users = new ArrayList<User>();
 			users.add(user);
-			for (User u : battleQerry) {
+			for (final User u : battleQerry) {
 				users.add(u);
 			}
-			for(User u : users) {
+			for(final User u : users) {
 				battleQerry.remove(u);
 			}
 			final Battle battle = new Battle( battleID, users );
@@ -58,17 +58,17 @@ public class GameControler implements GameInterface {
 	}
 
 	@Override
-	public void leaveBattleQuery(User user) throws NotInQueryException {
+	public void leaveBattleQuery(final User user) throws NotInQueryException {
 		battleQerry.remove(user);
 	}
 
 	@Override
-	public void setNextRobot(User user, RobotPrototype rp) {
+	public void setNextRobot(final User user, final RobotPrototype rp) {
 		user.setNextRobot(rp);
 	}
 
 	@Override
-	public Battle getGameSituation(User user) {
+	public Battle getGameSituation(final User user) {
 		return user.getBattle();
 	}
 
@@ -79,7 +79,7 @@ public class GameControler implements GameInterface {
 	}
 
 	@Override
-	public void setBehaviour(long robotID, String behaviour, User user) {
+	public void setBehaviour(final long robotID, final String behaviour, final User user) {
 		user.setBehavior(robotID, behaviour);
 	}
 }

@@ -1,7 +1,12 @@
+/**
+ * @author Christian Köderitz
+ * @version 0.1
+ * @since 10.10.2014
+ */
 function FrameControler ( ) {
     var obj = this;
     var lastFrameTime = 0;
-    var maxFrameRate = 30;
+    var maxFrameRate = 25;
     var minFrameLength = 1000 / maxFrameRate;
     var onNewFrameFunctions = [];
     var gui;

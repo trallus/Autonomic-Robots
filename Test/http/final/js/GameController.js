@@ -49,7 +49,7 @@ var GameController = {
 					var i = 0;
 					$(".setNext input").each(function(){roboSet[i]=this.value;i++;});
 					console.log(roboSet);
-					intervallCounter = 20;
+					intervallCounter = 200;
 					intervall = window.setInterval(function() {
 					
 						//get game situation in 1/sec up to 20x

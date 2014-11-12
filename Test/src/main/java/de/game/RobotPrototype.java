@@ -1,6 +1,7 @@
 package de.game;
 
 import de.game.weapon.WeaponPrototype;
+import de.httpServer.User;
 import de.math.Vector2D;
 
 public class RobotPrototype {
@@ -32,8 +33,8 @@ public class RobotPrototype {
 		return behaviour;
 	}
 	
-	public Robot generateRobot (final long id, final Vector2D position) {
-		final Robot robot = new Robot(id, position, this, weaponPrototype);
+	public Robot generateRobot (final long id, final Vector2D position, final User user) {
+		final Robot robot = new Robot(id, position, this, weaponPrototype, user);
 		return robot;
 	}
 }

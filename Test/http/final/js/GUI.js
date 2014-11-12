@@ -90,7 +90,7 @@ function GUI(frameControler, controllerName) {
 	//@param canvas
 	//@return {x, y}
 	function getMouse(e, canvas) {
-		var element = canvas, offsetX = 0, offsetY = 0, mx, my;
+		var element = canvas, offsetX = 0, offsetY = 0;
 
 		// Compute the total offset. It's possible to cache this if you want
 		if (element.offsetParent !== undefined) {
@@ -99,14 +99,15 @@ function GUI(frameControler, controllerName) {
 				offsetY += element.offsetTop;
 			} while ((element = element.offsetParent));
 		}
+		var resultOffsetX = offsetX;
 		// Add padding and border style widths to offset
 		// Also add the <html> offsets in case there's a position:fixed bar (like the stumbleupon bar)
 		// This part is not strictly necessary, it depends on your styling
-		offsetX += stylePaddingLeft + styleBorderLeft + htmlLeft;
+		resultOffsetX += stylePaddingLeft + styleBorderLeft + htmlLeft;
 		offsetY += stylePaddingTop + styleBorderTop + htmlTop;
 
-		mx = e.pageX - offsetX;
-		my = e.pageY - offsetY;
+		var mx = e.pageX - resultOffsetX;
+		var my = e.pageY - offsetY;
 
 		//return a simple javascript object with x and y defined
 		return {

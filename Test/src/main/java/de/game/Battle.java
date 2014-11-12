@@ -49,6 +49,7 @@ public class Battle extends Thread implements Runnable {
     private long robotIdCounter;
 	
 	/**
+	 * Creates and starts a battle. every battle has an unique id and a pair of users
 	 * @param id
 	 * @param users
 	 */
@@ -60,7 +61,7 @@ public class Battle extends Thread implements Runnable {
 		robotIdCounter = 0;
 		timeToNextRobot = System.currentTimeMillis();
 		startTimeMs = timeToNextRobot;
-		timeLimitMs = 20000;	// Spiel dauert nun 20 sekunden
+		timeLimitMs = 200000;	// Spiel dauert nun 20 sekunden
 		
 		// add battle to users
 		final List<Vector2D> startPoints = calculateStartpoints(users.size());
@@ -122,7 +123,7 @@ public class Battle extends Thread implements Runnable {
 		// set next robot
 		if (timeToNextRobot < currentTime) {
 			for (final User u : users) {
-				final Robot nextRobot = u.getNextRobot().generateRobot(robotIdCounter, u.getStartPoint());
+				final Robot nextRobot = u.getNextRobot().generateRobot(robotIdCounter, u.getStartPoint(),u);
 				u.addBattleRobot(nextRobot);
 				physicObjects.add(nextRobot);
 				robotIdCounter++;

@@ -96,8 +96,8 @@ function CollisionControler ( physicObjects ) {
                     // Achtung: hier noch nur Kollisionsanteile
                     var m1 = physicalObjects[i].getMass();
                     var m2 = physicalObjects[k].getMass();
-                    var sp1 = 2 * (m1*mV1[0][0]+m2*mV2[0][0]) / (m1+m2) // 2 * geschwindigkeit des gemeinsamen schwerpunktes
-                    var sp2 = 2 * (m1*mV1[0][1]+m2*mV2[0][1]) / (m1+m2) // 2 * geschwindigkeit des gemeinsamen schwerpunktes
+                    var sp1 = 2 * (m1*mV1[0][0]+m2*mV2[0][0]) / (m1+m2); // 2 * geschwindigkeit des gemeinsamen schwerpunktes
+                    var sp2 = 2 * (m1*mV1[0][1]+m2*mV2[0][1]) / (m1+m2); // 2 * geschwindigkeit des gemeinsamen schwerpunktes
 
                     mV1[0] = new Array (sp1-mV1[0][0], sp2-mV1[0][1]);
                     mV2[0] = new Array (sp1-mV2[0][0], sp2-mV2[0][1]);

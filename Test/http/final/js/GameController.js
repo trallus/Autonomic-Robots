@@ -31,8 +31,7 @@ var GameController = {
 		
 		//start game request, joining batlle queue
 		function getNextServerFrame() {
-			var position;
-			
+			//send first robot settings
 			$.ajax({
 				type : "POST",
 				data : JSON.stringify(serverRobot()/*getting actual selection for robot values*/),
@@ -40,18 +39,18 @@ var GameController = {
 				url : "serverRequest/game-setNextRobot"
 			}).done(function(json) {
 				console.log(json);
-				var roboSet = [];
-				var i = 0;
-				$(".setNext input").each(function(){roboSet[i]=this.value;i++;});
-				console.log(roboSet);
 				//join BattleQuery
 				$.ajax({
 					url : "serverRequest/game-joinBattleQuery"
 				}).done(function(json) {
 					gui.setStart();
 					console.log(json);
-					var intervallCounter = 20;
-					var intervall = window.setInterval(function() {
+					roboSet = [];
+					var i = 0;
+					$(".setNext input").each(function(){roboSet[i]=this.value;i++;});
+					console.log(roboSet);
+					intervallCounter = 20;
+					intervall = window.setInterval(function() {
 					
 						//get game situation in 1/sec up to 20x
 						$.ajax({
@@ -62,7 +61,7 @@ var GameController = {
 	
 							//checking for new gameSituation & size of server robot list size to gui robot list size
 							if (position.gameSituation && position.gameSituation[controller.name]) {
-								var size = Object.keys(position.gameSituation[controller.name]).length;
+								size = Object.keys(position.gameSituation[controller.name]).length;
 								if (size > gui.getRobotNum()/2) {
 											gui.newRobot(Object.getOwnPropertyNames(position.gameSituation)[0]);
 								}
@@ -103,11 +102,11 @@ var GameController = {
 		 *get roboSet array to fill next robot values
 		 *@return r
 		 */
-		function serverRobot(set) {
+		function serverRobot() {
 			//controller.getRobot();
-			var roboSet = controller.roboSet;
+			roboSet = controller.roboSet;
 			//var roboSet = set;
-			var r = {
+			r = {
 				weaponPrototype : {
 					range : roboSet[0],
 					rateOfFire : roboSet[1],
@@ -120,11 +119,11 @@ var GameController = {
 			return r;
 		};
 		/**
-		//get robot
-		//@return roboSet[]‚
+		*get robot
+		*@return roboSet[]‚
 		*/
 		function getRobot () {
-			var roboSet = [];
+			roboSet = [];
 			roboSet[0] = $("#range-setter").value;
 			roboSet[1] = $("#rateOfFire-setter").value;
 			roboSet[2] = $("#damage-setter").value;

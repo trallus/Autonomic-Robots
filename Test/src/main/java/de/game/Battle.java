@@ -3,6 +3,7 @@ package de.game;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.game.behaviour.BehaviourFactory;
 import de.httpServer.User;
 import de.logger.Log;
 import de.math.Vector2D;
@@ -47,13 +48,18 @@ public class Battle extends Thread implements Runnable {
      * To be sure that all Robots has unique id
      */
     private long robotIdCounter;
+    /**
+     * The BehaviourFactory that is used to create the Behaviours for the Robots
+     */
+    private final BehaviourFactory behaviourFactory;
 	
 	/**
 	 * Creates and starts a battle. every battle has an unique id and a pair of users
 	 * @param id
 	 * @param users
+	 * @param behaviourFactory 
 	 */
-	public Battle (final long id, final List<User> users) {
+	public Battle (final long id, final List<User> users, final BehaviourFactory behaviourFactory) {
 		Log.log("Battle Create: "+id);
 		this.id = id;
 		this.users = users;
@@ -62,7 +68,7 @@ public class Battle extends Thread implements Runnable {
 		timeToNextRobot = System.currentTimeMillis();
 		startTimeMs = timeToNextRobot;
 		timeLimitMs = 200000;	// Spiel dauert nun 20 sekunden
-		
+		this.behaviourFactory = behaviourFactory;
 		// add battle to users
 		final List<Vector2D> startPoints = calculateStartpoints(users.size());
 		for (int i=0; i<users.size(); i++) {
@@ -123,7 +129,7 @@ public class Battle extends Thread implements Runnable {
 		// set next robot
 		if (timeToNextRobot < currentTime) {
 			for (final User u : users) {
-				final Robot nextRobot = u.getNextRobot().generateRobot(robotIdCounter, u.getStartPoint(),u);
+				final Robot nextRobot = u.getNextRobot().generateRobot(robotIdCounter, u.getStartPoint(),u,behaviourFactory);
 				u.addBattleRobot(nextRobot);
 				physicObjects.add(nextRobot);
 				robotIdCounter++;

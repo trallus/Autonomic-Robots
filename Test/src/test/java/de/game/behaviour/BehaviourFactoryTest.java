@@ -20,7 +20,7 @@ public class BehaviourFactoryTest {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-	bf = BehaviourFactory.getBehaviourFactory();
+	bf = new BehaviourFactory();
     }
 
     @Test

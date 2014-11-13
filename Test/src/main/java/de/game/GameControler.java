@@ -2,6 +2,8 @@ package de.game;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.game.behaviour.BehaviourFactory;
 import de.game.exceptions.NotInQueryException;
 import de.httpServer.User;
 
@@ -15,11 +17,13 @@ public class GameControler implements GameInterface {
 	private final List<User> battleQerry;
 	private final List<Battle> battles;
 	private long battleID;
+	private final BehaviourFactory behaviourFactory;
 	
 	public GameControler ( ) throws Exception{
 		battleQerry = new ArrayList<User>();
 		battles = new ArrayList<Battle>();
 		battleID = 0;
+		behaviourFactory = new BehaviourFactory();
 	}
 
 	@Override
@@ -34,7 +38,7 @@ public class GameControler implements GameInterface {
 			for(final User u : users) {
 				battleQerry.remove(u);
 			}
-			final Battle battle = new Battle( battleID, users );
+			final Battle battle = new Battle( battleID, users , behaviourFactory);
 			battles.add(battle);
 			battle.start();	// start battle
 			battleID ++;

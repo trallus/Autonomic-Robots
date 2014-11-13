@@ -24,10 +24,6 @@ public class Main {
 		} else {
 			portNumber = Integer.parseInt(args[0]);
 		}
-
-		//BehaviourFactory starten (XML wird geladen)
-		BehaviourFactory.getBehaviourFactory();
-		
 		// Start HTTP Server
 
 		String httpPath = System.getProperty("user.dir") + "/http/final/";

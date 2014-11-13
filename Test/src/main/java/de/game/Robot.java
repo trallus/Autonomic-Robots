@@ -25,9 +25,10 @@ public class Robot extends PhysikObject implements Tick {
     private Behaviour behaviour;
     private HashMap<User, List<Robot>> knownRobots;
     private final User user;
+    private final BehaviourFactory behaviourFactory;
 
     public Robot(final long id, final Vector2D position,
-	    final RobotPrototype rb, final Weapon weapon, final User user) {
+	    final RobotPrototype rb, final Weapon weapon, final User user, final BehaviourFactory behaviourFactory) {
 	super(0, 0); // start direction 0°, speed 0 pixel/sec
 	this.accelerate = true;
 	this.turnLeft = true;
@@ -39,8 +40,10 @@ public class Robot extends PhysikObject implements Tick {
 	this.acceleration = .1 / armor * enginePower;
 	this.weapon = weapon;
 	// So every robot has a (stupid) behaviour
-	this.behaviour = new DefaultBehaviour(this, "DefaultBehaviour");
+	final String behaviourName = behaviourFactory.getBehaviours().iterator().next(); //The first entry, hopefully the DefaultBehaviour
+	this.behaviour = behaviourFactory.getInstanceOfBehaviour(behaviourName, this);
 	this.user = user;
+	this.behaviourFactory = behaviourFactory;
     }
 
     public long getID() {
@@ -60,8 +63,7 @@ public class Robot extends PhysikObject implements Tick {
      * @see de.game.behaviour.BehaviourFactory#getBehaviours()
      */
     public void setBehaviour(final String name) {
-	final BehaviourFactory bf = BehaviourFactory.getBehaviourFactory();
-	behaviour = bf.getInstanceOfBehaviour(name, this);
+	behaviour = behaviourFactory.getInstanceOfBehaviour(name, this);
     }
 
     public void shoot(final Vector2D targetPosition) {

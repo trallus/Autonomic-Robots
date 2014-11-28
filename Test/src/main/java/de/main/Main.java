@@ -24,23 +24,25 @@ public class Main {
      *            The First entry is the portnumber
      */
     public static void main(String[] args) throws Exception {
-	int portNumber;
-	if (args.length != 1) { // TODO change so that the log level can be set
+	final int portNumber;
+	final LogLevel logLevel;
+	if (args.length < 1) { // TODO change so that the log level can be set
 	    portNumber = 80;
+	    logLevel = LogLevel.NORMAL;
 	}
 	else {
 	    portNumber = Integer.parseInt(args[0]);
+	    logLevel = LogLevel.NORMAL;
 	}
-	System.out.println(args.length);
 
 	// Initialize Logging
 
 	final PrintWriter normalWriter = new PrintWriter(new BufferedWriter(
-		new FileWriter("log.log")));
+		new FileWriter("log.log",true)),true);
 	final PrintWriter errorWriter = new PrintWriter(new BufferedWriter(
-		new FileWriter("error.log")));
+		new FileWriter("error.log",true)),true);
 	final LoggerAndExceptionHandlerFacadeIF logFacade = new LogExceptionFacade(
-		errorWriter, normalWriter, LogLevel.NORMAL);
+		errorWriter, normalWriter, logLevel);
 
 	// Start HTTP Server
 

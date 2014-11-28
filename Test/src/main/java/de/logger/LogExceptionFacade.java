@@ -24,29 +24,28 @@ public class LogExceptionFacade implements LoggerAndExceptionHandlerFacadeIF {
     private final LogLevel logLevel;
 
     /**
-     * Creates Instance of LogExceptionFacade
+     * Creates Instance of LogExceptionFacade with the Specified LogLevel and PrintWriters
      * 
      * @param errorLog
      *            The Printwriter in which all error will be logged, must be not
-     *            null and writable if the LogLevel is not OFF
+     *            null and writable if the LogLevel is not OFF, must be set to autoflush
      * @param normalLog
      *            The Printwriter in which all nonerror will be logged, must be
-     *            not null and writable if the LogLevel is not OFF
+     *            not null and writable if the LogLevel is not OFF, must be set to autoflush
      * @param logLevel
      *            The level of logging that will be done. Warnig
      *            {@link LogLevel#OFF} means that there will be no sort of
-     *            loggin for Console use{@link LogLevel#DEBUG}.
+     *            loggin
      */
     public LogExceptionFacade(final PrintWriter errorLog,
 	    final PrintWriter normalLog, LogLevel logLevel) {
 	if (!logLevel.equals(LogLevel.OFF)
 		&& (errorLog == null || normalLog == null))
-	    throw new IllegalArgumentException("PrintWriters can't be null");
+	    throw new IllegalArgumentException("PrintWriters can't be null with LogLevel > OFF");
 	if (!logLevel.equals(LogLevel.OFF)
 		&& (errorLog.checkError() || normalLog.checkError()))
 	    throw new IllegalArgumentException("PrintWriter must be writable");
-	// TODO Entscheidung ob Printwriter oder Verzeichnis und Writer selber
-	// anlegen
+
 	this.errorLog = errorLog;
 	this.normalLog = normalLog;
 	this.logLevel = logLevel;

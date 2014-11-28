@@ -77,38 +77,26 @@ public class ExceptionHandler implements ExceptionHandlerIF, LoggerIF {
     @Override
     public void log(final String message, final String caller,
 	    final LogLevel lvl, final Throwable cause) {
-	// TODO Redundanz reduzieren & LogLevel Check verbessern
 	if (logLevel.equals(LogLevel.OFF)) // Deactivated logging
+	    return;
+	else if(logLevel.compareTo(lvl) < 0)
 	    return;
 
 	final String temp = (caller != null ? caller : "") + " with Message: "
 		+ message; // Build Message String, with caller if != null
 
-	if (logLevel.equals(LogLevel.DEBUG) && lvl.equals(LogLevel.DEBUG)) { // Console
-									     // logging
-	    System.out.println(temp);
-	    if (cause != null)
-		cause.printStackTrace(System.out);
-	    return;
+	if (cause == null) {
+	    printLog(temp);
 	}
-	else if (lvl.equals(LogLevel.NORMAL)) {
-	    if (cause == null) {
-		printLog(temp);
-	    }
-	    else if (cause instanceof Error) {
-		final Error error = (Error) cause;
-		printErrorLog(temp + " with cause:");
-		printErrorLog(error);
-	    }
-	    else {
-		printLog(temp + " with cause:");
-		printLog(cause);
-	    }
+	else if (cause instanceof Error) {
+	    final Error error = (Error) cause;
+	    printErrorLog(temp + " with cause:");
+	    printErrorLog(error);
 	}
 	else {
-	    throw new IllegalArgumentException("Unknown LogLevel: " + lvl);
+	    printLog(temp + " with cause:");
+	    printLog(cause);
 	}
-	// TODO Redundanz reduzieren & LogLevel Check verbessern
     }
 
     /**

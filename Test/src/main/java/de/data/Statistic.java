@@ -30,6 +30,7 @@ public class Statistic {
     private int lostBattles;
 
     /**
+     * Getter for the number of won battles
      * @return The number of Battles won
      */
     public int getWonBattles() {
@@ -37,6 +38,7 @@ public class Statistic {
     }
 
     /**
+     * Getter for the number of lost battles
      * @return The number of Battles lost
      */
     public int getLostBattles() {

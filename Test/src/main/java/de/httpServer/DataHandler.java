@@ -9,6 +9,8 @@ import com.sun.net.httpserver.HttpHandler;
 import de.game.GameControler;
 import de.game.GameInterface;
 import de.logger.Log;
+import de.logger.LogLevel;
+import de.logger.LoggerAndExceptionHandlerFacadeIF;
 
 /**
  * handle the requests
@@ -32,18 +34,25 @@ class DateHandler implements HttpHandler {
 	 */
 	private final String keyURI;
 	private final GameInterface gameInterface;
+	
+	/**
+	 * Instance of LoggerAndExceptionHandlerFacadeIF given in the handle Methode to the Server Request
+	 */
+	private final LoggerAndExceptionHandlerFacadeIF logFacade;
 
 	/**
 	 * @param gameControler 
 	 * @param userManager
 	 * @param httpPath
 	 * @param keyURI
+	 * @param logFacade the LoggerAndExceptionHandlerFacade that is used to get the Logger
 	 */
-	public DateHandler(GameInterface gameInterface, UserManager userManager, String httpPath, String keyURI) {
+	public DateHandler(GameInterface gameInterface, UserManager userManager, String httpPath, String keyURI, final LoggerAndExceptionHandlerFacadeIF logFacade) {
 		this.userManager = userManager;
 		this.httpPath = httpPath;
 		this.keyURI = keyURI;
 		this.gameInterface = gameInterface;
+		this.logFacade = logFacade;
 	}
 
 	/* 
@@ -55,14 +64,14 @@ class DateHandler implements HttpHandler {
 	public void handle(HttpExchange httpExchange) throws IOException {
 
 		String uri = httpExchange.getRequestURI().toString();
-		Log.debugLog("Angefragte URI: " + uri);
+		logFacade.getLoggerInstance().log("Angefragte URI: " + uri, this.getClass().getName(), LogLevel.DEBUG);
 
 		Request request = null;
 
 		try {
 			if (uri.matches(".*" + keyURI + ".*")) {
 
-				request = new ServerRequest(httpExchange, userManager, gameInterface);
+				request = new ServerRequest(httpExchange, userManager, gameInterface, logFacade);
 			} else {
 				request = new DocumentRequest(httpExchange, httpPath);
 			}

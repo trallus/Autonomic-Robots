@@ -15,6 +15,9 @@ import org.junit.Test;
 import de.data.DBUser;
 import de.httpServer.EmailNotFoundException;
 import de.httpServer.User;
+import de.logger.LogExceptionFacade;
+import de.logger.LogLevel;
+import de.logger.LoggerAndExceptionHandlerFacadeIF;
 
 /**
  * Test if the UserManager Works fine
@@ -49,7 +52,8 @@ public class ProxydUserManagerTest {
      */
     @BeforeClass
     public static void start(){
-	plainUserManager = new UserManagerImpl();
+	final LoggerAndExceptionHandlerFacadeIF laefif = new LogExceptionFacade(null, null, LogLevel.OFF);
+	plainUserManager = new UserManagerImpl(laefif);
     }
     
     /**

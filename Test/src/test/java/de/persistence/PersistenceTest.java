@@ -11,6 +11,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.data.DBUser;
+import de.logger.LogExceptionFacade;
+import de.logger.LogLevel;
+import de.logger.LoggerAndExceptionHandlerFacadeIF;
 
 /**
  * Test if the CrudWorker is working correctly
@@ -27,7 +30,8 @@ public class PersistenceTest {
 
     @BeforeClass
     public static void startDB() {
-	persistence = new PersistenceFacade();
+	final LoggerAndExceptionHandlerFacadeIF laefif = new LogExceptionFacade(null, null, LogLevel.OFF);
+	persistence = new PersistenceFacade(laefif);
 	persistence.startDBSystem();
     }
 

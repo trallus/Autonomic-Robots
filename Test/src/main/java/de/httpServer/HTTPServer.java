@@ -9,6 +9,7 @@ import com.sun.net.httpserver.HttpServer;
 import de.game.GameControler;
 import de.game.GameInterface;
 import de.logger.Log;
+import de.logger.LoggerAndExceptionHandlerFacadeIF;
 
 
 /**
@@ -23,14 +24,15 @@ public class HTTPServer {
 	 * @param keyURI if the destination of the request (URI) contains this key, it will be a server request
 	 * @param httpPath the root path of the http files
 	 * @param portNumber the server listen on this port
+	 * @param logFacade the LoggerAndExceptionHandlerFacade that is used to get the Logger
 	 * @throws Exception
 	 */
 	public HTTPServer(String keyURI, String httpPath,
-		    int portNumber) throws Exception {
+		    int portNumber, LoggerAndExceptionHandlerFacadeIF logFacade) throws Exception {
 
 		final GameInterface gameInterface = new GameControler();
 
-		UserManager plainUserManager = new UserManagerImpl();
+		UserManager plainUserManager = new UserManagerImpl(logFacade);
 		UserManager proxydUserManager = ( UserManager )
 				Proxy.newProxyInstance(
 						plainUserManager.getClass().getClassLoader(), 
@@ -42,7 +44,7 @@ public class HTTPServer {
 		
 		httpServer.setExecutor(Executors.newCachedThreadPool());
 		
-		httpServer.createContext("/", new DateHandler(gameInterface, proxydUserManager, httpPath, keyURI));
+		httpServer.createContext("/", new DateHandler(gameInterface, proxydUserManager, httpPath, keyURI, logFacade));
 		httpServer.start();
 
 		Log.log("HTTP Server gestartet an port: " + portNumber);

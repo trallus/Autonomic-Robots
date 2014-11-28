@@ -22,27 +22,9 @@ public interface ExceptionHandlerIF {
     void handle(Throwable throwable, Map<String, Object> replyJson);
 
     /**
-     * Logs the given message and caller information but will not inform the
-     * frontend
-     * 
-     * @param message
-     *            Failure message
-     * @param caller
-     *            Caller of this methode
+     * Handels Exceptions so that they can be logged but can't send anything to the frontend
+     * @param throwable The throwable that shoudl be handeled
      */
-    void log(String message, String caller);
-
-    /**
-     * Logs the given message, caller and cause information but will not inform
-     * the frontend
-     * 
-     * @param message
-     *            The failure message
-     * @param caller
-     *            The caller of this methode
-     * @param cause
-     *            The cause for the logging
-     */
-    void log(String message, String caller, Throwable cause);
+    void handle(Throwable throwable);
 
 }

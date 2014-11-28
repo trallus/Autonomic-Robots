@@ -9,8 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.omg.PortableInterceptor.ClientRequestInfo;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
@@ -23,8 +21,8 @@ import de.game.exceptions.NotInQueryException;
 import de.game.weapon.WeaponPrototype;
 import de.httpServer.ClientClasses.ClientNextRobot;
 import de.httpServer.ClientClasses.ClientUser;
-import de.logger.ExceptionHandlerFacade;
-import de.logger.Log;
+import de.logger.LogLevel;
+import de.logger.LoggerAndExceptionHandlerFacadeIF;
 import de.math.Vector2D;
 
 /**
@@ -65,9 +63,11 @@ public class ServerRequest extends Request {
 	 * 
 	 * @param httpExchange
 	 * @param userManager
+	 * @param gameInterface
+	 * @param logFacade the LoggerAndExceptionHandlerFacade that is used to get the Logger
 	 * @throws Exception
 	 */
-	public ServerRequest(HttpExchange httpExchange, UserManager userManager, GameInterface gameInterface)
+	public ServerRequest(HttpExchange httpExchange, UserManager userManager, GameInterface gameInterface, final LoggerAndExceptionHandlerFacadeIF logFacade)
 			throws Exception {
 
 		mediaType = "application/json";
@@ -78,7 +78,7 @@ public class ServerRequest extends Request {
 		user = userManager.getUser(null, SID);
 		// was a new user created?
 		if (SID == null || !SID.equals(user.sessionID)) {
-			Log.debugLog("Send new SID");
+			logFacade.getLoggerInstance().log("Send new SID", this.getClass().getName(), LogLevel.DEBUG);
 			sendNewSID(user.sessionID);
 		}
 
@@ -87,7 +87,7 @@ public class ServerRequest extends Request {
 			handleURICommand(uri, userManager, gameInterface);
 		}
 		catch(Throwable arg){
-			ExceptionHandlerFacade.getExceptionHandler().handle(arg, replyJson);
+			logFacade.getExceptionHandlerInstance().handle(arg, replyJson);
 		}
 
 		replyJson.put("logedIn", user.isLogedIn());

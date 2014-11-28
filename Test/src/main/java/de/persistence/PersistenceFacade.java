@@ -7,8 +7,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import de.logger.ExceptionHandlerFacade;
-import de.logger.ExceptionHandlerIF;
+import de.logger.LogLevel;
+import de.logger.LoggerAndExceptionHandlerFacadeIF;
+import de.logger.LoggerIF;
 
 /**
  * The Facade for the Persistence system
@@ -19,13 +20,26 @@ import de.logger.ExceptionHandlerIF;
  */
 public class PersistenceFacade implements PersistenceFacadeIF {
 
+    /**
+     * Flag that indicates if the underlying DB was started
+     */
     private boolean dbStarted;
+    /**
+     * Instance of the EntityManagerFactory used to create EntityManagers for the getDBController Methode
+     */
     private EntityManagerFactory emf;
-    private ExceptionHandlerIF handler;
-
-    public PersistenceFacade() {
+    /**
+     * Instance of the LoggerIf that is used to handle the logging
+     */
+    private final LoggerIF logger;
+    
+    /**
+     * 
+     * @param logFacade the LoggerAndExceptionHandlerFacade that is used to get the Logger
+     */
+    public PersistenceFacade(final LoggerAndExceptionHandlerFacadeIF logFacade) {
 	dbStarted = false;
-	handler = ExceptionHandlerFacade.getExceptionHandler();
+	logger = logFacade.getLoggerInstance();
     }
 
     @Override
@@ -52,7 +66,7 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	    emf = Persistence.createEntityManagerFactory("monster");
 	    emf.createEntityManager(); //Check if DB really is started, will throw Exception otherwise
 	    dbStarted = true;
-	    handler.log("DB system started", "PersistenceFacade");
+	    logger.log("DB system started", "PersistenceFacade",LogLevel.DEBUG);
 	}
 	catch (Exception arg0) {
 	    final PersistenceException pex = new PersistenceException("Could not start DB system", arg0, false);
@@ -68,7 +82,7 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	    DriverManager.getConnection("jdbc:derby:DB;shutdown=true");
 	}
 	catch (SQLNonTransientConnectionException expected) {
-	    handler.log("DB system shutdown", "PersistenceFacade");
+	    logger.log("DB system shutdown", "PersistenceFacade",LogLevel.DEBUG);
 	    /*
 	     * DO NOTHING, this exception is thrown from derby during shutdown
 	     * and means no error See http://db.apache.org/derby/papers
@@ -120,7 +134,7 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	    }
 	}
 	catch (Exception arg0) {
-	    ExceptionHandlerFacade.getExceptionHandler().log("Could not end transaction", "Persitence Facade", arg0);
+	    logger.log("Could not end transaction", "Persitence Facade", LogLevel.NORMAL, arg0);
 	}
     }
 }

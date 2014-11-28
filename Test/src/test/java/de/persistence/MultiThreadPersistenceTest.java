@@ -5,6 +5,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.data.DBUser;
+import de.logger.LogExceptionFacade;
+import de.logger.LogLevel;
+import de.logger.LoggerAndExceptionHandlerFacadeIF;
 
 /**
  * @author mike
@@ -27,7 +30,8 @@ public class MultiThreadPersistenceTest {
      */
     @Before
     public void setUp() throws Exception {
-	psf = new PersistenceFacade();
+	final LoggerAndExceptionHandlerFacadeIF laefif = new LogExceptionFacade(null, null, LogLevel.OFF);
+	psf = new PersistenceFacade(laefif);
 	psf.startDBSystem();
     }
 

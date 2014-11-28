@@ -26,13 +26,13 @@ public class Main {
     public static void main(String[] args) throws Exception {
 	final int portNumber;
 	final LogLevel logLevel;
-	if (args.length < 1) { // TODO change so that the log level can be set
+	if (args.length < 1) { 
 	    portNumber = 80;
 	    logLevel = LogLevel.NORMAL;
 	}
 	else {
 	    portNumber = Integer.parseInt(args[0]);
-	    logLevel = LogLevel.NORMAL;
+	    logLevel = LogLevel.NORMAL;// TODO change so that the log level can be set
 	}
 
 	// Initialize Logging

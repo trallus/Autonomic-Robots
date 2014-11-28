@@ -6,6 +6,7 @@ import java.util.List;
 import de.game.behaviour.BehaviourFactory;
 import de.game.exceptions.NotInQueryException;
 import de.httpServer.User;
+import de.logger.LoggerAndExceptionHandlerFacadeIF;
 
 /**
  * Controls the Game
@@ -18,12 +19,14 @@ public class GameControler implements GameInterface {
 	private final List<Battle> battles;
 	private long battleID;
 	private final BehaviourFactory behaviourFactory;
+	private final LoggerAndExceptionHandlerFacadeIF logFacade;
 	
-	public GameControler ( ) throws Exception{
+	public GameControler (final LoggerAndExceptionHandlerFacadeIF logFacade ) throws Exception{
 		battleQerry = new ArrayList<User>();
 		battles = new ArrayList<Battle>();
 		battleID = 0;
 		behaviourFactory = new BehaviourFactory();
+		this.logFacade = logFacade;
 	}
 
 	@Override
@@ -38,7 +41,7 @@ public class GameControler implements GameInterface {
 			for(final User u : users) {
 				battleQerry.remove(u);
 			}
-			final Battle battle = new Battle( battleID, users , behaviourFactory);
+			final Battle battle = new Battle( battleID, users , behaviourFactory, logFacade);
 			battles.add(battle);
 			battle.start();	// start battle
 			battleID ++;

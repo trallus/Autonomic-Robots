@@ -9,7 +9,9 @@ import de.game.behaviour.BehaviourFactory;
 import de.game.behaviour.DefaultBehaviour;
 import de.game.weapon.Weapon;
 import de.httpServer.User;
-import de.logger.Log;
+import de.logger.LogLevel;
+import de.logger.LoggerAndExceptionHandlerFacadeIF;
+import de.logger.LoggerIF;
 import de.math.Vector2D;
 import de.physicEngine.PhysikObject;
 
@@ -26,9 +28,10 @@ public class Robot extends PhysikObject implements Tick {
     private HashMap<User, List<Robot>> knownRobots;
     private final User user;
     private final BehaviourFactory behaviourFactory;
+    private final LoggerIF log;
 
     public Robot(final long id, final Vector2D position,
-	    final RobotPrototype rb, final Weapon weapon, final User user, final BehaviourFactory behaviourFactory) {
+	    final RobotPrototype rb, final Weapon weapon, final User user, final BehaviourFactory behaviourFactory, final LoggerAndExceptionHandlerFacadeIF logFacade) {
 	super(0, 0); // start direction 0°, speed 0 pixel/sec
 	this.accelerate = true;
 	this.turnLeft = true;
@@ -44,6 +47,7 @@ public class Robot extends PhysikObject implements Tick {
 	this.behaviour = behaviourFactory.getInstanceOfBehaviour(behaviourName, this);
 	this.user = user;
 	this.behaviourFactory = behaviourFactory;
+	this.log = logFacade.getLoggerInstance();
     }
 
     public long getID() {
@@ -100,7 +104,7 @@ public class Robot extends PhysikObject implements Tick {
     }
 
     private void die() {
-	Log.log("Robot die: " + id);
+	log.log("Robot die: " + id, this.getClass().getName(), LogLevel.DEBUG);
 	behaviour = null; // Break the bidirectional association so that gc can
 			  // clean both, needs confirmation of necessarity
     }

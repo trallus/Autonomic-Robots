@@ -8,7 +8,7 @@ import com.sun.net.httpserver.HttpServer;
 
 import de.game.GameControler;
 import de.game.GameInterface;
-import de.logger.Log;
+import de.logger.LogLevel;
 import de.logger.LoggerAndExceptionHandlerFacadeIF;
 
 
@@ -28,9 +28,9 @@ public class HTTPServer {
 	 * @throws Exception
 	 */
 	public HTTPServer(String keyURI, String httpPath,
-		    int portNumber, LoggerAndExceptionHandlerFacadeIF logFacade) throws Exception {
+		    int portNumber, final LoggerAndExceptionHandlerFacadeIF logFacade) throws Exception {
 
-		final GameInterface gameInterface = new GameControler();
+		final GameInterface gameInterface = new GameControler(logFacade);
 
 		UserManager plainUserManager = new UserManagerImpl(logFacade);
 		UserManager proxydUserManager = ( UserManager )
@@ -47,7 +47,7 @@ public class HTTPServer {
 		httpServer.createContext("/", new DateHandler(gameInterface, proxydUserManager, httpPath, keyURI, logFacade));
 		httpServer.start();
 
-		Log.log("HTTP Server gestartet an port: " + portNumber);
+		logFacade.getLoggerInstance().log("HTTP Server gestartet an port: " + portNumber, this.getClass().getName(), LogLevel.NORMAL);
 		
 	}
 }

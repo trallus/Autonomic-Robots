@@ -8,7 +8,6 @@ import com.sun.net.httpserver.HttpHandler;
 
 import de.game.GameControler;
 import de.game.GameInterface;
-import de.logger.Log;
 import de.logger.LogLevel;
 import de.logger.LoggerAndExceptionHandlerFacadeIF;
 

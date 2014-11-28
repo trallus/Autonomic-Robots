@@ -5,7 +5,9 @@ import java.util.List;
 
 import de.game.behaviour.BehaviourFactory;
 import de.httpServer.User;
-import de.logger.Log;
+import de.logger.LogLevel;
+import de.logger.LoggerAndExceptionHandlerFacadeIF;
+import de.logger.LoggerIF;
 import de.math.Vector2D;
 import de.physicEngine.PhysikObject;
 
@@ -52,6 +54,8 @@ public class Battle extends Thread implements Runnable {
      * The BehaviourFactory that is used to create the Behaviours for the Robots
      */
     private final BehaviourFactory behaviourFactory;
+    
+    private final LoggerIF log;
 	
 	/**
 	 * Creates and starts a battle. every battle has an unique id and a pair of users
@@ -59,8 +63,9 @@ public class Battle extends Thread implements Runnable {
 	 * @param users
 	 * @param behaviourFactory 
 	 */
-	public Battle (final long id, final List<User> users, final BehaviourFactory behaviourFactory) {
-		Log.log("Battle Create: "+id);
+	public Battle (final long id, final List<User> users, final BehaviourFactory behaviourFactory, final LoggerAndExceptionHandlerFacadeIF logFacade) {
+	    	this.log = logFacade.getLoggerInstance();
+		log.log("Battle Create: "+id, this.getClass().getName(), LogLevel.DEBUG);
 		this.id = id;
 		this.users = users;
 		this.physicObjects = new ArrayList<PhysikObject>();
@@ -98,7 +103,7 @@ public class Battle extends Thread implements Runnable {
 	 */
 	@Override
 	public void run() {
-		Log.log("Battle Start: "+id);
+		log.log("Battle Start: "+id, this.getClass().getName(), LogLevel.DEBUG);
 		frameLoop();
 	}
 	
@@ -122,7 +127,7 @@ public class Battle extends Thread implements Runnable {
 			while (users.size() > 0) {
 				users.remove(0);
 			}
-			Log.log("Battle End: "+id);
+			log.log("Battle End: "+id, this.getClass().getName(), LogLevel.DEBUG);
 			return;	// Battle End
 		}
 		
@@ -133,7 +138,7 @@ public class Battle extends Thread implements Runnable {
 				u.addBattleRobot(nextRobot);
 				physicObjects.add(nextRobot);
 				robotIdCounter++;
-				Log.log("Robot"+robotIdCounter);
+				log.log("Robot"+robotIdCounter, this.getClass().getName(), LogLevel.DEBUG);
 			}
 			timeToNextRobot += robotIntervall;
 		}

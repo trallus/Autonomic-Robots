@@ -57,6 +57,8 @@ public class ServerRequest extends Request {
 	 * the user for this request
 	 */
 	private final User user;
+	
+	private final LoggerAndExceptionHandlerFacadeIF logFacade;
 
 	/**
 	 * handle the request
@@ -70,6 +72,8 @@ public class ServerRequest extends Request {
 	public ServerRequest(HttpExchange httpExchange, UserManager userManager, GameInterface gameInterface, final LoggerAndExceptionHandlerFacadeIF logFacade)
 			throws Exception {
 
+	    	this.logFacade = logFacade;
+	    
 		mediaType = "application/json";
 
 		this.httpExchange = httpExchange;
@@ -169,7 +173,7 @@ public class ServerRequest extends Request {
 			final String jsonString = readInputStream();
 			final ClientNextRobot cnr = gsonIn.fromJson(jsonString, ClientNextRobot.class);
 			final WeaponPrototype wp = new WeaponPrototype(cnr.range, cnr.rateOfFire, cnr.damage);
-			final RobotPrototype rp = new RobotPrototype(wp, cnr.armor, cnr.enginePower, cnr.behaviour);
+			final RobotPrototype rp = new RobotPrototype(wp, cnr.armor, cnr.enginePower, cnr.behaviour, logFacade);
 			user.setNextRobot(rp);
 		} else if (uri.indexOf("getBehaviours") != -1) {
 			final String[] behaviours = {"gibts noch nicht", "und das auch nicht"};

@@ -37,6 +37,8 @@ public interface CRUDIF {
     /**
      * Read the Entity of the given class with the given id from the DataBase
      * 
+     * @param <T> The type of the desired Entity 
+     * 
      * @param arg
      *            The class of the desired Entity
      * @param id
@@ -48,6 +50,8 @@ public interface CRUDIF {
     /**
      * Reads all Entities of the given class from the DataBase
      * 
+     * @param <T> The type of the desired Entity 
+     * 
      * @param arg
      *            The class of the desired Entities
      * @return List of all found Entities
@@ -57,6 +61,8 @@ public interface CRUDIF {
     /**
      * Reads all Entities of the given class with the attribut Name-Value pair
      * from the DataBase
+     * 
+     * @param <T> The type of the desired Entity 
      * 
      * @param arg
      *            The class of the desired Entities

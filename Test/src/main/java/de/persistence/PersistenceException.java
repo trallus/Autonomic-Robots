@@ -11,6 +11,12 @@ import de.logger.Failure;
 @SuppressWarnings("serial")
 public class PersistenceException extends Failure {
 
+    /**
+     * Initializes this wrapper with the given message, exception and flag.
+     * @param message Description message for this exception.
+     * @param cause The underlying exception that cause the throw of this exception.
+     * @param sendToUser Indicates if the message should be send to the user.
+     */
     public PersistenceException(final String message, final Exception cause,
 	    final boolean sendToUser) {
 	super(message, cause, sendToUser);

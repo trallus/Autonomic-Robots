@@ -1,6 +1,7 @@
 package de.persistence;
 
 /**
+ * Declaration of the menagment Methods of the Persitence
  * @author Mike Kiekebusch
  * @version 0.1
  * @since 28.05.2014
@@ -8,6 +9,7 @@ package de.persistence;
 public interface PersistenceFacadeIF {
 
     /**
+     * Returns a Implementing Instance of the CRUDIF
      * @return A new implementing Object of the CRUDIF
      *         (Create,Read,Update,Delete)
      */
@@ -20,7 +22,6 @@ public interface PersistenceFacadeIF {
 
     /**
      * Stops the DataBaseSystem
-     * @throws PersistenceException
      */
     public void shutdownDBSystem();
     

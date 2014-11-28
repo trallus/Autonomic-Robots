@@ -34,7 +34,7 @@ public class PersistenceFacade implements PersistenceFacadeIF {
     private final LoggerIF logger;
     
     /**
-     * 
+     * Creats a Instance of the PersistenceFacade with the given Instance of the LoggerAndExceptionHandlerFacadeIF
      * @param logFacade the LoggerAndExceptionHandlerFacade that is used to get the Logger
      */
     public PersistenceFacade(final LoggerAndExceptionHandlerFacadeIF logFacade) {
@@ -99,9 +99,6 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	}
     }
 
-    /**
-     * @see de.persistence.PersistenceFacadeIF#beginTransaction(CRUDIF)
-     */
     @Override
     public void beginTransaction(final CRUDIF dbcontroller) {
 	if (!dbStarted)
@@ -117,9 +114,6 @@ public class PersistenceFacade implements PersistenceFacadeIF {
 	}
     }
 
-    /**
-     * @see de.persistence.PersistenceFacadeIF#endTransaction(boolean, CRUDIF)
-     */
     @Override
     public void endTransaction(final boolean state,final CRUDIF dbcontroller) {
 	if (!dbStarted)

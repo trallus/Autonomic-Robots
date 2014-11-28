@@ -15,10 +15,14 @@ import javax.persistence.Query;
  */
 public class CRUDWorker implements CRUDIF {
     
+    /**
+     * The EntityManager that is used for the CRUD operations
+     */
     private final EntityManager em;
 
     /**
-     * Just Initializing the entityManagerFactory
+     * Initializes the CRUDWorker with the given EntityManager
+     * @param em The EntityManager that will be set as the final Field
      */
     protected CRUDWorker(final EntityManager em) {
 	if(em == null){
@@ -29,13 +33,14 @@ public class CRUDWorker implements CRUDIF {
 	this.em = em;
     }
     
+    /**
+     * Returns the EntityManager of this CRUDWorker
+     * @return the EntityManager of this CRUDWorker
+     */
     protected EntityManager getEntityManager(){
 	return em;
     }
 
-    /**
-     * @see de.persistence.CRUDIF#insert(java.lang.Object)
-     */
     @Override
     public void insert(final Object obj) {
 	try {
@@ -50,9 +55,6 @@ public class CRUDWorker implements CRUDIF {
 	}
     }
 
-    /**
-     * @see de.persistence.CRUDIF#update(java.lang.Object)
-     */
     @Override
     public void update(final Object obj) {
 	try {
@@ -67,9 +69,6 @@ public class CRUDWorker implements CRUDIF {
 	}
     }
 
-    /**
-     * @see de.persistence.CRUDIF#remove(java.lang.Object)
-     */
     @Override
     public void remove(final Object obj) {
 	try {
@@ -84,9 +83,6 @@ public class CRUDWorker implements CRUDIF {
 	}
     }
 
-    /**
-     * @see de.persistence.CRUDIF#readID(java.lang.Class, long)
-     */
     @Override
     public <T> T readID(final Class<T> arg, final long id) {
 	try {
@@ -103,9 +99,6 @@ public class CRUDWorker implements CRUDIF {
 	}
     }
 
-    /**
-     * @see de.persistence.CRUDIF#readAll(java.lang.Class)
-     */
     @Override
     public <T> List<T> readAll(final Class<T> arg) {
 	try {
@@ -124,10 +117,6 @@ public class CRUDWorker implements CRUDIF {
 	}
     }
 
-    /**
-     * @see de.persistence.CRUDIF#readAll(java.lang.Class, java.lang.String,
-     *      java.lang.Object)
-     */
     @Override
     public <T> List<T> readAll(final Class<T> arg, final String attributName,
 	    Object attributValue) {

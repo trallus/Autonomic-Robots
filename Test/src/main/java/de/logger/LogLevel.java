@@ -2,7 +2,7 @@ package de.logger;
 
 /**
  * A Marker class for the logLevel
- * @author mike
+ * @author Mike Kiekebusch
  * @version 0.1
  */
 public class LogLevel implements Comparable<LogLevel>{
@@ -27,14 +27,12 @@ public class LogLevel implements Comparable<LogLevel>{
 
     /**
      * Creates a LogLevel instance
+     * @param i Int Value that will be used for the Level
      */
     private LogLevel(final int i) {
 	this.level = i;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
 	final int prime = 31;
@@ -43,9 +41,6 @@ public class LogLevel implements Comparable<LogLevel>{
 	return result;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) {
 	if (this == obj)
@@ -64,7 +59,5 @@ public class LogLevel implements Comparable<LogLevel>{
     public int compareTo(LogLevel o) {
 	return this.level - o.level;
     }
-
-    
 
 }

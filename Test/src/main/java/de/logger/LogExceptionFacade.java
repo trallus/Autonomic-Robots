@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 /**
  * Facade that returns Instances of LoggerIF and ExceptionHandlerIF
  * 
- * @author mike
+ * @author Mike Kiekebusch
  * @version 0.3
  */
 public class LogExceptionFacade implements LoggerAndExceptionHandlerFacadeIF {

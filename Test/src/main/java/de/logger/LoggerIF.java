@@ -3,7 +3,7 @@ package de.logger;
 /**
  * Interface for the logging of messages
  * 
- * @author mike
+ * @author Mike Kiekebusch
  * @version 0.1
  */
 public interface LoggerIF {

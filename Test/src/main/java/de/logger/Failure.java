@@ -3,22 +3,25 @@ package de.logger;
 import java.util.HashMap;
 /**
  * A Simple Head Wrapper for all Exceptions
- * @author Mike
+ * @author Mike Kiekebusch
  * @version 0.1
  */
 @SuppressWarnings("serial")
 public class Failure extends RuntimeException {
 	/**
-	 * List of all Parameters
+	 * List of all Parameters of the methode that invoked this failure
 	 */
 	private final HashMap<String, String> param;
 	/**
 	 * Failure Message
 	 */
 	private final String message;
-	
+	/**
+	 * Flag that indicates if this failure should be shown to the user or not
+	 */
 	private final boolean sendToUser;
 	/**
+	 * Initializes the Failure with the given message and flag
 	 * @param message The failure Message for the invking Message
 	 * @param sendToUser if this Failure should be communicated to the user
 	 */
@@ -28,6 +31,7 @@ public class Failure extends RuntimeException {
 		this.param = new HashMap<String, String>();
 	}
 	/**
+	 * Initializes the Failure with the given parameter map, message, cause and flag
 	 * @param param Parameter of the methode that issues this failure
 	 * @param message The failure Message for the invking Message
 	 * @param cause Exception that Caused this Failure
@@ -41,6 +45,7 @@ public class Failure extends RuntimeException {
 	}
 	
 	/**
+	 * Initializes the Failure with the given message, cause and flag
 	 * @param message The failure Message, cant be null
 	 * @param cause Exception that Caused this Failure
 	 * @param sendToUser if this Failure should be communicated to the user
@@ -67,8 +72,10 @@ public class Failure extends RuntimeException {
 	}
 
 	/**
+	 * Constructs the Message for this Failure out of the message field and the param field
 	 * @return The Message of this Failure with Parameter Key-Value pairs
 	 */
+	@Override
 	public String getMessage (){
 		StringBuilder ausgabe = new StringBuilder(message);
 		if(param != null){
@@ -82,6 +89,7 @@ public class Failure extends RuntimeException {
 		return ausgabe.toString();
 	}
 	/**
+	 * Getter of the sendToUser flag
 	 * @return the value of sendToUser
 	 */
 	public boolean getSendToUser(){

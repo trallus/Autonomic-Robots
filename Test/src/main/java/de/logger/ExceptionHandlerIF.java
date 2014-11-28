@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * Specifies methods for central Exception and loggin handling
  * 
- * @author mike
+ * @author Mike Kiekebusch
  * @version 0.1
  */
 public interface ExceptionHandlerIF {

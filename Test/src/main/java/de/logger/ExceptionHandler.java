@@ -6,18 +6,39 @@ import java.util.Calendar;
 import java.util.Map;
 
 /**
- * @author mike
+ * Implements the ExceptionHandlerIF and LoggerIF and uses the {@link Calendar}
+ * with {@link DateFormat#MEDIUM} for timestemp generation
+ * 
+ * @author Mike Kiekebusch
  * @version 0.1
  */
 public class ExceptionHandler implements ExceptionHandlerIF, LoggerIF {
 
+    /**
+     * PrintWriter used to log exclusively for {@link Error}
+     */
     private final PrintWriter errorLog;
+    /**
+     * PrintWriter used to log the rest
+     */
     private final PrintWriter normalLog;
+    /**
+     * The DateFormat that is used for timestemp generation
+     */
     private final DateFormat dateFormat;
+    /**
+     * The Calendar that is used for timestemp generation
+     */
     private final Calendar calendar;
+    /**
+     * The LogLevel of this
+     */
     private final LogLevel logLevel;
 
     /**
+     * Inititalizes the ExceptionHandler with the given printwritters and
+     * loglevel
+     * 
      * @param errorLog
      *            The Printwritter for the errorLog
      * @param normalLog
@@ -37,18 +58,11 @@ public class ExceptionHandler implements ExceptionHandlerIF, LoggerIF {
 	this.logLevel = logLevel;
     }
 
-    /**
-     * @see de.logger.ExceptionHandlerIF#handle(Throwable)
-     */
     @Override
     public void handle(final Throwable throwable) {
 	handle(throwable, null);
     }
 
-    /**
-     * @see de.logger.ExceptionHandlerIF#handle(java.lang.Throwable,
-     *      java.util.Map)
-     */
     @Override
     public void handle(final Throwable throwable, Map<String, Object> replyJson) {
 	if (throwable instanceof Failure) { // Frontend Message
@@ -61,25 +75,18 @@ public class ExceptionHandler implements ExceptionHandlerIF, LoggerIF {
 					    // specified methode
     }
 
-    /**
-     * @see de.logger.ExceptionHandlerIF#log(java.lang.String, java.lang.String)
-     */
     @Override
     public void log(final String message, final String caller,
 	    final LogLevel lvl) {
 	log(message, caller, lvl, null);
     }
 
-    /**
-     * @see de.logger.ExceptionHandlerIF#log(java.lang.String, java.lang.String,
-     *      java.lang.Throwable)
-     */
     @Override
     public void log(final String message, final String caller,
 	    final LogLevel lvl, final Throwable cause) {
 	if (logLevel.equals(LogLevel.OFF)) // Deactivated logging
 	    return;
-	else if(logLevel.compareTo(lvl) < 0)
+	else if (logLevel.compareTo(lvl) < 0)
 	    return;
 
 	final String temp = (caller != null ? caller : "") + " with Message: "
@@ -100,6 +107,7 @@ public class ExceptionHandler implements ExceptionHandlerIF, LoggerIF {
     }
 
     /**
+     * Print the given message as line into the normalLog
      * 
      * @param message
      *            Message that will be writen into the log file
@@ -109,6 +117,7 @@ public class ExceptionHandler implements ExceptionHandlerIF, LoggerIF {
     }
 
     /**
+     * Print the given throwable into the normalLog
      * 
      * @param throwable
      *            which message and stacktrace will be writen into the log file
@@ -119,6 +128,7 @@ public class ExceptionHandler implements ExceptionHandlerIF, LoggerIF {
     }
 
     /**
+     * Print the given message into the errorLog
      * 
      * @param message
      *            Message that will be writen into the errorlog file
@@ -128,6 +138,7 @@ public class ExceptionHandler implements ExceptionHandlerIF, LoggerIF {
     }
 
     /**
+     * Print the given error into the errorLog
      * 
      * @param error
      *            which message and stacktrace will be writen into the errorlog
@@ -139,6 +150,8 @@ public class ExceptionHandler implements ExceptionHandlerIF, LoggerIF {
     }
 
     /**
+     * Getter for the actual timestemp
+     * 
      * @return The actual time stemp
      */
     private String getTimeStemp() {

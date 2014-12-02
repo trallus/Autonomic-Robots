@@ -21,10 +21,18 @@ import de.game.Robot;
  */
 public class BehaviourFactory {
 
+    /**
+     * Map that holds the names of Behaviours as Key and the full calified class
+     * name as Value.
+     */
     private Map<String, String> behaviours; // Not final because the try-catch
 					    // in the constructor will invoke
 					    // compiler failure
 
+    /**
+     * Initializes the BehaviourFactory with the Map stored in the
+     * /META-INF/Behaviours.xml
+     */
     public BehaviourFactory() {
 	try {
 	    final JAXBContext jc = JAXBContext.newInstance(BehaviourMap.class);
@@ -44,10 +52,22 @@ public class BehaviourFactory {
 	}
     }
 
+    /**
+     * Returns a Collection of the BehaviourNames that are used to get specific
+     * Behaviours.
+     * 
+     * @return The Collection of known behaviours names
+     */
     public Collection<String> getBehaviours() {
 	return behaviours.keySet();
     }
 
+    /**
+     * Generates a Behaviour with the given name for the specified robot
+     * @param name The name of the behaviour
+     * @param robot The Robot which will use this behaviour
+     * @return The generated Behaviour
+     */
     public Behaviour getInstanceOfBehaviour(String name, Robot robot) {
 	Behaviour behaviour = null;
 	try {

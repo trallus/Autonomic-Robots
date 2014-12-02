@@ -12,7 +12,13 @@ import de.game.Tick;
  */
 public abstract class Behaviour implements Tick {
 
+    /**
+     * The Robot this Behaviour controlls
+     */
     protected final Robot robot;
+    /**
+     * The Name of this Behaviour
+     */
     private final String name;
 
     /**

@@ -58,6 +58,9 @@ public class ServerRequest extends Request {
 	 */
 	private final User user;
 	
+	/**
+	 * the logging facade
+	 */
 	private final LoggerAndExceptionHandlerFacadeIF logFacade;
 
 	/**
@@ -69,7 +72,7 @@ public class ServerRequest extends Request {
 	 * @param logFacade the LoggerAndExceptionHandlerFacade that is used to get the Logger
 	 * @throws Exception
 	 */
-	public ServerRequest(HttpExchange httpExchange, UserManager userManager, GameInterface gameInterface, final LoggerAndExceptionHandlerFacadeIF logFacade)
+	public ServerRequest(final HttpExchange httpExchange, final UserManager userManager, final GameInterface gameInterface, final LoggerAndExceptionHandlerFacadeIF logFacade)
 			throws Exception {
 
 	    	this.logFacade = logFacade;
@@ -109,7 +112,7 @@ public class ServerRequest extends Request {
 	 * @param gameInterface 
 	 * @throws Exception
 	 */
-	private void handleURICommand(String uri, UserManager userManager, GameInterface gameInterface) throws Exception {
+	private void handleURICommand(final String uri, final UserManager userManager, final GameInterface gameInterface) throws Exception {
 
 		if (uri.indexOf("game") != -1) {
 			handleGameCommands(uri, user, gameInterface);
@@ -147,8 +150,8 @@ public class ServerRequest extends Request {
 
 	}
 
-	private void handleGameCommands(String uri, User user,
-			GameInterface gameInterface) throws InterruptedException, NotInQueryException, IOException {
+	private void handleGameCommands(final String uri, final User user,
+			final GameInterface gameInterface) throws InterruptedException, NotInQueryException, IOException {
 		if (uri.indexOf("getGameSituation") != -1) {
 			final Map<String, Object> gameSituation = new HashMap<String, Object>();
 			final Battle b = user.getBattle();
@@ -203,12 +206,12 @@ public class ServerRequest extends Request {
 	 * @param httpExchange
 	 * @return
 	 */
-	private String getSessionID(HttpExchange httpExchange) {
+	private String getSessionID(final HttpExchange httpExchange) {
 		final String SID;
 
 		// if browser send a sessionID, find user with this sessionID
 		final String key = "SessionID=";
-		Map m = httpExchange.getRequestHeaders();
+		final Map m = httpExchange.getRequestHeaders();
 		// get a list with all cookies from browser
 		LinkedList<String> headerList = (LinkedList<String>) m.get("Cookie");
 
@@ -230,7 +233,7 @@ public class ServerRequest extends Request {
 	 * 
 	 * @param SID
 	 */
-	private void sendNewSID(String SID) {
+	private void sendNewSID(final String SID) {
 		// send the sessionID to browser
 		httpExchange.getResponseHeaders().add("Set-Cookie", "SessionID=" + SID);
 	}

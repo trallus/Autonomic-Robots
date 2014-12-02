@@ -24,6 +24,7 @@ public abstract class Weapon {
      */
     protected final int damage;
     /**
+     * Initializes the Weapon with the given range, rateOfFire and damage
      * @param range of the weapon, >0
      * @param rateOfFire of this weapon, >0
      * @param damage, !=0

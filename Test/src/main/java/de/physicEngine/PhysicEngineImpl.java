@@ -3,8 +3,8 @@ package de.physicEngine;
 import java.util.ArrayList;
 
 import de.game.Battle;
+import de.game.Matrix;
 import de.game.Tick;
-import de.math.Matrix;
 import de.math.Vector2D;
 
 public class PhysicEngineImpl implements Tick{

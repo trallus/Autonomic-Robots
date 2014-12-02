@@ -1,4 +1,4 @@
-package de.math;
+package de.game;
 
 /**
  * @author Christian Köditz

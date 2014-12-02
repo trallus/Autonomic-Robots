@@ -1,10 +1,9 @@
 package de.game.physicEngine;
 
 import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
-import de.math.Matrix;
+import de.game.Matrix;
 
 public class MatrixTest {
     @Test

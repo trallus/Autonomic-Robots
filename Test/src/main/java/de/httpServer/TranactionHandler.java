@@ -6,31 +6,16 @@ import java.lang.reflect.Method;
 import de.persistence.CRUDIF;
 import de.persistence.PersistenceFacade;
 
-/**
- * a Transection handler for dynamic proxyd user manager
- * @author ko
- *
- */
 public class TranactionHandler implements InvocationHandler {
 	
-	/**
-	 * the user manager
-	 */
 	private final UserManager userManager;
 	
-	/**
-	 * set the Target for the dynamic proxy
-	 * @param target
-	 */
-	public TranactionHandler ( final Object target ) {
+	public TranactionHandler ( Object target ) {
 		userManager = (UserManager) target;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[])
-	 */
 	@Override
-	public Object invoke(final Object proxy, final Method method, final Object[] args)
+	public Object invoke(Object proxy, Method method, Object[] args)
 			throws Throwable {
 		
 		final PersistenceFacade psf = userManager.getPersistence();

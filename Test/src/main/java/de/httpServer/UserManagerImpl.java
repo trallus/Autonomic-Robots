@@ -48,7 +48,7 @@ public class UserManagerImpl implements UserManager {
 	}
 	
 	/**
-	 * Shut down the user manager
+	 * 
 	 */
 	public void shutDown () {
 		persistence.shutdownDBSystem();
@@ -249,19 +249,10 @@ public class UserManagerImpl implements UserManager {
 		return (md5String);
 	}
 
-	/* (non-Javadoc)
-	 * @see de.httpServer.UserManager#getPersistence()
-	 */
 	public PersistenceFacade getPersistence() {
 		return persistence;
 	}
 	
-	/**
-	 * get the user with the e-mail
-	 * @param db
-	 * @param eMail
-	 * @return User
-	 */
 	private DBUser getUserWithEmail (final CRUDIF db, String eMail ) {
 		List<DBUser> userList = db.readAll(DBUser.class, "eMail", eMail);
 		if ( userList.size() == 0 ) {
@@ -271,12 +262,6 @@ public class UserManagerImpl implements UserManager {
 		return userList.get(0);
 	}
 	
-	/**
-	 * get the user with the name
-	 * @param db
-	 * @param name
-	 * @return User
-	 */
 	private DBUser getUserWithName (final CRUDIF db, String name ) {
 		List<DBUser> userList = db.readAll(DBUser.class, "name", name);
 		if ( userList.size() == 0 ) {
@@ -286,14 +271,6 @@ public class UserManagerImpl implements UserManager {
 		return userList.get(0);
 	}
 	
-	/**
-	 * Check if e-mail or name is already in use
-	 * @param db
-	 * @param eMail
-	 * @param name
-	 * @throws EmailInUseException
-	 * @throws NameInUseException
-	 */
 	private void checkInUse (final CRUDIF db, String eMail, String name) throws EmailInUseException, NameInUseException {
 		// check if email already registered
 		if ( getUserWithEmail (db, eMail) != null ) {

@@ -1,7 +1,7 @@
 package de.math;
 
 /**
- * A Simple 2D Vector
+ * A Simple immutable 2D Vector
  * 
  * @author Mike Kiekebusch
  * @version 0.1
@@ -34,6 +34,7 @@ public class Vector2D {
     }
 
     /**
+     * Returns the first element of the vector
      * @return the n1
      */
     public double getN1() {
@@ -41,6 +42,7 @@ public class Vector2D {
     }
 
     /**
+     * Returns the second element of the vector
      * @return the n2
      */
     public double getN2() {
@@ -48,6 +50,7 @@ public class Vector2D {
     }
 
     /**
+     * Returns the magnitude of this vector
      * @return the magnitude
      */
     public double getMagnitude() {
@@ -55,11 +58,11 @@ public class Vector2D {
     }
 
     /**
-     * Calculates the sum of the this Vector with the give vector (this+v2)
+     * Calculates the sum of the this Vector with the given vector (this+v2)
      * 
      * @param v2
      *            The Vector that will be added to this one
-     * @return The sum of both vectors
+     * @return The resulting vector of this addition
      */
     public Vector2D addition(final Vector2D v2) {
 	return new Vector2D(n1 + v2.n1, n2 + v2.n2);

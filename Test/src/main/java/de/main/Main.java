@@ -18,7 +18,8 @@ import de.logger.LoggerAndExceptionHandlerFacadeIF;
 public class Main {
 
     /**
-     * The Entry Point for the program
+     * The Entry Point for the program. Without arguments the default listening
+     * Port 80 is used.
      * 
      * @param args
      *            The First entry is the portnumber
@@ -26,21 +27,22 @@ public class Main {
     public static void main(String[] args) throws Exception {
 	final int portNumber;
 	final LogLevel logLevel;
-	if (args.length < 1) { 
+	if (args.length < 1) {
 	    portNumber = 80;
 	    logLevel = LogLevel.NORMAL;
 	}
 	else {
 	    portNumber = Integer.parseInt(args[0]);
-	    logLevel = LogLevel.NORMAL;// TODO change so that the log level can be set
+	    logLevel = LogLevel.NORMAL;// TODO change so that the log level can
+				       // be set
 	}
 
 	// Initialize Logging
 
 	final PrintWriter normalWriter = new PrintWriter(new BufferedWriter(
-		new FileWriter("log.log",true)),true);
+		new FileWriter("log.log", true)), true);
 	final PrintWriter errorWriter = new PrintWriter(new BufferedWriter(
-		new FileWriter("error.log",true)),true);
+		new FileWriter("error.log", true)), true);
 	final LoggerAndExceptionHandlerFacadeIF logFacade = new LogExceptionFacade(
 		errorWriter, normalWriter, logLevel);
 
@@ -53,7 +55,8 @@ public class Main {
 	try {
 	    new HTTPServer(keyURI, httpPath, portNumber, logFacade);
 	}
-	catch (Throwable arg) { //Last catch so that all can be handeled and logged
+	catch (Throwable arg) { // Last catch so that all can be handeled and
+				// logged
 	    logFacade.getExceptionHandlerInstance().handle(arg);
 	}
     }

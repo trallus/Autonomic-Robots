@@ -121,7 +121,6 @@ public class UserManagerImpl implements UserManager {
 	 * @param eMail
 	 * @param password
 	 * @param user
-	 * @return
 	 * @throws NoSuchAlgorithmException
 	 * @throws EmailNotFoundException
 	 */

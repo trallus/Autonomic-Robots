@@ -29,12 +29,12 @@ public interface GameInterface {
 	/**
 	 * set the next Robot for the running Battle
 	 * @param user
-	 * @param robot
+	 * @param rp
 	 */
 	void setNextRobot ( User user, RobotPrototype rp );
 	/**
 	 * get a actual snapshot from the battlefald
-	 * @param battleID
+	 * @param user
 	 * @return
 	 */
 	Battle getGameSituation ( User user );
@@ -47,7 +47,7 @@ public interface GameInterface {
 	 * set a behaviour to a exist robot
 	 * @param robotID
 	 * @param behaviour
-	 * @param battleID
+	 * @param user
 	 */
 	void setBehaviour(long robotID, String behaviour, User user) throws RobotNotFoundException, BehaviorNotFoundException, BattleNotFoundException;
 }

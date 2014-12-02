@@ -10,6 +10,10 @@ import de.math.Vector2D;
  */
 public abstract class PhysikObject {
 	
+	/**
+	 * @param direction Richtung des Objektes in Rad
+	 * @param speed Geschwindigkeit des Objektes
+	 */
 	public PhysikObject (final double direction, final double speed) {
 		this.direction = direction;
 		this.speed = speed;
@@ -72,6 +76,8 @@ public abstract class PhysikObject {
      */
     public void setMoveVector(final Vector2D moveVector) {
         this.moveVector = moveVector;
+        this.speed = moveVector.getMagnitude();
+        this.direction = Math.asin(moveVector.getN1());
     }
     /**
      * @return the radius
@@ -116,14 +122,16 @@ public abstract class PhysikObject {
         return direction;
     }
     /**
-     * @param angle turn the object with this angle
+     * turn the object with this angle
+     * @param angle
      */
     public void turn(final double angle) {
         direction += angle;
         updateMoveVector();
     }
     /**
-     * @param speed with this speed
+     * accelerate with this speed
+     * @param speed
      */
     public void accelerate(final double speed) {
         this.speed += speed;
@@ -137,7 +145,17 @@ public abstract class PhysikObject {
 		position = position.addition(moveVector.mul(elapsedTime));
 	}
     
+	/**
+	 * update the moveVector with direction and speed
+	 */
 	private void updateMoveVector () {
 		moveVector = new Vector2D(speed*Math.sin(direction), speed*Math.cos(direction));
+	}
+	@Override
+	public String toString() {
+		return "PhysikObject [position=" + position + ", moveVector="
+				+ moveVector + ", radius=" + radius + ", mass=" + mass
+				+ ", hitPoints=" + hitPoints + ", direction=" + direction
+				+ ", speed=" + speed + "]";
 	}
 }

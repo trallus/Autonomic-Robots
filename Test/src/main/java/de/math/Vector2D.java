@@ -136,4 +136,12 @@ public class Vector2D {
 	    return false;
 	return true;
     }
+
+	@Override
+	public String toString() {
+		return "Vector2D [n1=" + n1 + ", n2=" + n2 + ", magnitude=" + magnitude
+				+ "]";
+	}
+    
+    
 }

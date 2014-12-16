@@ -28,6 +28,13 @@
 				<include>**/*.*</include>
 			</includes>
 		</fileSet>
+		<fileSet>
+			<directory>${project.build.directory}/site/apidocs</directory>
+			<outputDirectory>Doc</outputDirectory>
+			<includes>
+				<include>**/*.*</include>
+			</includes>
+		</fileSet>
 	</fileSets>
 	<dependencySets>
 		<dependencySet>

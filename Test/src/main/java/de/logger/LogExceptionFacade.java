@@ -1,6 +1,8 @@
 package de.logger;
 
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.util.Calendar;
 
 /**
  * Facade that returns Instances of LoggerIF and ExceptionHandlerIF
@@ -50,8 +52,11 @@ public class LogExceptionFacade implements LoggerAndExceptionHandlerFacadeIF {
 	this.normalLog = normalLog;
 	this.logLevel = logLevel;
 	if (!logLevel.equals(LogLevel.OFF)) {
-	    normalLog.println("####Logging started####");
-	    errorLog.println("####Logging started####");
+	    final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
+	    final Calendar calendar = Calendar.getInstance();
+	    final String timeStemp = dateFormat.format(calendar.getTime());
+	    normalLog.printf("####Logging started at %s ####%n",timeStemp);
+	    errorLog.printf("####Logging started at %s ####%n",timeStemp);
 	}
     }
 

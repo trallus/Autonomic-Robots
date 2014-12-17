@@ -8,7 +8,13 @@
  */
 
 function GUI(frameControler, controllerName) {
-	var obj = this, canvas, physic, x, mult = 0, robotNum = 1, allRobots = [], RIP = [],canvas = document.getElementById('scene');
+	var obj = this; 
+	var x;
+	var mult = 0; 
+	var robotNum = 1; 
+	var allRobots = [];
+	var RIP = [];
+	var canvas = document.getElementById('scene');
 	this.context;
 	valid = false;
 
@@ -118,9 +124,13 @@ function GUI(frameControler, controllerName) {
 	canvas.onmousedown = function(e) {
 		pt = getMouse(e, canvas);
 		for (var i = 0, l = allRobots.length; i < l; i++) {
-			if (allRobots[i].hitTest(pt.x, pt.y)) {
+			if (allRobots[i].hitTest(pt.x-300, pt.y-300)) {
+				/*
 				console.log("AUSGEWAEHLTER ROBOT: " + (i+1));
 				console.log(pt);
+				*/
+				$("#auswahl p").empty();
+				$("#auswahl p").append("AUSGEWAEHLTER ROBOT: " + (i+1));
 			}
 		}
 	};
@@ -179,6 +189,7 @@ function GUI(frameControler, controllerName) {
 		
 		//draw map radar when there is a gameSituation, valid set by obj.newRobot()
 		if(valid){
+			/*
 			x.beginPath();
 			x.strokeStyle = "#000";
 			x.lineWidth = 600;
@@ -189,18 +200,24 @@ function GUI(frameControler, controllerName) {
 			grd.addColorStop(1,"#2f2f2f");
 			x.strokeStyle = grd;
 			x.stroke();
+			*/
 			time = parseInt((new Date().getTime() - start), 10);
 			x.beginPath();
 			x.font = "13px Verdana";
 			x.fillStyle = '#FFFFFF';
 			x.fillText('Playtime:  ' + msToTime(time), 467, 10);
-			x.beginPath();
+			//x.beginPath();
 			x.lineWidth = 1;
 			x.strokeStyle = "#0d0";
+			
 			for(var i = 0; i <= 10; i++){
+				x.beginPath();
+				
 				x.arc( canvas.width/2, canvas.height/2, 30*i/*(59*i+i)*/, 0, 2 * Math.PI, false);
+				x.stroke();
 			}
-			x.stroke();
+			//x.stroke();
+			
 			x.beginPath();
 			x.strokeStyle = "#0f0";
 			x.moveTo(canvas.width/2, 0);
@@ -208,17 +225,31 @@ function GUI(frameControler, controllerName) {
 			x.lineWidth = 1;
 			x.moveTo(0, canvas.height/2);
 			x.lineTo(canvas.width, canvas.height/2);
+			x.stroke();
 			
-			
+			x.translate(300.5,300.5);
+			x.beginPath();
+    		var grd=x.createLinearGradient(22,67,0,-17);
+			grd.addColorStop(1,"rgba(0, 255, 0, 0)");
+			grd.addColorStop(0,"rgba(0, 255, 0, 0.5)");
+
+    		x.fillStyle=grd;
+    		x.rotate(((mult*15)%360)*Math.PI/180);
+    		x.arc(0,0,300,0,1.9*Math.PI,true);
+        	x.lineTo(0.5,0.5);
+        	x.fill();
+
+        	x.rotate(((-mult*15)%360)*Math.PI/180);
+        	x.translate(0,0);
         	
 		}else{
-			x.beginPath();
+			//x.beginPath();
 			x.font = "13px Verdana";
 			x.fillStyle = '#FFFFFF';
 			x.fillText('WAITING FOR OTHER PLAYER', 200, 300);
 		}
         // actually start drawing
-        x.stroke();
+		 //x.stroke();
 	}
 	construct();
 }

@@ -47,6 +47,7 @@ var GameController = {
 		 * start game request, joining batlle queue
 		 */
 		function getNextServerFrame() {
+			$("body").append(controller.name);
 			//send first robot settings
 			$.ajax({
 				type : "POST",
@@ -65,7 +66,7 @@ var GameController = {
 					var i = 0;
 					$(".setNext input").each(function(){roboSet[i]=this.value;i++;});
 					console.log(roboSet);
-					intervallCounter = 100;
+					intervallCounter = 20;
 					intervall = window.setInterval(function() {
 					
 						//get game situation in 1/sec up to 20x
@@ -74,7 +75,7 @@ var GameController = {
 						}).done(function(json) {
 
 							position = json;
-	
+							
 							//checking for new gameSituation & size of server robot list size to gui robot list size
 							if (position.gameSituation && position.gameSituation[controller.name]) {
 								size = Object.keys(position.gameSituation[controller.name]).length;

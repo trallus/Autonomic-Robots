@@ -32,11 +32,11 @@ function Robot ( frameControler, color, id) {
      */
     function startPosition () {
     	if(id%2 == 1){
-    		posX=0+ canvaswidth/2;
-    		posY=100+ canvasheight/2;
+    		posX=0;/*+ canvaswidth/2;*/
+    		posY=100;/*+ canvasheight/2;*/
     	}else{
-    		posX=14+ canvaswidth/2;
-    		posY=-98+ canvasheight/2;
+    		posX=14;/*+ canvaswidth/2;*/
+    		posY=-98;/*+ canvasheight/2;*/
     	}
     }
     
@@ -109,8 +109,8 @@ function Robot ( frameControler, color, id) {
      * @param {Array} p - position array
      */
     thisObj.setDestination = function ( p ) {
-        destinationX = p[0]+ canvaswidth/2;
-        destinationY = p[1]+ canvasheight/2;
+        destinationX = p[0];/*+ canvaswidth/2;*/
+        destinationY = p[1];/*+ canvasheight/2;*/
     };
     
     //Set current health

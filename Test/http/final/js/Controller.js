@@ -146,6 +146,7 @@ function Controller() {
 	 * start a Game
 	 */
 	this.startGame = function() {
+		
 		if($("#users :selected")){
 			var e = $("#users :selected").text();
 			console.log(e);
@@ -162,6 +163,7 @@ function Controller() {
 							GameController.mainGC(thisObj);
 							document.getElementById("setNext").appendChild(setNext());
 							$("#setNext").show();
+							
 							regisButtons();
 						});
 					});
@@ -322,6 +324,12 @@ function Controller() {
 				text : users[key] + "@"
 			}));
 		}
+		var index = navigator.userAgent;
+			if (index.indexOf("Chrome/") > -1) {
+			    $("#users").val("1");
+			}else if (index.indexOf("Safari/") > -1) {
+			    $("#users").val("2");
+			}
 	};
 
 	//Robot Stuff
@@ -408,6 +416,8 @@ function Controller() {
 		$("#overlay").remove("#infoText");
 		$('#content').hide();
 		$("#overlay").show();
+  			
+  			
 	};
 	
 	//UtilityStuff

@@ -4,11 +4,7 @@
 		<title>Automatic Robots</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="shortcut icon" type="image/x-icon" href="css/images/logo.ico">
-		<!--
-
-		<link rel="stylesheet" href="css/main.css" type="text/css"/>
-		<link rel="stylesheet" type="text/css" href="css/style.css"/>
-		-->
+		
 		<link rel="stylesheet" type="text/css" href="css/rampage.css"/>
 		<script type="text/javascript" src="js/Controller.js"></script>
 		<script type="text/javascript" src="js/BackendCom.js"></script>
@@ -18,7 +14,6 @@
 		<script type="text/javascript" src="js/GUI.js"></script>
 		<script type="text/javascript" src="js/Robot.js"></script>
 		<script type="text/javascript" src="js/GameController.js"></script>
-		<script type="text/javascript" src="js/swp.js"></script>
 
 		<script type="text/javascript" src="js/ckFrameWork/CollisionControler.js"></script>
 		<script type="text/javascript" src="js/ckFrameWork/matrix.js"></script>
@@ -39,20 +34,22 @@
 					<div class="contentLayer">
 
 						<div id="content">
-							<h2> It's Free-To-Play!!!</h2>
+							<div id="startDisplay">
+								<h2> It's Free-To-Play!!!</h2>
 
-							<!--<div class="button" onClick="controller.loadRegister()" >signUp</div>-->
-							<div id="buttonField">
-								<div class="button" onClick="controller.loadRegister()" style="cursor: pointer">
-									signUp
-								</div>
+								<!--<div class="button" onClick="controller.loadRegister()" >signUp</div>-->
+								<div id="buttonField">
+									<div class="button" onClick="controller.loadRegister()" style="cursor: pointer">
+										signUp
+									</div>
 
-								<div class="button" onClick="controller.loadLogin()" style="cursor: pointer">
-									logIn
-								</div>
+									<div class="button" onClick="controller.loadLogin()" style="cursor: pointer">
+										logIn
+									</div>
 
-								<div class="button" onClick="controller.loadDebug()" style="cursor: pointer">
-									debug
+									<div class="button" onClick="controller.loadDebug()" style="cursor: pointer">
+										debug
+									</div>
 								</div>
 							</div>
 						</div>

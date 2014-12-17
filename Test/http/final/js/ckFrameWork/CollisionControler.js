@@ -1,11 +1,31 @@
+/**
+ * Description
+ * @method CollisionControler
+ * @param {} physicObjects
+ * @return 
+ */
 function CollisionControler ( physicObjects ) {
     
     var physicalObjects = physicObjects;
     
+    /**
+     * Description
+     * @method onFrame
+     * @param {} context
+     * @param {} time
+     * @return 
+     */
     this.onFrame = function onFrame (context, time) {
         collisionDetection(time);
     };
     
+    /**
+     * Description
+     * @method addPlast
+     * @param {} plast
+     * @param {} array
+     * @return array
+     */
     function addPlast ( plast, array ) {
         array[0] *= plast;
         array[1] *= plast;
@@ -13,6 +33,12 @@ function CollisionControler ( physicObjects ) {
         return array;
     }
 
+    /**
+     * Description
+     * @method collisionDetection
+     * @param {} time
+     * @return 
+     */
     function collisionDetection ( time ) {
                     
         for (var i=0; i<physicalObjects.length; i++) {

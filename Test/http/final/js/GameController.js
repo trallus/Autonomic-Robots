@@ -1,17 +1,30 @@
 /**
+ * GameController - contorls game network communication
+ * @class GameController
  * @author Florian Krüllke
  * @version 0.1
- * @since 10.11.2014
  */
-var GameController = {
-	/**
-	 * main of GameController
-	 * sets up a game
-	 * @param controller
-	 */
-	main : function(controller) {
 
+var GameController = {
+	//Main
+	/**
+	 * main of GameController sets up a game
+	 * @method mainGC
+	 * @param {Controller} controller - controller-object to access user interactivity
+	 */
+	mainGC : function(controller) {
+		
+		/**
+	    * create a new frameContoller
+	    * @type FrameControler
+	    * @memberof GameController
+	    */
 		var frameControler = new FrameControler();
+		/**
+	    * create a new GUI
+	    * @type GUI
+	    * @memberof GameController
+	    */
 		var gui = new GUI(frameControler, controller.name);
 		
 		//get into battle queue & create gameSituatuion
@@ -29,7 +42,10 @@ var GameController = {
 
 		});
 		
-		//start game request, joining batlle queue
+		//Get next server frame
+		/**
+		 * start game request, joining batlle queue
+		 */
 		function getNextServerFrame() {
 			//send first robot settings
 			$.ajax({
@@ -49,7 +65,7 @@ var GameController = {
 					var i = 0;
 					$(".setNext input").each(function(){roboSet[i]=this.value;i++;});
 					console.log(roboSet);
-					intervallCounter = 200;
+					intervallCounter = 100;
 					intervall = window.setInterval(function() {
 					
 						//get game situation in 1/sec up to 20x
@@ -98,9 +114,10 @@ var GameController = {
 				});
 			});
 		}
+		//Set next serverRobot
 		/**
-		 *get roboSet array to fill next robot values
-		 *@return r
+		 * get roboSet array to fill next robot values
+		 * @return r - JSON robot
 		 */
 		function serverRobot() {
 			//controller.getRobot();
@@ -118,10 +135,11 @@ var GameController = {
 			};
 			return r;
 		};
+		//Get robot values set by the user
 		/**
-		*get robot
-		*@return roboSet[]‚
-		*/
+		 * get robot
+		 * @return roboSet - array of robot values
+		 */
 		function getRobot () {
 			roboSet = [];
 			roboSet[0] = $("#range-setter").value;

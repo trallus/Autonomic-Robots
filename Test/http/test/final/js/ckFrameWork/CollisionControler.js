@@ -1,11 +1,31 @@
+/**
+ * Description
+ * @method CollisionControler
+ * @param {} physicObjects
+ * @return 
+ */
 function CollisionControler ( physicObjects ) {
     
     var physicalObjects = physicObjects;
     
+    /**
+     * Description
+     * @method onFrame
+     * @param {} context
+     * @param {} time
+     * @return 
+     */
     this.onFrame = function onFrame (context, time) {
         collisionDetection(time);
     };
     
+    /**
+     * Description
+     * @method addPlast
+     * @param {} plast
+     * @param {} array
+     * @return array
+     */
     function addPlast ( plast, array ) {
         array[0] *= plast;
         array[1] *= plast;
@@ -13,6 +33,12 @@ function CollisionControler ( physicObjects ) {
         return array;
     }
 
+    /**
+     * Description
+     * @method collisionDetection
+     * @param {} time
+     * @return 
+     */
     function collisionDetection ( time ) {
                     
         for (var i=0; i<physicalObjects.length; i++) {
@@ -96,8 +122,8 @@ function CollisionControler ( physicObjects ) {
                     // Achtung: hier noch nur Kollisionsanteile
                     var m1 = physicalObjects[i].getMass();
                     var m2 = physicalObjects[k].getMass();
-                    var sp1 = 2 * (m1*mV1[0][0]+m2*mV2[0][0]) / (m1+m2) // 2 * geschwindigkeit des gemeinsamen schwerpunktes
-                    var sp2 = 2 * (m1*mV1[0][1]+m2*mV2[0][1]) / (m1+m2) // 2 * geschwindigkeit des gemeinsamen schwerpunktes
+                    var sp1 = 2 * (m1*mV1[0][0]+m2*mV2[0][0]) / (m1+m2); // 2 * geschwindigkeit des gemeinsamen schwerpunktes
+                    var sp2 = 2 * (m1*mV1[0][1]+m2*mV2[0][1]) / (m1+m2); // 2 * geschwindigkeit des gemeinsamen schwerpunktes
 
                     mV1[0] = new Array (sp1-mV1[0][0], sp2-mV1[0][1]);
                     mV2[0] = new Array (sp1-mV2[0][0], sp2-mV2[0][1]);

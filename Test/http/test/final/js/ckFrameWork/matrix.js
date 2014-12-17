@@ -1,8 +1,19 @@
+/**
+ * Description
+ * @method $ckMatrix
+ * @param {} matrixArray
+ * @return 
+ */
 function $ckMatrix (matrixArray) {
     //zum lösen von lineatren Gleichungssysthemen nach dem Muster siehe $ckMatrixTest
     
     checkSort(matrixArray);
     
+    /**
+     * Description
+     * @method getResult
+     * @return CallExpression
+     */
     this.getResult = function () {
         
         var result = calculate(matrixArray);
@@ -12,6 +23,12 @@ function $ckMatrix (matrixArray) {
         return multiplyOut(result, tempArray);
     }
     
+    /**
+     * Description
+     * @method calculate
+     * @param {} inputMA
+     * @return 
+     */
     function calculate (inputMA) {
         //lösung Lineares Gleich.Sys. jede Stufe eine Gleichung weniger
         var localMA = new Array(inputMA.length-1);
@@ -49,6 +66,13 @@ function $ckMatrix (matrixArray) {
         
     }
     
+    /**
+     * Description
+     * @method multiplyOut
+     * @param {} result
+     * @param {} tempArray
+     * @return result
+     */
     function multiplyOut(result, tempArray) {
         
         for (var i=0; i < result.length; i++) {
@@ -61,6 +85,12 @@ function $ckMatrix (matrixArray) {
         return result;
     }
     
+    /**
+     * Description
+     * @method checkSort
+     * @param {} array
+     * @return 
+     */
     function checkSort(array){
         //ist der erste wert in der ersten reihe 0 muß umsortiert werden
         if (array[0][0] == 0) {

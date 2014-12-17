@@ -1,28 +1,37 @@
 /**
+ * FrameController - controls main frame activity
+ * @class FrameControler
  * @author Christian Köderitz
  * @version 0.1
- * @since 10.10.2014
  */
+
 function FrameControler ( ) {
     var obj = this;
     var lastFrameTime = 0;
-    var maxFrameRate = 25;
+    var maxFrameRate = 30;
     var minFrameLength = 1000 / maxFrameRate;
     var onNewFrameFunctions = [];
     var gui;
     var pause = false;
     
-    function construct () {
-    }
-    
+    /**
+     * set a GUI to render on frame
+     * @param {} extGUI
+     */
     this.setGUI = function ( extGUI ) {
         gui = extGUI;
     };
     
+    /**
+     * start rendering frames
+     */
     this.start = function () {
         nextFrame (  );
     };
     
+    /**
+     * set up a pause functionality
+     */
     this.pauseButton = function pauseButton () {
         if (pause) {
             pause = false;
@@ -32,7 +41,11 @@ function FrameControler ( ) {
         }
     };
     
+    /**
+     * calculates next frame
+     */
     function nextFrame () {
+        
         if (pause) {
             setTimeout ( nextFrame , 100);
             return;
@@ -54,12 +67,33 @@ function FrameControler ( ) {
             setTimeout ( nextFrame , minFrameLength - timeDiff);
             return;
         }
-        nextFrame();
+       nextFrame(); 
     }
     
+    //Request Animation Frame
+    /**
+     * Request Animation Frame - setting request animation frame for different browsers
+     * @method requestAnimFrame
+     * @param {Function} callback - callback function
+     */
+    window.requestAnimFrame = (function(){
+        return  window.requestAnimationFrame       || 
+                window.webkitRequestAnimationFrame || 
+                window.mozRequestAnimationFrame    || 
+                window.oRequestAnimationFrame      || 
+                window.msRequestAnimationFrame     || 
+                function(/* function */ callback, /* DOMElement */ element){
+                  window.setTimeout(callback, 1000 / 60);
+                };
+      })();
+  
+    //requestAnimFrame(nextFrame);
+    //Add context on new frame
+    /**
+     * possibility to add a context to frameController
+     * @param {Function} function - function to execute on frame
+     */
     this.addOnNewFrame = function ( func ) {
         onNewFrameFunctions.push ( func );
     };
-    
-    construct();
 }

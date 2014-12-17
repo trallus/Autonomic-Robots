@@ -1,227 +1,239 @@
+/**
+ * Robot - sets up a robot Object
+ * @class Robot
+ * @author Florian Krüllke
+ * @version 0.1
+ * @param {FrameControler} frameControler - controls frame activity
+ * @param {Number} color - controls color to separate friendly and enemy bots
+ * @param {Number} id - unique robot id
+ */
+
 function Robot ( frameControler, color, id) {
-    //var posX = 575;
-    //var posY = 375;
-    var thisObj = this;
-    var health = 100;
-    var posX = 0;
-    var posY = 100;
-    var speed = 0; // pix / sec
+    var thisObj = this, health = 100;
+    var posX;
+    var posY;
     var direction = Math.PI;
-    var random = Math.random()*3;
-    var destinationX = 100*random;
-    var destinationY = 100;
+    var destinationX; 
+    var destinationY; 
+    var weapon;
     var acceleration = 10; // pix / (sec*sec)
-    var radius = 10;
     var moveVector = new Array(0, 0);
-    var mass = 1; // Gewicht des Robot
-    var canvaswidth = 600;
-    var canvasheight = 423;
-    /*
-    posX = posX + canvaswidth/2; 
-    posY = posY + canvasheight/2;
-    */
-   	//posX = destinationX;
-    //posY = destinationY;
-    var colors = ["#0f0", "red"];
+    var speed = 0; // pix / sec
+    radius = 10;
+    mass = 1;
+    canvaswidth = 600;
+    canvasheight = 600;
+    colors = ["#0f0", "red"];
     startPosition();
     
+    //Start Position
+    /**
+     * give every player his start position
+     */
     function startPosition () {
-    	if(color == 0) {
+    	if(id%2 == 1){
     		posX=0+ canvaswidth/2;
     		posY=100+ canvasheight/2;
-    	} else {
-    		posX=100+ canvaswidth/2;
-    		posY=0+ canvasheight/2;
+    	}else{
+    		posX=14+ canvaswidth/2;
+    		posY=-98+ canvasheight/2;
     	}
-    	
     }
     
+    //Construct
+    /**
+     * add onFrame (draw, check for updates) to frameController
+     */
     function construct () {
         frameControler.addOnNewFrame ( onFrame );
     }
     
-   
-    thisObj.getDimension = function () { return radius; };
+   	//Get dimension
+    /**
+     * get dimension
+     * @return BinaryExpression - radius / 2
+     */
+    thisObj.getDimension = function () { return radius*.5; };
+    
+    //Get Position
+    /**
+     * get position
+     * @return {Array} ret - position array
+     */
     thisObj.getPosition = function () {
-        var ret = [posX, posY];
+        ret = [posX, posY];
         return ret;
     };
+    
+    //Get move vector
+    /**
+     * get move vector
+     * @return {Number} moveVector
+     */
     thisObj.getMoveVector = function () { return moveVector; };
+    
+    //Get mass
+    /**
+     * get mass
+     * @return {Number} mass
+     */
     thisObj.getMass = function () { return mass; };
     
+    //Set direction
+    /**
+     * set direction
+     * @param {Number} d - direction
+     */
     thisObj.setDirection = function ( d ) { direction = d; };
-    thisObj.setSpeed = function ( s ) {
-        speed = s;
-    };
+    
+    //Set speed
+    /**
+     * set speed
+     * @param {Number} s speed
+     */
+    thisObj.setSpeed = function ( s ) { speed = s; };
+    
+    //Set position
+    /**
+     * set position
+     * @param {Array} p - position array
+     */
     thisObj.setPosition = function ( p ) {
-        posX = p[0]+ canvaswidth/2;
-        posY = p[1]+ canvasheight/2;
+        posX = p[0];
+        posY = p[1];
     };
+    
+    //Set destination
+    /**
+     * set destination
+     * @param {Array} p - position array
+     */
     thisObj.setDestination = function ( p ) {
         destinationX = p[0]+ canvaswidth/2;
         destinationY = p[1]+ canvasheight/2;
     };
-    thisObj.getRoboColor = function () {
-        return controller.colors[id];
+    
+    //Set current health
+    /**
+     * set health
+     * @param {Number} damage - damage to subtract from health
+     */
+    function setHealth (damage) { health = health-damage;}
+    
+    //Set behavior
+    /**
+     * set an specified behavior
+     * @param {JSON} behave - new robot behave
+     */
+    this.setBehavior = function(behave) {
+    	//switch case for behavior like animations or health state
     };
     
-    //HIT TEST
+    //Get id
+    /**
+     * get id
+     * @return {Number} id - robot id
+     */
+    thisObj.getId = function () { return id; };
+    
+    //Hit test
+     /**
+      * HIT TEST - checks for clicked canvas position
+      * @param {Number} x - x position
+      * @param {Number} y - y position
+      * @return {boolean} true or false
+      */
      thisObj.hitTest = function (x, y) {
-        var dx = x - posX;
-        var dy = y - posY;
-        return dx * dx + dy * dy <= radius * radius;
+        dx = x - posX;
+        dy = y - posY;
+        return dx * dx + dy * dy <= radius/2 * radius;
     };
 
-	
-   
-    
-    //onframe
+    //On frame
+    /**
+     * onframe - global ticker for drawing methods
+     * @param {getContext("2d")} context - to draw context
+     * @param {Number} timeSinceLastDraw - time since last draw
+     */
     function onFrame ( context, timeSinceLastDraw ) {
-    /*
-		var i = 0;
-		
-        if (server.position.gameSituation) {
-        	for (var names in server.position.gameSituation) {
-        		for (var keys in server.position.gameSituation[names]) {
-        			i++;
-        			if(i == id) {
-	        		//var name = Object.getOwnPropertyNames ( server.position.gameSituation)[1];
-	        		//if (server.position.gameSituation[name][id]) {
-	        			console.log(keys + '    ' + names);
-	        			destinationX = server.position.gameSituation[names][keys].position[0] + canvaswidth/2;
-		           		destinationY = server.position.gameSituation[names][keys].position[1] + canvasheight/2;
-	        		}
-	           		//var name = Object.getOwnPropertyNames ( server.position.gameSituation)[i]; 
-	           		/* 
-	           		if(server.position.gameSituation[name][id]) {
-		           		var name = Object.getOwnPropertyNames ( server.position.gameSituation)[0];
-		           		destinationX = server.position.gameSituation[name][id].position[0] + canvaswidth/2;
-		           		destinationY = server.position.gameSituation[name][id].position[1] + canvasheight/2;
-		           		//console.log(destinationX + '   '  + destinationY);
-		           		console.log(server.position);
-		         	} 		
-		         	else {return;} 
-		         	
-		        }
-		        //push robot into robot list
-		        
-		      } 
-		        
-		}
-		*/
-		/*
-		if (server.allRobots) {
-			if (server.allRobots[id-1]) {
-				var r = server.allRobots[id-1];
-				destinationX = r[0] + canvaswidth/2;
-		        destinationY = r[1] + canvasheight/2;	
-			}
-		}
-		  */ 
         calcPosition ( timeSinceLastDraw );
         draw ( context );
     }
     
-    
-    function getColor() {
-    	var hold = "#";
-    	for ( var i = 0; i < 6; i++) {
-    		hold += letters[Math.floor(Math.random() * 16)];
-    	}
-    	return hold;	
-    }
-    
-    
+    //Draw
+    /**
+     * drawing method
+     * @param {getContext("2d")} context - to draw context
+     */
     function draw ( context ) {
-    	
-    	//context.translate(canvaswidth/2,canvasheight/2);
+    	//draw info
     	context.beginPath();
     	context.fillStyle = '#000000';
     	context.fillRect(posX-16,posY-24,32,15);
-    	//context.beginPath();
     	context.fillStyle = '#0F0';
     	context.fillRect(posX-15,posY-23,Math.floor(health*0.3),13);
-    	
+    	//draw robot
     	context.font = "10px Verdana";
-        //context.font = "10px Andale Mono";
         context.fillStyle = '#FFFFFF';
         context.fillText( '#' + id, posX-7, posY-13);
-        //x.fillText( 'New Robot in:       ' + count, 15, 75);
-        //x.fillText( 'Count of Robots:   ' + (robotNum-1), 15, 120);
-    
-    
-       
-       // context.beginPath();
         context.arc( posX, posY, radius/2, 0, 2 * Math.PI, false);
-        
-        // set drawing style
+        //set drawing style
         context.lineWidth = 1;
         context.strokeStyle =  "#000";
-        //context.fillStyle= "#0f0";
         context.fillStyle= colors[color];
         context.fill();
-        // actually start drawing
         context.stroke(); 
-        
-        
-        // draw destination
+        //draw destination
         context.beginPath();
         context.arc( destinationX, destinationY, 2, 0, 2 * Math.PI, false);
-        
-        // set drawing style
-        //context.lineWidth = 2;
-        //(context.strokeStyle = "#00FF00";;
-        
-        // actually start drawing
+        //actually start drawing
         context.stroke();    
     }
     
+    //Physics
+    /**
+     * create a physical behavior on changed destinations
+     * @param {Number} timeSinceLastDraw - time since last draw
+     */
     function calcPosition ( timeSinceLastDraw ) {
+    
         //angle between direction and pos, destination
         //treeangle abc: tan @ = a/b
-        
-        var a = destinationY - posY;
-        var b = destinationX - posX;
-        var alpha = Math.atan(a/b);
+        a = destinationY - posY;
+        b = destinationX - posX;
+        alpha = Math.atan(a/b);
         
         if ( b < 0 ) {
             if ( a > 0 ) alpha += Math.PI;
             else alpha -= Math.PI;
         }
-        
-        var angleDiff = alpha - direction;
-        behind = false; //if the destination behind the aircraft
+        angleDiff = alpha - direction;
+        behind = false; //if the destination behind the robot
         
         // values frim -2PI - 2PI
         if (angleDiff > Math.PI) {
             angleDiff -= 2*Math.PI;
             behind = true;
-        }
-        else if (angleDiff < -Math.PI) {
+        } else if (angleDiff < -Math.PI) {
             angleDiff += 2*Math.PI;
             behind = true;
         }
-        
         // distance
-        
-        var distanceToDestination = Math.sqrt(a*a + b*b);
-        
+        distanceToDestination = Math.sqrt(a*a + b*b);
         if (angleDiff < 0) direction -= 1 * timeSinceLastDraw;
         else direction += 1 * timeSinceLastDraw;
-        
         if (direction > Math.PI) direction -= 2*Math.PI;
         if (direction < -Math.PI) direction += 2*Math.PI;
         
         // position
-        var speedX = Math.cos ( direction ) * speed;
-        var speedY = Math.sin ( direction ) * speed;
+        speedX = Math.cos ( direction ) * speed;
+       	speedY = Math.sin ( direction ) * speed;
         moveVector = [speedX, speedY];
         posX += ( speedX * timeSinceLastDraw );
         posY += ( speedY * timeSinceLastDraw );
         
         if ( distanceToDestination < speed) speed -= acceleration * timeSinceLastDraw;
         else if ( Math.abs(angleDiff) < 1 ) speed += acceleration * timeSinceLastDraw;
-        
         
         if (false) {
             console.log("####################################");
@@ -231,6 +243,5 @@ function Robot ( frameControler, color, id) {
             console.log(direction);
         }
     }
-    
     construct ();
 }

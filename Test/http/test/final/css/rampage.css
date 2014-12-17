@@ -18,6 +18,14 @@ body {
 	background-color: #000000;
 }
 
+input {
+	width: 149px;
+	text-align: center;
+	vertical-align: center;
+	margin-left: 5px;
+	
+}
+
 #login{
 	text-align: center;
 }
@@ -29,7 +37,7 @@ body {
 
 #content{
 	position: absolute;
-	left: 50%;
+	left: 36%;
 }
 
 .contentLayer{
@@ -72,7 +80,7 @@ display: -webkit-flex;
     text-decoration: inherit;
     top:50%;
     left:50%;
-    margin:-100px 0 0 -150px;
+    margin:0 0 0 -150px;
     
 	//background: gray;
 	background: none repeat scroll 0 0 rgba(0, 0, 0, 0.2);
@@ -124,7 +132,7 @@ display: -webkit-flex;
 	border-top-right-radius: 7px;
 	border-bottom-left-radius: 7px;
 	border-bottom-right-radius: 7px;
-	background: rgba(256,256,256, 0.2);
+	background: rgba(256,256,256, 0.25);
 	border: 2px solid rgba(256,256,256, 0.3);
 	margin-top: 10px;
     cursor: pointer;
@@ -143,13 +151,14 @@ display: -webkit-flex;
 	border-top-right-radius: 7px;
 	border-bottom-left-radius: 7px;
 	border-bottom-right-radius: 7px;
-	background: rgba(256,256,256, 0.2);
-	border: 2px solid rgba(256,256,256, 0.3);
+	background: rgba(50,50,50, 0.75);
+	border: 1px solid rgba(256,256,256, 0.3);
+	
 }
 
 header, h1, footer {
-	//flex: 0 0 100px;
-	//-webkit-flex: 0 0 100px;
+	flex: 0 0 100px;
+	-webkit-flex: 0 0 100px;
 	    	
 	//background: #bbb;
 	//border-radius: 3px;
@@ -165,18 +174,21 @@ header, h1, footer {
 }
 
 .setNext {
-	margin-top: -458px;
-	margin-left: -250px;
+	margin-top: -641px;
+	margin-left: -180px;
 	vertical-align: center;
+	
 	//position: relative;
-	width: 170px;
+	width: 166px;
 	height: 280px;
 	border-top-left-radius: 7px;
 	border-top-right-radius: 7px;
 	border-bottom-left-radius: 7px;
 	border-bottom-right-radius: 7px;
-	background: rgba(256,256,256, 0.2);
-	border: 2px solid rgba(256,256,256, 0.3);
+	//background: rgba(100,100,100, 0.6);
+	background: rgba(50,50,50, 0.5);
+	//background: rgba(256,256,256, 0.2);
+	border: 1px solid rgba(256,256,256, 0.3);
 	//border: 7px solid rgba(256,256,256, 0.3);
 	//border-top-left-radius: 5px;
 	//border-top-right-radius: 5px;
@@ -184,6 +196,9 @@ header, h1, footer {
 	//border-bottom-right-radius: 5px;
 	
 	
+}
+.setNext > input{
+	vertical-align: center;
 }
 
 h1{font-family: Verdana;
@@ -267,8 +282,9 @@ aside {
 	border-top-right-radius: 7px;
 	border-bottom-left-radius: 7px;
 	border-bottom-right-radius: 7px;
-	background: rgba(256,256,256, 0.2);
-	border: 2px solid rgba(256,256,256, 0.3);
+	//background: rgba(256,256,256, 0.2);
+	background: rgba(50,50,50, 0.4);
+	border: 1px solid rgba(256,256,256, 0.3);
 	margin-top: 10px;
 	flex: 1;
 	-webkit-flex: 1;
@@ -281,7 +297,7 @@ aside {
 	padding: 5px;
 }
 
-@media only screen and (max-width: 640px) {
+@media only screen and (max-width: 1960px) {
 	.flex-area {
 		-webkit-flex-flow: column;
     	flex-flow: column;
@@ -306,7 +322,7 @@ aside {
 	}
 }
 
-@media only screen and (max-width: 420px) {
+@media only screen and (max-width: 960px) {
 	section {
 		-webkit-flex-flow: column;
 		flex-flow: column;

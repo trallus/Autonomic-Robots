@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: FrameControler.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: FrameControler.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * FrameController - controls main frame activity
+ * @class FrameControler
+ * @author Christian Köderitz
+ * @version 0.1
+ */
+
+function FrameControler ( ) {
+    var obj = this;
+    var lastFrameTime = 0;
+    var maxFrameRate = 30;
+    var minFrameLength = 1000 / maxFrameRate;
+    var onNewFrameFunctions = [];
+    var gui;
+    var pause = false;
+    
+    /**
+     * set a GUI to render on frame
+     * @param {} extGUI
+     */
+    this.setGUI = function ( extGUI ) {
+        gui = extGUI;
+    };
+    
+    /**
+     * start rendering frames
+     */
+    this.start = function () {
+        nextFrame (  );
+    };
+    
+    /**
+     * set up a pause functionality
+     */
+    this.pauseButton = function pauseButton () {
+        if (pause) {
+            pause = false;
+            lastFrameTime = new Date().getTime();
+        } else {
+            pause = true;
+        }
+    };
+    
+    /**
+     * calculates next frame
+     */
+    function nextFrame () {
+        
+        if (pause) {
+            setTimeout ( nextFrame , 100);
+            return;
+        }
+        
+        var timeSinceLastDraw = ( new Date().getTime() - lastFrameTime ) / 1000;    // sec
+        lastFrameTime = new Date().getTime();
+        
+        // Eigentliche Frame-tätigkeit
+        for (var i in onNewFrameFunctions) {
+            onNewFrameFunctions[i]( gui.context, timeSinceLastDraw );
+        }
+        
+        // Sicherstellen das die maximale Framerate nicht überschritten wird
+        var actFrameTime = new Date().getTime();
+        var timeDiff = actFrameTime - lastFrameTime;
+        
+        if (timeDiff &lt; minFrameLength) {
+            setTimeout ( nextFrame , minFrameLength - timeDiff);
+            return;
+        }
+        
+    }
+    
+    //Request Animation Frame
+    /**
+     * Request Animation Frame - setting request animation frame for different browsers
+     * @method requestAnimFrame
+     * @param {Function} callback - callback function
+     */
+    window.requestAnimFrame = (function(){
+        return  window.requestAnimationFrame       || 
+                window.webkitRequestAnimationFrame || 
+                window.mozRequestAnimationFrame    || 
+                window.oRequestAnimationFrame      || 
+                window.msRequestAnimationFrame     || 
+                function(/* function */ callback, /* DOMElement */ element){
+                  window.setTimeout(callback, 1000 / 60);
+                };
+      })();
+  
+    requestAnimFrame(nextFrame);
+    //Add context on new frame
+    /**
+     * possibility to add a context to frameController
+     * @param {Function} function - function to execute on frame
+     */
+    this.addOnNewFrame = function ( func ) {
+        onNewFrameFunctions.push ( func );
+    };
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BackendCom.html">BackendCom</a></li><li><a href="Controller.html">Controller</a></li><li><a href="FrameControler.html">FrameControler</a></li><li><a href="GameController.html">GameController</a></li><li><a href="GUI.html">GUI</a></li><li><a href="Robot.html">Robot</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addOnNewFrame">addOnNewFrame</a></li><li><a href="global.html#changeUser">changeUser</a></li><li><a href="global.html#endGame">endGame</a></li><li><a href="global.html#error">error</a></li><li><a href="global.html#getRobot">getRobot</a></li><li><a href="global.html#getRobotNum">getRobotNum</a></li><li><a href="global.html#loadAccount">loadAccount</a></li><li><a href="global.html#loadDebug">loadDebug</a></li><li><a href="global.html#loadHome">loadHome</a></li><li><a href="global.html#loadLogin">loadLogin</a></li><li><a href="global.html#loadPlayer">loadPlayer</a></li><li><a href="global.html#loadRegister">loadRegister</a></li><li><a href="global.html#logIn">logIn</a></li><li><a href="global.html#logOut">logOut</a></li><li><a href="global.html#mainGC">mainGC</a></li><li><a href="global.html#newRobot">newRobot</a></li><li><a href="global.html#overlay">overlay</a></li><li><a href="global.html#overlayOff">overlayOff</a></li><li><a href="global.html#pauseButton">pauseButton</a></li><li><a href="global.html#regist">regist</a></li><li><a href="global.html#registration">registration</a></li><li><a href="global.html#remove">remove</a></li><li><a href="global.html#requestAnimFrame">requestAnimFrame</a></li><li><a href="global.html#searchUser">searchUser</a></li><li><a href="global.html#setBehavior">setBehavior</a></li><li><a href="global.html#setBot">setBot</a></li><li><a href="global.html#setGUI">setGUI</a></li><li><a href="global.html#setRobot">setRobot</a></li><li><a href="global.html#setStart">setStart</a></li><li><a href="global.html#start">start</a></li><li><a href="global.html#startDebug">startDebug</a></li><li><a href="global.html#startGame">startGame</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha11</a> on Thu Dec 11 2014 01:06:31 GMT+0100 (CET)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

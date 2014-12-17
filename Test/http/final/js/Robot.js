@@ -1,15 +1,13 @@
 /**
+ * Robot - sets up a robot Object
+ * @class Robot
  * @author Florian Krüllke
  * @version 0.1
- * @since 10.11.2014
+ * @param {FrameControler} frameControler - controls frame activity
+ * @param {Number} color - controls color to separate friendly and enemy bots
+ * @param {Number} id - unique robot id
  */
 
-/**Robot
- * sets up a robot Object
- * @param franeControler
- * @param color
- * @param id
- */
 function Robot ( frameControler, color, id) {
     var thisObj = this, health = 100;
     var posX;
@@ -22,13 +20,16 @@ function Robot ( frameControler, color, id) {
     var moveVector = new Array(0, 0);
     var speed = 0; // pix / sec
     radius = 10;
-    mass = 1; // Gewicht des Robot
+    mass = 1;
     canvaswidth = 600;
     canvasheight = 600;
     colors = ["#0f0", "red"];
     startPosition();
     
-    //give every player his start position
+    //Start Position
+    /**
+     * give every player his start position
+     */
     function startPosition () {
     	if(id%2 == 1){
     		posX=0+ canvaswidth/2;
@@ -39,85 +40,131 @@ function Robot ( frameControler, color, id) {
     	}
     }
     
-    //add onFrame (draw, check for updates) to frameController
+    //Construct
+    /**
+     * add onFrame (draw, check for updates) to frameController
+     */
     function construct () {
         frameControler.addOnNewFrame ( onFrame );
     }
     
-   	//get dimension
-   	//@return radius
+   	//Get dimension
+    /**
+     * get dimension
+     * @return BinaryExpression - radius / 2
+     */
     thisObj.getDimension = function () { return radius*.5; };
     
-    //get position
-    //@return [posX, posY]
+    //Get Position
+    /**
+     * get position
+     * @return {Array} ret - position array
+     */
     thisObj.getPosition = function () {
         ret = [posX, posY];
         return ret;
     };
     
-    //get move vector
-    //@return moveVector
+    //Get move vector
+    /**
+     * get move vector
+     * @return {Number} moveVector
+     */
     thisObj.getMoveVector = function () { return moveVector; };
     
-    //get mass
-    //@return mass
+    //Get mass
+    /**
+     * get mass
+     * @return {Number} mass
+     */
     thisObj.getMass = function () { return mass; };
     
-    //set direction
-    //@param d
+    //Set direction
+    /**
+     * set direction
+     * @param {Number} d - direction
+     */
     thisObj.setDirection = function ( d ) { direction = d; };
     
-    //set speed
-    //@param s
+    //Set speed
+    /**
+     * set speed
+     * @param {Number} s speed
+     */
     thisObj.setSpeed = function ( s ) { speed = s; };
     
-    //set position
-    //@param p[]
+    //Set position
+    /**
+     * set position
+     * @param {Array} p - position array
+     */
     thisObj.setPosition = function ( p ) {
         posX = p[0];
         posY = p[1];
     };
     
-    //set destination
-    //@param p[]
+    //Set destination
+    /**
+     * set destination
+     * @param {Array} p - position array
+     */
     thisObj.setDestination = function ( p ) {
         destinationX = p[0]+ canvaswidth/2;
         destinationY = p[1]+ canvasheight/2;
     };
     
-    //set health
-    //@param damage
+    //Set current health
+    /**
+     * set health
+     * @param {Number} damage - damage to subtract from health
+     */
     function setHealth (damage) { health = health-damage;}
     
-    //set an specified behavior
-    //@param behave
+    //Set behavior
+    /**
+     * set an specified behavior
+     * @param {JSON} behave - new robot behave
+     */
     this.setBehavior = function(behave) {
     	//switch case for behavior like animations or health state
     };
     
-    //get id
-    //@return id
+    //Get id
+    /**
+     * get id
+     * @return {Number} id - robot id
+     */
     thisObj.getId = function () { return id; };
     
-    //HIT TEST - checks for clicked canvas position
-    //@param x
-    //@param y
+    //Hit test
+     /**
+      * HIT TEST - checks for clicked canvas position
+      * @param {Number} x - x position
+      * @param {Number} y - y position
+      * @return {boolean} true or false
+      */
      thisObj.hitTest = function (x, y) {
         dx = x - posX;
         dy = y - posY;
         return dx * dx + dy * dy <= radius/2 * radius;
     };
 
-    //onframe - global ticker for drawing methods
-    //@param context
-    //@param timeSinceLastDraw
+    //On frame
+    /**
+     * onframe - global ticker for drawing methods
+     * @param {getContext("2d")} context - to draw context
+     * @param {Number} timeSinceLastDraw - time since last draw
+     */
     function onFrame ( context, timeSinceLastDraw ) {
         calcPosition ( timeSinceLastDraw );
         draw ( context );
     }
     
-    //drawing method
-    //@param context (from construct)
+    //Draw
+    /**
+     * drawing method
+     * @param {getContext("2d")} context - to draw context
+     */
     function draw ( context ) {
     	//draw info
     	context.beginPath();
@@ -143,8 +190,11 @@ function Robot ( frameControler, color, id) {
         context.stroke();    
     }
     
-    //create a physical behavior on changed destinations
-    //@param timeSinceLastDraw
+    //Physics
+    /**
+     * create a physical behavior on changed destinations
+     * @param {Number} timeSinceLastDraw - time since last draw
+     */
     function calcPosition ( timeSinceLastDraw ) {
     
         //angle between direction and pos, destination

@@ -1,22 +1,22 @@
 /**
+ * GUI - sets up the canvas drawing part of the GUI
+ * @class GUI
  * @author Florian Krüllke
  * @version 0.1
- * @since 10.11.2014
+ * @param {FrameControler} frameControler - controls frame activity
+ * @param {String} controllerName - name of the user
  */
 
-/**
- * sets up the canvas drawing part of the GUI
- * @param franeControler
- * @param controllerName
- */
 function GUI(frameControler, controllerName) {
 	var obj = this, canvas, physic, x, mult = 0, robotNum = 1, allRobots = [], RIP = [],canvas = document.getElementById('scene');
 	this.context;
 	valid = false;
 
 	//Construct
-	//setting up the default attributes
-	//add physics and gui function draw to framecontrollerNameName
+	//
+	/**
+	 * setting up the default attributes/add physics and gui function draw to framecontrollerNameName
+	 */
 	function construct() {
 		canvas.width = 600;
 		canvas.height = 600;
@@ -26,30 +26,33 @@ function GUI(frameControler, controllerName) {
 		frameControler.addOnNewFrame(physic.onFrame);
 	};
 
-	//get actual robot number
-	//@return robotNum
+	//Get current count of robots
+	/**
+	 * get actual robot number
+	 * @return {Number} robotNum - count of robots
+	 */
 	this.getRobotNum = function () {
 		return robotNum;
 	};
 	
-	//set robot position
-	//@param i
-	//@param position
+	//Change position of a robot
+	/**
+	 * set robot position
+	 * @param {Number} i - robot id
+	 * @param {Array} position - array with position values
+	 */
 	this.setBot = function (i, position) {
 		size = Object.keys(allRobots).length;
 		for(var j = 0; j < size; j++) {
 			r = allRobots[j];
 			if(r && r.getId() == i+1) r.setDestination(position);
 		}
-		/*
-		if(allRobots[i]){
-				allRobots[i].setDestination( position);
-			}
-			*/
 	};
-	
-	//create a new robot
-	//@param color
+	//Create a new robot
+	/**
+	 * create a new robot
+	 * @param {String} name - user name (for displaying right color of an frinedly or enemy robot)
+	 */
 	this.newRobot = function(name) {
 		//on first start -> drawing play time via valid=true, set start time
 		c = 1;
@@ -78,17 +81,12 @@ function GUI(frameControler, controllerName) {
 	styleBorderLeft = parseInt(document.defaultView.getComputedStyle(canvas, null)['borderLeftWidth'], 10) || 0;
 	styleBorderTop = parseInt(document.defaultView.getComputedStyle(canvas, null)['borderTopWidth'], 10) || 0;
 	
-	//setting request animation frame for different browser
-	window.requestAnimFrame = (function() {
-		return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
-		function(callback) {
-			window.setTimeout(callback, 1000 / 60);
-		};})();
-	
-	//return a set of x & y coordinates
-	//@param e
-	//@param canvas
-	//@return {x, y}
+	/**
+	 * return a set of x & y coordinates
+	 * @param {Event} e - mouse event
+	 * @param {Canvas} canvas - game canvas element
+	 * @return Object - containing current mouse position (x,y)
+	 */
 	function getMouse(e, canvas) {
 		var element = canvas, offsetX = 0, offsetY = 0;
 
@@ -106,16 +104,17 @@ function GUI(frameControler, controllerName) {
 		resultOffsetX += stylePaddingLeft + styleBorderLeft + htmlLeft;
 		offsetY += stylePaddingTop + styleBorderTop + htmlTop;
 
-		var mx = e.pageX - resultOffsetX;
-		var my = e.pageY - offsetY;
-
 		//return a simple javascript object with x and y defined
 		return {
-			x : mx,
-			y : my
+			x : e.pageX - resultOffsetX,
+			y : e.pageY - offsetY
 		};
 	};
-	//detect mouse over robot
+	//Mouse click on robot detection
+	/**
+	 * detect mouse over robot
+	 * @param {event} e - mouse event
+	 */
 	canvas.onmousedown = function(e) {
 		pt = getMouse(e, canvas);
 		for (var i = 0, l = allRobots.length; i < l; i++) {
@@ -128,10 +127,17 @@ function GUI(frameControler, controllerName) {
 	//END mouse detection
 	
 	//Utility
-	//convert system ms to hh:minmin:secsec
-	//@param s
-	//@return hh:mm:ss
+	/**
+	 * convert system ms to (hh:minmin:secsec)
+	 * @param {Date} s - date time in ms
+	 * @return {String} - format (hh:mm:ss)
+	 */
 	function msToTime(s) {
+		/**
+		 * adds a 0 for one literal numbers (09 for 9)
+		 * @param {Number} n - number
+		 * @return {String} - formated number
+		 */
 		function addZ(n) {
 			return (n < 10 ? '0' : '') + n;
 		}
@@ -145,13 +151,19 @@ function GUI(frameControler, controllerName) {
 		return addZ(hrs) + ':' + addZ(mins) + ':' + addZ(secs);
 	}
 	
-	//set start time for a new game, start drawing in draw()
+	//Set start time
+	/**
+	 * set start time for a new game, start drawing in draw()
+	 */
 	this.setStart = function () {
 		valid = true;
 		start = new Date();
 	};
 
-	//drawing the content
+	//Draw
+	/**
+	 * drawing the GUI context
+	 */
 	function draw() {
 		
 		mult += 0.03;
@@ -170,6 +182,7 @@ function GUI(frameControler, controllerName) {
 			x.beginPath();
 			x.strokeStyle = "#000";
 			x.lineWidth = 600;
+			
 			x.arc(canvas.width/2, canvas.height/2,300,mult*Math.PI,(1.5+mult)*Math.PI, true) ;
 			grd=x.createRadialGradient(canvas.width/2, canvas.height/2, 1500, canvas.width/2, canvas.height/2,30 );
 			grd.addColorStop(0,"#0f0");
@@ -195,6 +208,9 @@ function GUI(frameControler, controllerName) {
 			x.lineWidth = 1;
 			x.moveTo(0, canvas.height/2);
 			x.lineTo(canvas.width, canvas.height/2);
+			
+			
+        	
 		}else{
 			x.beginPath();
 			x.font = "13px Verdana";

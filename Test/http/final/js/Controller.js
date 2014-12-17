@@ -1,30 +1,82 @@
 /**
+ * Controller - main user/client side functionality
+ * @class Controller
+ * @project Automatic Robots
  * @author Florian Krüllke
  * @version 0.1
- * @since 10.11.2014
  */
+
 function Controller() {
 	//Global var's
+	/**
+    *to create a static methods
+    * @type this
+    * @memberof Controller
+    */
 	var thisObj = this;
+	/**
+    *name space for build up URLs 
+    * @type String
+    * @memberof Controller
+    */
 	var server = "serverRequest";
+	/**
+    *new BackendCom-Object for server communication
+    * @type BackendCom
+    * @memberof Controller
+    */
 	var backendCom = new BackendCom();
-	thisObj.name
+	//- User
+	/**
+    *static name space for user name
+    * @type String
+    * @memberof Controller
+    */
+	thisObj.name;
+	/**
+    *password of the user
+    * @type String
+    * @memberof Controller
+    */
 	var password;
+	/**
+     * email of the user
+     * @type String
+     * @memberof Controller
+     */
 	var eMail;
+	/**
+    *to hold user-object
+    * @type object
+    * @memberof Controller
+    */
 	var user;
-	var $select;
-	//access for changed robot values by user
+	//- access for changed robot values by user
+	/**
+    * array to hold all robot-objects, static access
+    * @type Array
+    * @memberof Controller
+    */
 	thisObj.roboSet = [];
-	//control values for upgrade a robot
-	var control = 0;
-	var upgrade = 5;
-	//default robo issue names & values
+	//- default robo issue names & values
+	/**
+    * array for default name configuration
+    * @type Array
+    * @memberof Controller
+    */
 	var roboName = ["range", "rateOfFire", "damage", "armor", "enginePower", "behavior"];
+	/**
+    *array for default values configuration
+    * @type Array
+    * @memberof Controller
+    */
 	var roboVal = [100, 30, 10, 100, 100, "gibts noch nicht"];
-
-	//Get Html Parts
-	//
-	//... via AJAX
+	
+	//Get html parts method
+	/**
+	 * get html parts via AJAX
+	 * @param {String} destination - specifies the path URL
+	 */
 	function getAJAX(destination) {
 		$.ajax({
 			url : destination
@@ -35,53 +87,67 @@ function Controller() {
 
 		});
 	}
-
-	//open debug file - auto.html - in a new window
+	//Outer methods
+	//Load debug-mode
+	/**
+	 * open debug file - auto.html - in a new window
+	 */
 	this.loadDebug = function() {
 		window.open("auto.html");
-	};
-
-	//LoadAccountPage
+	}; 
+	//Load account settings
+	/**
+	 * load account-settings-page
+	 */
 	this.loadAccount = function() {
 		getAJAX("account.html");
 	};
-
-	//LoadRegistrationPage
+	//Registration
+	/**
+	 * load sign-up-page
+	 */
 	this.loadRegister = function() {
 		getAJAX("signup.html");
 	};
-
-	//LoadHomePage
+	//Load home-page
+	/**
+	 * load home-page
+	 */
 	this.loadHome = function() {
 		getAJAX("home.html");
 	};
-
-	//LoadLoginPage
+	//Load login-page
+	/**
+	 * load login-page
+	 */
 	this.loadLogin = function() {
 		getAJAX("login.html");
 	};
-
-	//LogOut
+	//load logout-page
+	/**
+	 * user loguut
+	 */
 	this.logOut = function() {
 		backendCom.logOut(function() {
 			thisObj.loadLogin();
 		});
 	};
-	
 	//End a game
+	/**
+	 * end a game
+	 */
 	this.endGame = function() {
 		backendCom.endGame(name, password, eMail, function() {
 			thisObj.loadHome();
 		});
 	};
-
-	//handle User
-	//
-	//Start a Game
+	//Start a game
+	/**
+	 * start a Game
+	 */
 	this.startGame = function() {
-		//var e = document.getElementById("users");
 		if($("#users :selected")){
-			var e = $("#users :selected").text();//.children("[:selected]").text();
+			var e = $("#users :selected").text();
 			console.log(e);
 			thisObj.name = e;
 		}
@@ -93,7 +159,7 @@ function Controller() {
 						url : "robots.html"
 					}).done(function(html) {
 						$("#content").html(html).promise().done(function() {
-							GameController.main(thisObj);
+							GameController.mainGC(thisObj);
 							document.getElementById("setNext").appendChild(setNext());
 							$("#setNext").show();
 							regisButtons();
@@ -106,8 +172,11 @@ function Controller() {
 		}
 
 	};
-
-	//End a Game
+	//Inner methods
+	//End a game
+	/**
+	 * end a Game
+	 */
 	function endGame() {
 		backendCom.endGame(name, password, eMail, function() {
 			thisObj.loadHome();
@@ -117,6 +186,9 @@ function Controller() {
 	}
 
 	//Registration
+	/**
+	 * registration
+	 */
 	function registration() {
 		readInputFealds();
 		if (name.trim() == '') {
@@ -140,7 +212,10 @@ function Controller() {
 		}
 	}
 
-	//Change User Settings
+	//Change user settings
+	/**
+	 * change user settings via readInputFields()
+	 */
 	function changeUser() {
 		readInputFealds();
 		backendCom.changeUser(name, password, eMail, function(json) {
@@ -151,12 +226,18 @@ function Controller() {
 		});
 	}
 
-	//Open Account Settings Form
+	//Open account
+	/**
+	 * open account settings page
+	 */
 	function account() {
 		thisObj.loadAccount();
 	}
 
 	//Login
+	/**
+	 * login
+	 */
 	function logIn() {
 		readInputFealds();
 		backendCom.logIn(password, eMail, function(json) {
@@ -170,7 +251,10 @@ function Controller() {
 		});
 	}
 
-	//LogOut
+	//Logout
+	/**
+	 * logOut
+	 */
 	function logOut() {
 		backendCom.logOut(function() {
 			thisObj.overlay('You\'ve been logged out!');
@@ -178,7 +262,10 @@ function Controller() {
 		});
 	}
 
-	//Remove an User
+	//Remove the user
+	/**
+	 * remove an User
+	 */
 	function remove() {
 		readInputFealds();
 		user = {
@@ -196,7 +283,10 @@ function Controller() {
 		});
 	}
 
-	//Search User
+	//Search for other online users
+	/**
+	 * search for other online users
+	 */
 	function searchUser() {
 		$('select').empty();
 		backendCom.searchUser($("#inputUserName").val(), function(json) {
@@ -211,7 +301,11 @@ function Controller() {
 		});
 	}
 
-	//loadPlayer default users select
+	//Debug load player feature
+	/**
+	 * load dummy players for default users select
+	 * @param {JSON} users - default dummy users
+	 */
 	this.loadPlayer = function(users) {
 		var e = document.createElement("select");
 		e.setAttribute("name", "users");
@@ -221,7 +315,7 @@ function Controller() {
 		//$("#overlay").remove("#infoText");
 		//$('#content').hide();
 		//$("#overlay").show();
-		$select = $('#users');
+		var $select = $('#users');
 		for (var key in users) {
 			$select.append($('<option />', {
 				value : (key),
@@ -231,8 +325,11 @@ function Controller() {
 	};
 
 	//Robot Stuff
-	//
-	//set next robot div element builder
+	//Set next robot HTML-element
+	/**
+	 * set next robot div element builder
+	 * @return div - returns a HTML-DIV containing default set up of a robot
+	 */
 	function setNext() {
 		$("#btnOverlayOff").hide();
 		var div = document.createElement("div");
@@ -244,17 +341,6 @@ function Controller() {
 		div.appendChild(x);
 		for (var i = 0; i < 6; i++) {
 			var e = document.createElement("input");
-			/*
-			 e.addEventListener("keydown", function(event) {
-			 if (event.which == 38) {
-			 thisObj.upgrade(0,event);
-			 }
-			 if (event.which == 40)
-			 {
-			 thisObj.upgrade(1,event);
-			 }
-			 });
-			 */
 			e.id = roboName[i] + "-setter";
 			var n = document.createElement('br');
 			e.setAttribute("class", "inputRobo");
@@ -267,7 +353,6 @@ function Controller() {
 			e.value = roboVal[i];
 			e.name = "number";
 			e.title = roboName[i];
-			//e.setAttribute("disabled", "");
 			div.appendChild(e);
 		}
 		var min = document.createElement("p");
@@ -276,7 +361,10 @@ function Controller() {
 		return div;
 	}
 
-	//get the values and behavior of the next robot from document inputs
+	//Get current robot values
+	/**
+	 * get the values and behavior of the next robot from document inputs
+	 */
 	this.getRobot = function() {
 		/*
 		 thisObj.roboSet = {
@@ -300,7 +388,10 @@ function Controller() {
 		//return thisObj.roboSet;
 	};
 
-	//function for setting the first robot via function overlay
+	//Create a SetRobot-DIV-element for the overlay
+	/**
+	 * function for setting the first robot via function overlay
+	 */
 	this.setRobot = function() {
 		var div = setNext();
 		document.getElementById("overlay").appendChild(div);
@@ -318,26 +409,13 @@ function Controller() {
 		$('#content').hide();
 		$("#overlay").show();
 	};
-	/*
-	//control and check the allowed upgrade
-	this.upgrade = function (mode, event) {
-	if(upgrade <= 0 && control >= 5 && mode == 0) {
-	window.alert('NO CHEATIN!!!');
-	}
-	else if(mode % 2 == 0) {
-	upgrade--;
-	event.explicitOriginalTarget.value++;
-	control++;
-	} else {
-	upgrade++;
-	event.explicitOriginalTarget.value--;
-	control--;
-	}
-	};
-	*/
+	
 	//UtilityStuff
 	//
-	//Button Initialization
+	//Button initialization
+	/**
+	 * button initialization
+	 */
 	regisButtons = function() {
 
 		$("#btnRegister").click(registration);
@@ -350,14 +428,24 @@ function Controller() {
 		$("#btnSearchUser").click(searchUser);
 	};
 
-	//InputRead
+	//Input read
+	/**
+	 * input fields read
+	 */
 	function readInputFealds() {
 		name = $("#inputUserName").val();
 		password = $("#inputUserPass").val();
 		eMail = $("#inputUserEMail").val();
 	}
 
-	//JSON CHECK for 2 values
+	//Check JSON for two values
+	/**
+	 * Description JSON CHECK for 2 values
+	 * @param {JSON} json - JSON to search through
+	 * @param {VALUE} value1 - any value to look for
+	 * @param {VALUE} value2 - any value to look for
+	 * @return boolean - true or false for success or not
+	 */
 	function check(json, value1, value2) {
 		for (key in json) {
 			if ( typeof (json[key]) === "object") {
@@ -370,16 +458,23 @@ function Controller() {
 		return false;
 	}
 
-	//open a overlay with a text string called json
-	this.overlay = function(json) {
+	//Overlay opener
+	/**
+	 * open a overlay with a text string called info
+	 * @param {String} info - text string displayed in the overlay
+	 */
+	this.overlay = function(info) {
 		$(document).ready(function() {
 			$('#content').hide();
 			var el = $("#overlay").show();
-			$('<p id="infoText">INFO!<br><br>' + json + '</p>').insertBefore(".infoPush");
+			$('<p id="infoText">INFO!<br><br>' + info + '</p>').insertBefore(".infoPush");
 		});
 	};
 
-	//close the overlay and remove the tag with id "infoText"
+	//Overlay closer
+	/**
+	 * close the overlay and remove the tag with id "infoText"
+	 */
 	this.overlayOff = function() {
 		$(document).ready(function() {
 			$("#content").show();
@@ -396,34 +491,43 @@ function Controller() {
 	};
 };
 
-//HTML ACCESS
-var users = ["a", "b", "c", "d", "e", "f", "g", "h"];
-var controller;
-
-function regist() {
-
-	var backendCom = new BackendCom();
-	for (var i in users) {
-		backendCom.registration(users[i] + '@', "", users[i] + '@', function(json) {
-			//console.log(json);
-
-		});
-	}
-};
-
-function start() {
-	//AUTODB
-	//regist();
-
-	controller = new Controller();
-};
-
-function startDebug() {
-
-	//regist();
-
-	controller = new Controller();
-	controller.setRobot();
-	controller.loadPlayer(users);
-};
-
+	//DEBUG FEATURES
+	/**
+	 * DEBUG FEATURES
+	 */
+	var controller;
+	/**
+	 * registers a bunch of auto-users for development
+	 */
+	function regist() {
+		var users = ["a", "b", "c", "d", "e", "f", "g", "h"];
+		var controller;
+	
+		var backendCom = new BackendCom();
+		for (var i in users) {
+			backendCom.registration(users[i] + '@', "", users[i] + '@', function(json) {
+				//console.log(json);
+	
+			});
+		}
+	};
+	
+	/**
+	 * initialization method for creating a new instance of class Controller
+	 */
+	function start() {
+		controller = new Controller();
+	};
+	
+	/**
+	 * initialization method for debugging mode, creates a bunch of dummy users
+	 */
+	function startDebug() {
+		
+		//regist();
+		var users = ["a", "b", "c", "d", "e", "f", "g", "h"];
+		controller = new Controller();
+		controller.setRobot();
+		controller.loadPlayer(users);
+	};
+	

@@ -17,6 +17,8 @@ function GUI(frameControler, controllerName) {
 	var canvas = document.getElementById('scene');
 	this.context;
 	valid = false;
+	var test;
+	
 
 	//Construct
 	//

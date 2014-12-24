@@ -72,7 +72,7 @@ public class Battle extends Thread implements Runnable {
 		robotIdCounter = 0;
 		timeToNextRobot = System.currentTimeMillis();
 		startTimeMs = timeToNextRobot;
-		timeLimitMs = 200000;	// Spiel dauert nun 20 sekunden
+		timeLimitMs = 20000;	// Spiel dauert nun 20 sekunden
 		this.behaviourFactory = behaviourFactory;
 		// add battle to users
 		final List<Vector2D> startPoints = calculateStartpoints(users.size());

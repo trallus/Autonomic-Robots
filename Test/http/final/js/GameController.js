@@ -48,25 +48,14 @@ var GameController = {
 		 */
 		function getNextServerFrame() {
 			$("body").append(controller.name);
-			//send first robot settings
-			$.ajax({
-				type : "POST",
-				data : JSON.stringify(serverRobot()/*getting actual selection for robot values*/),
-				dataType : "json",
-				url : "serverRequest/game-setNextRobot"
-			}).done(function(json) {
-				console.log(json);
-				//join BattleQuery
-				$.ajax({
-					url : "serverRequest/game-joinBattleQuery"
-				}).done(function(json) {
+			var robot = serverRobot();
+			console.log(robot);
+			controller.setNextRobot(robot, controller.joinBattleQuery( function(json) {
 					gui.setStart();
 					console.log(json);
-					roboSet = [];
-					var i = 0;
-					$(".setNext input").each(function(){roboSet[i]=this.value;i++;});
-					console.log(roboSet);
-					intervallCounter = 20;
+					
+					//Intervall Gameloop
+					intervallCounter = 30;
 					intervall = window.setInterval(function() {
 					
 						//get game situation in 1/sec up to 20x
@@ -90,8 +79,15 @@ var GameController = {
 								}
 							}
 						});
-						//end game after 20x
+						//end game after 30x
 						intervallCounter--;
+						//Intervall next robot
+						if(intervallCounter%10 == 0) {
+							controller.getRobot();
+							robot = serverRobot();
+							controller.setNextRobot(robot, function () {});
+							console.log(robot);
+						}
 
 						//SERVERPOINT -> auskommentieren Zeile 65 & 72
 						//kommentiert es aus und probierts
@@ -112,8 +108,8 @@ var GameController = {
 							});
 						}
 					}, 1000);
-				});
-			});
+				})
+			);
 		}
 		//Set next serverRobot
 		/**
@@ -121,7 +117,6 @@ var GameController = {
 		 * @return r - JSON robot
 		 */
 		function serverRobot() {
-			//controller.getRobot();
 			roboSet = controller.roboSet;
 			//var roboSet = set;
 			r = {

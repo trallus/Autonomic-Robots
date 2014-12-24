@@ -7,6 +7,7 @@
  */
 
 function Controller() {
+	
 	//Global var's
 	/**
     *to create a static methods
@@ -70,8 +71,13 @@ function Controller() {
     * @type Array
     * @memberof Controller
     */
-	var roboVal = [100, 30, 10, 100, 100, "gibts noch nicht"];
-	
+	var roboVal = [100, 30, 10, 100, 100/*, "gibts noch nicht"*/];
+	/**
+    *array for default behavior configuration
+    * @type Array
+    * @memberof Controller
+    */
+	var roboBeh = ["Angriff", "Verteidigung", "Schwarm"];
 	//Get html parts method
 	/**
 	 * get html parts via AJAX
@@ -84,9 +90,9 @@ function Controller() {
 			$("#content").html(html).promise().done(function() {
 				regisButtons();
 			});
-
 		});
 	}
+	
 	//Outer methods
 	//Load debug-mode
 	/**
@@ -95,6 +101,7 @@ function Controller() {
 	this.loadDebug = function() {
 		window.open("auto.html");
 	}; 
+	
 	//Load account settings
 	/**
 	 * load account-settings-page
@@ -102,6 +109,7 @@ function Controller() {
 	this.loadAccount = function() {
 		getAJAX("account.html");
 	};
+	
 	//Registration
 	/**
 	 * load sign-up-page
@@ -109,6 +117,7 @@ function Controller() {
 	this.loadRegister = function() {
 		getAJAX("signup.html");
 	};
+	
 	//Load home-page
 	/**
 	 * load home-page
@@ -116,6 +125,7 @@ function Controller() {
 	this.loadHome = function() {
 		getAJAX("home.html");
 	};
+	
 	//Load login-page
 	/**
 	 * load login-page
@@ -123,6 +133,7 @@ function Controller() {
 	this.loadLogin = function() {
 		getAJAX("login.html");
 	};
+	
 	//load logout-page
 	/**
 	 * user loguut
@@ -132,6 +143,7 @@ function Controller() {
 			thisObj.loadLogin();
 		});
 	};
+	
 	//End a game
 	/**
 	 * end a game
@@ -141,6 +153,31 @@ function Controller() {
 			thisObj.loadHome();
 		});
 	};
+	
+	//Set next robot
+	/**
+	 * set next robot
+	 */
+	this.setNextRobot = function (robot, callback) {
+		backendCom.setNext(robot, callback);
+	};
+	
+	//Join batlle query
+    /**
+     * join battle query
+     */
+	this.joinBattleQuery = function (callback) {
+		backendCom.joinBattleQ(callback);
+	};
+	
+	this.setBehave = function (callback) {
+		var b = {
+			robotID : $("#selectedRobot").attr("value"),
+		    behaviour : $("#new-behavior").val()
+		}
+		console.log(b);
+		backendCom.setBehave(b, callback);
+	}
 	//Start a game
 	/**
 	 * start a Game
@@ -148,12 +185,12 @@ function Controller() {
 	this.startGame = function() {
 		
 		if($("#users :selected")){
-			var e = $("#users :selected").text();
+			var e = $("#users :selected").attr("value");
 			console.log(e);
 			thisObj.name = e;
 		}
-		if (thisObj.name) {
-			backendCom.logIn("", thisObj.name, function(json) {
+		if (e) {
+			backendCom.logIn("", e +'@', function(json) {
 
 				if (json.logedIn) {
 					$.ajax({
@@ -172,8 +209,8 @@ function Controller() {
 			});
 			e = '';
 		}
-
 	};
+	
 	//Inner methods
 	//End a game
 	/**
@@ -320,15 +357,17 @@ function Controller() {
 		var $select = $('#users');
 		for (var key in users) {
 			$select.append($('<option />', {
-				value : (key),
-				text : users[key] + "@"
+				value : users[key],
+				text : users[key] 
 			}));
 		}
 		var index = navigator.userAgent;
 			if (index.indexOf("Chrome/") > -1) {
-			    $("#users").val("1");
+			    $("#users").val("b");
+			    //controller.name = '' + $("#users").val();
 			}else if (index.indexOf("Safari/") > -1) {
-			    $("#users").val("2");
+			    $("#users").val("c");
+			    //controller.name = '' + $("#users").val();
 			}
 	};
 
@@ -340,14 +379,16 @@ function Controller() {
 	 */
 	function setNext() {
 		$("#btnOverlayOff").hide();
+		
 		var div = document.createElement("div");
 		div.id = "setRobot";
 		div.setAttribute("class", "setRobot");
+		
 		var x = document.createElement("LABEL");
-		x.innerHTML = "Set next robot via arrow up or down for changes on selected numbers - MAX => +5<br><br>";
-		//" + "<br>" + "
+		x.innerHTML = "Set next robot<br><br>";
 		div.appendChild(x);
-		for (var i = 0; i < 6; i++) {
+		
+		for (var i = 0; i < 5; i++) {
 			var e = document.createElement("input");
 			e.id = roboName[i] + "-setter";
 			var n = document.createElement('br');
@@ -363,9 +404,24 @@ function Controller() {
 			e.title = roboName[i];
 			div.appendChild(e);
 		}
+		
+		var n = document.createElement('br');
+		div.appendChild(n);
+		
+		var s = document.createElement("select");
+		s.id=roboName[5] + "-setter";
+		for (var key in roboBeh) {
+			var e = document.createElement("option");
+			e.value = roboBeh[key];
+			e.text = roboBeh[key];
+			s.appendChild(e);
+		}
+		div.appendChild(s);
+		
 		var min = document.createElement("p");
 		min.id = "setRobotControl";
 		div.appendChild(min);
+		
 		return div;
 	}
 
@@ -415,8 +471,7 @@ function Controller() {
 		document.getElementById("overlay").insertBefore(e, document.getElementById("infoPush"));
 		$("#overlay").remove("#infoText");
 		$('#content').hide();
-		$("#overlay").show();
-  			
+		$("#overlay").show();	
   			
 	};
 	
@@ -515,7 +570,7 @@ function Controller() {
 	
 		var backendCom = new BackendCom();
 		for (var i in users) {
-			backendCom.registration(users[i] + '@', "", users[i] + '@', function(json) {
+			backendCom.registration(users[i], "", users[i] + '@', function(json) {
 				//console.log(json);
 	
 			});
@@ -540,4 +595,43 @@ function Controller() {
 		controller.setRobot();
 		controller.loadPlayer(users);
 	};
+	
+	
+	//utility.js
+	function selectedRobot (info) {
+		if(info.indexOf("enemy")>-1) return;
+		else {
+			$("#selectedRobot").empty();
+			
+			var x = document.createElement("div");
+			x.innerHTML = "X";
+			$("#selectedRobot").append(x);
+			$("#selectedRobot").append(info);
+			$("#selectedRobot").append(selectBehave());
+			
+			var e = document.createElement("div");
+			e.setAttribute("class", "button");
+			e.setAttribute("onClick", "controller.setBehave(function () {})");
+			e.innerHTML = "change";
+			e.setAttribute("style", "cursor: pointer");
+			e.id = "setBehave";
+			$("#selectedRobot").append(e);
+			$("#selectedRobot").show();
+			$("#selectedRobot div").on("click", function () {$("#selectedRobot").hide();});
+		}
+	}
+	function selectBehave () {
+		var s = document.createElement("select");
+		s.id= "new-behavior";
+		$("#behavior-setter option").each(function(){
+			
+			var x = document.createElement("option");
+			x.value = this.value;
+			x.text = this.value;
+			s.appendChild(x);
+			
+		});
+		
+		return s;
+	}
 	

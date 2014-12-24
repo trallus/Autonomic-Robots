@@ -25,7 +25,31 @@ input {
 	margin-left: 5px;
 	
 }
-
+#setRobot{
+	text-align: center;
+}
+#selectedRobot{
+	width: 200px; 
+	float: right; 
+	position:fixed; 
+	top:10%; 
+	right:4%;
+	//background: #8E908C;
+	padding: 10px;
+	display: none;
+	border-top-left-radius: 7px;
+	border-top-right-radius: 7px;
+	border-bottom-left-radius: 7px;
+	border-bottom-right-radius: 7px;
+	background: rgba(50,50,50, 0.75);
+	border: 1px solid rgba(256,256,256, 0.3);
+}
+#selectedRobot div{
+	cursor: pointer;
+	float : right;
+	border : 1px solid #fff;
+	padding: 1px;
+}
 #login{
 	text-align: center;
 }
@@ -174,7 +198,7 @@ header, h1, footer {
 }
 
 .setNext {
-	margin-top: -641px;
+	margin-top: -639px;
 	margin-left: -180px;
 	vertical-align: center;
 	

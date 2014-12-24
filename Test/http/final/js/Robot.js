@@ -23,9 +23,11 @@ function Robot ( frameControler, color, id) {
     mass = 1;
     canvaswidth = 600;
     canvasheight = 600;
-    colors = ["#0f0", "red"];
+    var colors = ["#0f0","red"];
+    thisObj.user;
     startPosition();
-    
+    if(color==0) thisObj.user="you";
+    else thisObj.user="enemy";
     //Start Position
     /**
      * give every player his start position
@@ -34,9 +36,11 @@ function Robot ( frameControler, color, id) {
     	if(id%2 == 1){
     		posX=0;/*+ canvaswidth/2;*/
     		posY=100;/*+ canvasheight/2;*/
+    		
     	}else{
     		posX=14;/*+ canvaswidth/2;*/
     		posY=-98;/*+ canvasheight/2;*/
+    		
     	}
     }
     
@@ -63,6 +67,13 @@ function Robot ( frameControler, color, id) {
     thisObj.getPosition = function () {
         ret = [posX, posY];
         return ret;
+    };
+    
+    thisObj.getUser = function () { return thisObj.user; };
+    
+    thisObj.getColor = function (i) { 
+    	if(i%2 == 0) {return colors[0];}
+    	else{ return colors[1];}
     };
     
     //Get move vector
@@ -175,7 +186,7 @@ function Robot ( frameControler, color, id) {
     	//draw robot
     	context.font = "10px Verdana";
         context.fillStyle = '#FFFFFF';
-        context.fillText( '#' + id, posX-7, posY-13);
+        context.fillText( '#' + (id-1), posX-7, posY-13);
         context.arc( posX, posY, radius/2, 0, 2 * Math.PI, false);
         //set drawing style
         context.lineWidth = 1;

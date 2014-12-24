@@ -23,7 +23,7 @@ function GUI(frameControler, controllerName) {
 	//Construct
 	//
 	/**
-	 * setting up the default attributes/add physics and gui function draw to framecontrollerNameName
+	 * setting up the default attributes/add physics and gui function draw to frameController
 	 */
 	function construct() {
 		canvas.width = 600;
@@ -59,14 +59,15 @@ function GUI(frameControler, controllerName) {
 	//Create a new robot
 	/**
 	 * create a new robot
-	 * @param {String} name - user name (for displaying right color of an frinedly or enemy robot)
+	 * @param {String} name - user name (for displaying right color of an friendly or enemy robot)
 	 */
 	this.newRobot = function(name) {
 		//on first start -> drawing play time via valid=true, set start time
 		c = 1;
+		//console.log(controllerName+'  '+name);
 		if(controllerName == name) {c = 0;}
 		for(var i = 0; i<=1; i++){
-			robo = new Robot(frameControler, c%2, robotNum );
+			robo = new Robot(frameControler, c%2, robotNum, controllerName );
 			//increase number of robots
 			robotNum++;
 			//push robot into my robot list
@@ -131,8 +132,10 @@ function GUI(frameControler, controllerName) {
 				console.log("AUSGEWAEHLTER ROBOT: " + (i+1));
 				console.log(pt);
 				*/
-				$("#auswahl p").empty();
-				$("#auswahl p").append("AUSGEWAEHLTER ROBOT: " + (i+1));
+				//$("#auswahl p").empty();
+				//$("#auswahl p").append("AUSGEWAEHLTER ROBOT: robot #"+ (i+1));
+				document.getElementById("selectedRobot").value=i;
+				selectedRobot("AUSGEWAEHLTER ROBOT: "+allRobots[i].getUser()+" #"+ (i));
 			}
 		}
 	};
@@ -206,8 +209,11 @@ function GUI(frameControler, controllerName) {
 			time = parseInt((new Date().getTime() - start), 10);
 			x.beginPath();
 			x.font = "13px Verdana";
+			x.fillStyle='#0f0';
+			x.fillText('you are '+ controllerName,0,25)
 			x.fillStyle = '#FFFFFF';
-			x.fillText('Playtime:  ' + msToTime(time), 467, 10);
+			x.fillText(msToTime(time), 0, 10);
+			
 			//x.beginPath();
 			x.lineWidth = 1;
 			x.strokeStyle = "#0d0";

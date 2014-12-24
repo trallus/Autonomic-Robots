@@ -164,24 +164,38 @@ function BackendCom ( ) {
         
         //serverRequest( user, server + "/changeUser", callback );
         serverRequest( user, server + "/changeUser", function () {
-                thisObj.overlay('Changed into:<br>' + name + '<br>' + password + '<br>'  + eMail);
+        	controller.overlay('Changed into:<br>' + name + '<br>' + password + '<br>'  + eMail);
         });
     };
-
-    //Overlay
+    
+    //Set next robot
     /**
-     * open a overlay with a text string value called info
-     * @param {String} info - in this overlay displayed text
+     * set next robot
+     * @param {JSON} robot - robot data send to server
+     * @param {Function} callback - callback function
      */
-    this.overlay = function ( info ) {
-        //window.alert("sdfsdf");
-            $(document).ready(function () {
-                var el = $("#overlay").show();
-                $( '<p id="infoText">info!!!<br>' + info + '</p>' ).insertBefore( ".infoPush" );
-                $("#content").hide();
-                //$("body").hide();
-        });
-    };
+    this.setNext = function (robot, callback) {
+    	serverRequest( robot, server + "/game-setNextRobot", callback );
+    } 
+    
+    //Join batlle query
+    /**
+     * join battle query
+     * @param {Function} callback - callback function
+     */
+    this.joinBattleQ = function ( callback ) {
+    	serverRequest( undefined, server + "/game-joinBattleQuery", callback );  
+    }
+    
+    //Set robot behavior
+    /**
+     * set robot behavior
+     * @param {JSON} b - robot behavior data send to server
+     * @param {Function} callback - callback function
+     */
+    this.setBehave = function (b, callback) {
+    	serverRequest( b, server + "/game-setBehavior", callback );
+    }
     
     //inner server request method
     /**

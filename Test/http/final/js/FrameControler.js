@@ -1,7 +1,7 @@
 /**
  * FrameController - controls main frame activity
  * @class FrameControler
- * @author Christian Köderitz
+ * @author Christian Köditz
  * @version 0.1
  */
 

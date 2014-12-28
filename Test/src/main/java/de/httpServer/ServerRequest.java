@@ -176,7 +176,8 @@ public class ServerRequest extends Request {
 			final RobotPrototype rp = new RobotPrototype(wp, cnr.armor, cnr.enginePower, cnr.behaviour, logFacade);
 			user.setNextRobot(rp);
 		} else if (uri.indexOf("getBehaviours") != -1) {
-			final String[] behaviours = {"gibts noch nicht", "und das auch nicht"};
+			final List<String> behaviourList = gameInterface.getBehaviours();
+			final String[] behaviours = (String[]) behaviourList.toArray();
 			replyJson.put("behaviours", behaviours);
 		} else if (uri.indexOf("leaveBattleQuery") != -1) {
 			gameInterface.leaveBattleQuery(user);

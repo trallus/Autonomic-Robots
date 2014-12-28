@@ -183,6 +183,9 @@ public class ServerRequest extends Request {
 			gameInterface.leaveBattleQuery(user);
 		} else if (uri.indexOf("joinBattleQuery") != -1) {
 			gameInterface.joinBattleQuery(user);
+		} else if (uri.indexOf("setBehavior") != -1) {
+			final String jsonString = readInputStream();
+			System.out.println(jsonString);
 		}
 	}
 

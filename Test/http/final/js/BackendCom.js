@@ -197,6 +197,15 @@ function BackendCom ( ) {
     	serverRequest( b, server + "/game-setBehavior", callback );
     }
     
+    //Get behaviors
+    /**
+     * get behaviors
+     */
+    this.getBehavior = function (callback) {
+    	serverRequest(undefined, server + "game-getBehaviors", callback);
+    }
+
+    
     //inner server request method
     /**
      * inner-server communication method

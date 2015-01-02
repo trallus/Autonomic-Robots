@@ -162,6 +162,21 @@ function Controller() {
 		backendCom.setNext(robot, callback);
 	};
 	
+	//Get behaviors
+	/**
+	 * get behaviors
+	 */
+	this.getBehavior = function () {
+		backendCom.getBehavior(function (json) {
+			if (json.behaviors) {
+				roboBeh = [];
+				for(var keys in json.behaviors) {
+					roboBeh[keys] = json.behaviors[keys];
+				}
+			}
+		});
+	}
+	
 	//Join batlle query
     /**
      * join battle query
@@ -191,7 +206,7 @@ function Controller() {
 		}
 		if (e) {
 			backendCom.logIn("", e +'@', function(json) {
-
+				thisObj.getBehavior();
 				if (json.logedIn) {
 					$.ajax({
 						url : "robots.html"
@@ -564,8 +579,7 @@ function Controller() {
 	/**
 	 * registers a bunch of auto-users for development
 	 */
-	function regist() {
-		var users = ["a", "b", "c", "d", "e", "f", "g", "h"];
+	function regist(users) {
 		var controller;
 	
 		var backendCom = new BackendCom();
@@ -588,9 +602,8 @@ function Controller() {
 	 * initialization method for debugging mode, creates a bunch of dummy users
 	 */
 	function startDebug() {
-		
-		//regist();
 		var users = ["a", "b", "c", "d", "e", "f", "g", "h"];
+		//regist(users);
 		controller = new Controller();
 		controller.setRobot();
 		controller.loadPlayer(users);

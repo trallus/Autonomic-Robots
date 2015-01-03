@@ -194,7 +194,7 @@ function BackendCom ( ) {
      * @param {Function} callback - callback function
      */
     this.setBehave = function (b, callback) {
-    	serverRequest( b, server + "/game-setBehavior", callback );
+    	serverRequest( b, server + "/game-setBehaviour", callback );
     }
     
     //Get behaviors
@@ -202,7 +202,7 @@ function BackendCom ( ) {
      * get behaviors
      */
     this.getBehavior = function (callback) {
-    	serverRequest(undefined, server + "game-getBehaviors", callback);
+    	serverRequest(undefined, server + "/game-getBehaviours", callback);
     }
 
     

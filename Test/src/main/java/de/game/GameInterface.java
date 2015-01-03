@@ -42,7 +42,7 @@ public interface GameInterface {
 	 * get a list of all possible robot behaviours
 	 * @return
 	 */
-	List<String> getBehaviours();
+	String[] getBehaviours();
 	/**
 	 * set a behaviour to a exist robot
 	 * @param robotID

@@ -1,8 +1,10 @@
 package de.game;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import de.game.behaviour.Behaviour;
 import de.game.behaviour.BehaviourFactory;
 import de.game.exceptions.NotInQueryException;
 import de.httpServer.User;
@@ -80,9 +82,13 @@ public class GameControler implements GameInterface {
 	}
 
 	@Override
-	public List<String> getBehaviours() {
-		// TODO Auto-generated method stub
-		return null;
+	public String[] getBehaviours() {
+		
+		final Collection<String> behaviours = behaviourFactory.getBehaviours();
+		
+		final String[] behaviourNames = new String[behaviours.size()];
+		
+		return behaviours.toArray(behaviourNames);
 	}
 
 	@Override

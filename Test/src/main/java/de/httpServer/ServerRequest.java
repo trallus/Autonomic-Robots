@@ -176,14 +176,12 @@ public class ServerRequest extends Request {
 			final RobotPrototype rp = new RobotPrototype(wp, cnr.armor, cnr.enginePower, cnr.behaviour, logFacade);
 			user.setNextRobot(rp);
 		} else if (uri.indexOf("getBehaviours") != -1) {
-			final List<String> behaviourList = gameInterface.getBehaviours();
-			final String[] behaviours = (String[]) behaviourList.toArray();
-			replyJson.put("behaviours", behaviours);
+			replyJson.put("behaviours", gameInterface.getBehaviours());
 		} else if (uri.indexOf("leaveBattleQuery") != -1) {
 			gameInterface.leaveBattleQuery(user);
 		} else if (uri.indexOf("joinBattleQuery") != -1) {
 			gameInterface.joinBattleQuery(user);
-		} else if (uri.indexOf("setBehavior") != -1) {
+		} else if (uri.indexOf("setBehaviour") != -1) {
 			final String jsonString = readInputStream();
 			System.out.println(jsonString);
 		}

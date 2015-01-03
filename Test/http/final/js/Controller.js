@@ -206,6 +206,7 @@ function Controller() {
 		}
 		if (e) {
 			backendCom.logIn("", e +'@', function(json) {
+				console.log(json.logedIn);
 				thisObj.getBehavior();
 				if (json.logedIn) {
 					$.ajax({

@@ -8,5 +8,9 @@
 			<key>DefaultBehaviour</key>
 			<value>de.game.behaviour.DefaultBehaviour</value>
 		</entry>
+		<entry>
+			<key>WingManBehaviour</key>
+			<value>de.game.behaviour.WingManBehaviour</value>
+		</entry>
 	</behaviours>
 </BehaviourFactory-Map>

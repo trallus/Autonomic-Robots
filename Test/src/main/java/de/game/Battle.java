@@ -134,7 +134,10 @@ public class Battle extends Thread implements Runnable {
 		// set next robot
 		if (timeToNextRobot < currentTime) {
 			for (final User u : users) {
-				final Robot nextRobot = u.getNextRobot().generateRobot(robotIdCounter, u.getStartPoint(),u,behaviourFactory);
+				final RobotPrototype rp = u.getNextRobot();
+				final Vector2D sp = u.getStartPoint();
+				final Robot nextRobot = rp.generateRobot(robotIdCounter, sp,u,behaviourFactory);
+				
 				u.addBattleRobot(nextRobot);
 				physicObjects.add(nextRobot);
 				robotIdCounter++;

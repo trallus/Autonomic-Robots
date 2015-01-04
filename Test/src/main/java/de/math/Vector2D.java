@@ -100,6 +100,10 @@ public class Vector2D {
     public double dot(final Vector2D v2) {
 	return n1 * v2.n1 + n2 * v2.n2;
     }
+    
+    public double kreuz (final Vector2D v2) {
+    	return n1 * v2.n2 - n2 * v2.n1; 
+    }
 
     /**
      * @see java.lang.Object#hashCode()

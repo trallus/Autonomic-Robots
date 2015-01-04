@@ -133,7 +133,14 @@ public abstract class PhysikObject {
      * accelerate with this speed
      * @param speed
      */
-    public void accelerate(final double speed) {
+    public void accelerate(double speed) {
+    	if (this.speed <= 0) {
+    		this.speed = 0;
+    		if (speed < 0) return;
+    	}
+    	
+    	if (speed < 0) speed *= 2;
+    	
         this.speed += speed;
         updateMoveVector();
     }

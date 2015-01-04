@@ -167,16 +167,18 @@ function Controller() {
 	 * get behaviors
 	 */
 	this.getBehavior = function () {
+		var r = [];
 		backendCom.getBehavior(function (json) {
-			if (json.behaviors) {
-				roboBeh = [];
-				for(var keys in json.behaviors) {
-					roboBeh[keys] = json.behaviors[keys];
+			if (json.behaviours) {
+				r = [];
+				for(var keys in json.behaviours) {
+					r[keys] = json.behaviours[keys];
 				}
 			}
+			roboBeh = r;
 		});
+		//return r;
 	}
-	
 	//Join batlle query
     /**
      * join battle query
@@ -199,14 +201,9 @@ function Controller() {
 	 */
 	this.startGame = function() {
 		
-		if($("#users :selected")){
-			var e = $("#users :selected").attr("value");
-			console.log(e);
-			thisObj.name = e;
-		}
+		var e = thisObj.name;
 		if (e) {
 			backendCom.logIn("", e +'@', function(json) {
-				thisObj.getBehavior();
 				if (json.logedIn) {
 					$.ajax({
 						url : "robots.html"
@@ -361,14 +358,18 @@ function Controller() {
 	 * @param {JSON} users - default dummy users
 	 */
 	this.loadPlayer = function(users) {
+		$("#overlay").empty();
+		
+		$("#overlay").append("D E B U G M O D E" + "<br>");
+		
 		var e = document.createElement("select");
 		e.setAttribute("name", "users");
 		e.setAttribute("style", "cursor: pointer");
 		e.id = "users";
 		document.getElementById("overlay").insertBefore(e, document.getElementById("infoPush"));
-		//$("#overlay").remove("#infoText");
-		//$('#content').hide();
-		//$("#overlay").show();
+		
+		$('#content').hide();
+		$("#overlay").show();
 		var $select = $('#users');
 		for (var key in users) {
 			$select.append($('<option />', {
@@ -376,14 +377,22 @@ function Controller() {
 				text : users[key] 
 			}));
 		}
+		e = document.createElement("div");
+		e.setAttribute("class", "button");
+		e.setAttribute("onClick", "controller.setRobot();");
+		e.innerHTML = "startGame";
+		e.setAttribute("style", "cursor: pointer");
+		style = "cursor: pointer";
+		e.id = "btnStartGame";
+		document.getElementById("overlay").insertBefore(e, document.getElementById("infoPush"));
 		var index = navigator.userAgent;
-			if (index.indexOf("Chrome/") > -1) {
-			    $("#users").val("b");
-			    //controller.name = '' + $("#users").val();
-			}else if (index.indexOf("Safari/") > -1) {
-			    $("#users").val("c");
-			    //controller.name = '' + $("#users").val();
-			}
+		if (index.indexOf("Chrome/") > -1) {
+		    $("#users").val("b");
+		    //controller.name = '' + $("#users").val();
+		}else if (index.indexOf("Safari/") > -1) {
+		    $("#users").val("c");
+		    //controller.name = '' + $("#users").val();
+		}
 	};
 
 	//Robot Stuff
@@ -425,10 +434,13 @@ function Controller() {
 		
 		var s = document.createElement("select");
 		s.id=roboName[5] + "-setter";
-		for (var key in roboBeh) {
+		
+		var r = roboBeh;
+		
+		for (var key in r) {
 			var e = document.createElement("option");
-			e.value = roboBeh[key];
-			e.text = roboBeh[key];
+			e.value = r[key];
+			e.text = r[key];
 			s.appendChild(e);
 		}
 		div.appendChild(s);
@@ -472,6 +484,12 @@ function Controller() {
 	 * function for setting the first robot via function overlay
 	 */
 	this.setRobot = function() {
+		if($("#users :selected")){
+			var e = $("#users :selected").attr("value");
+			console.log(e);
+			thisObj.name = e;
+		}
+		$("#overlay").empty();
 		var div = setNext();
 		document.getElementById("overlay").appendChild(div);
 		document.getElementById("overlay").insertBefore(div, document.getElementById("infoPush"));
@@ -569,6 +587,7 @@ function Controller() {
 			$('#users').remove();
 		});
 	};
+	
 };
 
 	//DEBUG FEATURES
@@ -605,7 +624,8 @@ function Controller() {
 		var users = ["a", "b", "c", "d", "e", "f", "g", "h"];
 		//regist(users);
 		controller = new Controller();
-		controller.setRobot();
+		controller.getBehavior();
+		//controller.setRobot();
 		controller.loadPlayer(users);
 	};
 	

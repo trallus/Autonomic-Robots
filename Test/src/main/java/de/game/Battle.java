@@ -111,7 +111,8 @@ public class Battle extends Thread implements Runnable {
 	 * Calculate the battle situation per frame
 	 */
 	private void frameLoop () {
-		final long robotIntervall = 10000;
+		
+		final long robotIntervall = 5000;
 		final long frameIntervall = 100;	// 1/10 sec
 		final double elapsedTime = .1;
 		final long currentTime = System.currentTimeMillis();
@@ -134,6 +135,7 @@ public class Battle extends Thread implements Runnable {
 		// set next robot
 		if (timeToNextRobot < currentTime) {
 			for (final User u : users) {
+				if (u.getNextRobot() == null) return;
 				final RobotPrototype rp = u.getNextRobot();
 				final Vector2D sp = u.getStartPoint();
 				final Robot nextRobot = rp.generateRobot(robotIdCounter, sp,u,behaviourFactory);

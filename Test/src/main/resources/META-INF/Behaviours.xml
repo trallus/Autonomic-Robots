@@ -12,5 +12,9 @@
 			<key>WingManBehaviour</key>
 			<value>de.game.behaviour.WingManBehaviour</value>
 		</entry>
+		<entry>
+			<key>AttacBehaviour</key>
+			<value>de.game.behaviour.AttacBehaviour</value>
+		</entry>
 	</behaviours>
 </BehaviourFactory-Map>

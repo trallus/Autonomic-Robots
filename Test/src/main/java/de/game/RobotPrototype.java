@@ -38,7 +38,7 @@ public class RobotPrototype {
 	}
 	
 	public Robot generateRobot (final long id, final Vector2D position, final User user, final BehaviourFactory behaviourFactory) {
-		final Robot robot = new Robot(id, position, this, weaponPrototype, user,behaviourFactory, logFacade);
+		final Robot robot = new Robot(id, position, this, weaponPrototype, user,behaviourFactory, behaviour, logFacade);
 		return robot;
 	}
 }

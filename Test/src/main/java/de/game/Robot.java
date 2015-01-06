@@ -31,7 +31,7 @@ public class Robot extends PhysikObject implements Tick {
     private final LoggerIF log;
 
     public Robot(final long id, final Vector2D position,
-	    final RobotPrototype rb, final Weapon weapon, final User user, final BehaviourFactory behaviourFactory, final LoggerAndExceptionHandlerFacadeIF logFacade) {
+	    final RobotPrototype rb, final Weapon weapon, final User user, final BehaviourFactory behaviourFactory, final String behaviour, final LoggerAndExceptionHandlerFacadeIF logFacade) {
 	super(0, 0); // start direction 0°, speed 0 pixel/sec
 	this.accelerate = true;
 	this.turnLeft = true;
@@ -42,9 +42,7 @@ public class Robot extends PhysikObject implements Tick {
 	this.turningSpeed = .1 / armor * enginePower;
 	this.acceleration = .1 / armor * enginePower;
 	this.weapon = weapon;
-	// So every robot has a (stupid) behaviour
-	final String behaviourName = behaviourFactory.getBehaviours().iterator().next(); //The first entry, hopefully the DefaultBehaviour
-	this.behaviour = behaviourFactory.getInstanceOfBehaviour(behaviourName, this);
+	this.behaviour = behaviourFactory.getInstanceOfBehaviour(behaviour, this);
 	this.user = user;
 	this.behaviourFactory = behaviourFactory;
 	this.log = logFacade.getLoggerInstance();

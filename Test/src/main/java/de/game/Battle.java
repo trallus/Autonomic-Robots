@@ -111,7 +111,7 @@ public class Battle extends Thread implements Runnable {
 	 * Calculate the battle situation per frame
 	 */
 	private void frameLoop () {
-		
+	    while(true){
 		final long robotIntervall = 5000;
 		final long frameIntervall = 100;	// 1/10 sec
 		final double elapsedTime = .1;
@@ -166,7 +166,7 @@ public class Battle extends Thread implements Runnable {
 			e.printStackTrace();
 		}
 		
-		frameLoop();
+	    }
 	}
 	
 	/**

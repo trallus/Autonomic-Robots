@@ -1,5 +1,6 @@
 package de.game.weapon;
 
+import de.game.Battle;
 import de.math.Vector2D;
 
 /**
@@ -30,22 +31,8 @@ public abstract class Weapon {
      * @param damage, not equal zero
      */
     public Weapon(final int range, final int rateOfFire, final int damage) {
-	if(range<=0){ //TODO reduce redundance
-	    final CouldNotCreateWeaponException exception = new CouldNotCreateWeaponException("Weapon Range not allowed to be less than 1", false);
-	    exception.putParameter("range", range);
-	    exception.putParameter("rateOfFire", rateOfFire);
-	    exception.putParameter("damage", damage);
-	    throw exception;
-	}
-	if(rateOfFire<=0){
-	    final CouldNotCreateWeaponException exception = new CouldNotCreateWeaponException("Weapon rateOfFire not allowed to be less than 1", false);
-	    exception.putParameter("range", range);
-	    exception.putParameter("rateOfFire", rateOfFire);
-	    exception.putParameter("damage", damage);
-	    throw exception;
-	}
-	if(damage==0){
-	    final CouldNotCreateWeaponException exception = new CouldNotCreateWeaponException("Weapon Damage not allowed to be 0", false);
+	if(range<=0 || damage==0 || rateOfFire<=0){
+	    final CouldNotCreateWeaponException exception = new CouldNotCreateWeaponException("One or more parameters out of boundary", false);
 	    exception.putParameter("range", range);
 	    exception.putParameter("rateOfFire", rateOfFire);
 	    exception.putParameter("damage", damage);
@@ -59,6 +46,9 @@ public abstract class Weapon {
     /**
      * Fires the Wepon with the given targetPosition
      * @param targetPosition the position at which the weapon aims it's shoots
+     * @param battle the battle to which the shoot of the weapon will be added
+     * @param elapsedTime The elapsed time since the last call of this methode
+     * @param startingPosition The position from which the weapon is fired
      */
-    public abstract void shoot(Vector2D targetPosition);
+    public abstract void shoot(final Vector2D targetPosition, final Battle battle, double elapsedTime, Vector2D startingPosition);
 }

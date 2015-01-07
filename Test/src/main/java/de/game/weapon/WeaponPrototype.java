@@ -1,5 +1,6 @@
 package de.game.weapon;
 
+import de.game.Battle;
 import de.math.Vector2D;
 
 public class WeaponPrototype extends Weapon {
@@ -23,7 +24,9 @@ public class WeaponPrototype extends Weapon {
     }
 
     @Override
-    public void shoot(Vector2D targetPosition) {
+    public void shoot(Vector2D targetPosition, Battle battle,
+	    double elapsedTime, Vector2D startingPosition) {
 	//Does nothing in the Prototype
     }
+
 }

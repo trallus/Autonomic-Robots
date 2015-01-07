@@ -1,12 +1,10 @@
 package de.game;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import de.game.behaviour.Behaviour;
 import de.game.behaviour.BehaviourFactory;
-import de.game.behaviour.DefaultBehaviour;
 import de.game.weapon.Weapon;
 import de.httpServer.User;
 import de.logger.LogLevel;
@@ -68,8 +66,14 @@ public class Robot extends PhysikObject implements Tick {
 	behaviour = behaviourFactory.getInstanceOfBehaviour(name, this);
     }
 
-    public void shoot(final Vector2D targetPosition) {
-	// TODO Behaviour will invoke this methode so the robot fires its weapon
+    /**
+     * Calls the shoot methode of weapon
+     * @param targetPosition the postion of the target
+     * @param battle the battle in which this robot is
+     * @see Weapon#shoot(Vector2D, Battle)
+     */
+    public void shoot(final Vector2D targetPosition, final Battle battle, final double elapsedTime) {
+	weapon.shoot(targetPosition, battle, elapsedTime, this.getPosition());
     }
 
     @Override
@@ -136,5 +140,11 @@ public class Robot extends PhysikObject implements Tick {
     	}
     }
     
-    
+    /**
+     * Returns the armor value of this robot
+     * @return the armor value of this robot
+     */
+    public double getArmor(){
+	return armor;
+    }
 }

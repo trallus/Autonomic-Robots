@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.game.behaviour.BehaviourFactory;
+import de.game.weapon.Bullet;
 import de.httpServer.User;
 import de.logger.LogLevel;
 import de.logger.LoggerAndExceptionHandlerFacadeIF;
@@ -167,6 +168,10 @@ public class Battle extends Thread implements Runnable {
 		}
 		
 	    }
+	}
+	
+	public void addBullet(final Bullet bullet){
+	    physicObjects.add(bullet);
 	}
 	
 	/**

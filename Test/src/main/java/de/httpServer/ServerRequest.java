@@ -18,6 +18,7 @@ import de.game.GameInterface;
 import de.game.Robot;
 import de.game.RobotPrototype;
 import de.game.exceptions.NotInQueryException;
+import de.game.weapon.LaserShot;
 import de.game.weapon.WeaponPrototype;
 import de.httpServer.ClientClasses.ClientNextRobot;
 import de.httpServer.ClientClasses.ClientUser;
@@ -122,6 +123,8 @@ public class ServerRequest extends Request {
 		} else if (uri.indexOf("logIn") != -1) {
 			ClientUser clientUser = readClientUser();
 			userManager.logIn(null, clientUser.eMail, clientUser.password, user);
+			replyJson.put("username", user.getDBUser().getName());
+			replyJson.put("email", user.getDBUser().getEMail());
 		} else if (uri.indexOf("logOut") != -1) {
 			userManager.logOut(null, user);
 		} else if (uri.indexOf("remove") != -1) {
@@ -154,10 +157,13 @@ public class ServerRequest extends Request {
 			final Battle b = user.getBattle();
 			final List<User> ul = b.getUsers();
 			for(User u : ul) {
+				
+				// add Robots
 				final String un = u.getDBUser().getName();
 				final ArrayList<Map<String, Object>> robotList = new ArrayList<Map<String, Object>>();
 				gameSituation.put(un, robotList);
 				final List<Robot> rl = u.getBattleRobots();
+				final List<LaserShot> shotMap = b.getShotMap();
 				for (Robot r : rl) {
 					final Map<String, Object> robot = new HashMap<String, Object>();
 					final Vector2D position = r.getPosition();
@@ -165,14 +171,22 @@ public class ServerRequest extends Request {
 					robot.put("position", posLong);
 					robot.put("id", r.getID());
 					robot.put("hitPoints", r.getHitPoints());
+					for(final LaserShot ls : shotMap) {
+						if (ls.shooter != r) continue;
+						if (ls.haveSeenTheShot.contains(user)) continue;
+						ls.haveSeenTheShot.add(user);
+						robot.put("shotTarget", ls.target.getID());
+					}
 					robotList.add(robot);
 				}
+				
 			}
 			replyJson.put("gameSituation", gameSituation);
 		} else if (uri.indexOf("setNextRobot") != -1) {
 			final String jsonString = readInputStream();
 			final ClientNextRobot cnr = gsonIn.fromJson(jsonString, ClientNextRobot.class);
-			final WeaponPrototype wp = new WeaponPrototype(cnr.range, cnr.rateOfFire, cnr.damage);
+			//final WeaponPrototype wp = new WeaponPrototype(cnr.range, cnr.rateOfFire, cnr.damage);
+			final WeaponPrototype wp = new WeaponPrototype(200, 30, 10);
 			final RobotPrototype rp = new RobotPrototype(wp, cnr.armor, cnr.enginePower, cnr.behaviour, logFacade);
 			user.setNextRobot(rp);
 		} else if (uri.indexOf("getBehaviours") != -1) {

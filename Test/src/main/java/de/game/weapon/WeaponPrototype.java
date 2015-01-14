@@ -1,14 +1,15 @@
 package de.game.weapon;
 
-import de.game.Battle;
-import de.math.Vector2D;
+public class WeaponPrototype {
 
-public class WeaponPrototype extends Weapon {
-
+	private final int range;
+	private final int rateOfFire;
+	private final int damage;
+	
     public WeaponPrototype(long range, long rateOfFire, long damage) {
-	super(1,1,1); //TODO fixen und untere Zeile wieder herstellen
-	//super((int) range, (int) rateOfFire,(int) damage);
-	//Why is this long and not int like it is Declared in UML???
+    	this.range =(int)  range;
+    	this.rateOfFire = (int) rateOfFire;
+    	this.damage = (int) damage;
     }
 
     public int getRange() {
@@ -23,10 +24,7 @@ public class WeaponPrototype extends Weapon {
 	return damage;
     }
 
-    @Override
-    public void shoot(Vector2D targetPosition, Battle battle,
-	    double elapsedTime, Vector2D startingPosition) {
-	//Does nothing in the Prototype
+    public Weapon generateWeapon () {
+    	return new WeaponLaser(range, rateOfFire, damage);
     }
-
 }

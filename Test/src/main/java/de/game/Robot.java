@@ -44,6 +44,7 @@ public class Robot extends PhysikObject implements Tick {
 	this.user = user;
 	this.behaviourFactory = behaviourFactory;
 	this.log = logFacade.getLoggerInstance();
+	setHitPoints(armor);
     }
 
     public long getID() {
@@ -75,6 +76,10 @@ public class Robot extends PhysikObject implements Tick {
     public void shoot(final Vector2D targetPosition, final Battle battle, final double elapsedTime) {
 	weapon.shoot(targetPosition, battle, elapsedTime, this.getPosition());
     }
+    
+    public Weapon getWeapon () {
+    	return weapon;
+    }
 
     @Override
     public void onHit(final PhysikObject po) {
@@ -87,6 +92,12 @@ public class Robot extends PhysikObject implements Tick {
 	else {
 	    setHitPoints(hp);
 	}
+    }
+    
+    public void laserHit (final int power) {
+    	double hp = getHitPoints() - power;
+    	if (hp < 0) hp = 0;
+    	setHitPoints(hp);
     }
 
     public void turnLeft() {

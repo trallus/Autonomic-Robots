@@ -43,6 +43,10 @@ public abstract class Weapon {
 	this.damage = damage;
     }
     
+    public int getRange() {
+    	return range;
+    }
+    
     /**
      * Fires the Wepon with the given targetPosition
      * @param targetPosition the position at which the weapon aims it's shoots

@@ -3,6 +3,7 @@ import java.util.List;
 
 import de.game.Battle;
 import de.game.Robot;
+import de.game.weapon.WeaponLaser;
 import de.httpServer.User;
 import de.math.Vector2D;
 
@@ -15,7 +16,7 @@ import de.math.Vector2D;
 public class AttacBehaviour extends Behaviour {
 
 	/**
-	 * The Robots of the own Team
+	 * The Robots of the anamy Team
 	 */
 	private List<Robot> anamyTeam;
 	/**
@@ -40,8 +41,6 @@ public class AttacBehaviour extends Behaviour {
 		
 		if (anamyTeam == null) {
 			initialAnamyTeam(battle.getUsers());
-			//robot.accelerate();
-			//return;
 		}
 		
 		if (anamyTeam.size() < 1) return;
@@ -57,12 +56,29 @@ public class AttacBehaviour extends Behaviour {
 		for (final Robot r : anamyTeam) {
 			if (r == target) {
 				navigateTo(target);
+				shoot(target, battle, elapsedTime);
 				return;
 			}
 		}
 		// if not get new target
 		target = getNextTarget();
 		navigateTo(target);
+		
+		shoot(target, battle, elapsedTime);
+	}
+	
+	private void shoot (final Robot target, final Battle battle, final double elapsedTime) {
+		final int range = robot.getWeapon().getRange();
+
+		final double a = robot.getPosition().getN1() - target.getPosition().getN1();
+		final double b = robot.getPosition().getN2() - target.getPosition().getN2();
+		
+		final double distance = Math.sqrt(a*a + b*b);
+		
+		if (distance <= range) {
+			final WeaponLaser wp = (WeaponLaser) robot.getWeapon();
+			wp.laserShoot(robot, target, battle);
+		}
 	}
 	
 	private Robot getNextTarget () {
@@ -100,19 +116,10 @@ public class AttacBehaviour extends Behaviour {
 		}
 		else {
 			robot.accelerate();
-			//if (kreuz > 0)kreuz *= -1;
 		}
 		
 		if (kreuz > 0) robot.turnLeft();
 		else if (kreuz < 0) robot.turnRight();
-		/*
-		System.out.println(robot.getID());
-		System.out.println("s:" + scalar);
-		System.out.println("k:" + kreuz);
-		System.out.println("d:" + robot.getDirection());
-		System.out.println(robot.getMoveVector());
-		System.out.println(direction);
-		*/
 	}
 
 	private void initialAnamyTeam(List<User> users) {

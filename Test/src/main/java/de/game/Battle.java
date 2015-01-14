@@ -1,10 +1,13 @@
 package de.game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.game.behaviour.BehaviourFactory;
 import de.game.weapon.Bullet;
+import de.game.weapon.LaserShot;
 import de.httpServer.User;
 import de.logger.LogLevel;
 import de.logger.LoggerAndExceptionHandlerFacadeIF;
@@ -57,6 +60,8 @@ public class Battle extends Thread implements Runnable {
     private final BehaviourFactory behaviourFactory;
     
     private final LoggerIF log;
+    
+    private final List<LaserShot> laserShotList;
 	
 	/**
 	 * Creates and starts a battle. every battle has an unique id and a pair of users
@@ -70,10 +75,11 @@ public class Battle extends Thread implements Runnable {
 		this.id = id;
 		this.users = users;
 		this.physicObjects = new ArrayList<PhysikObject>();
+		this.laserShotList = new ArrayList<LaserShot>();
 		robotIdCounter = 0;
 		timeToNextRobot = System.currentTimeMillis();
 		startTimeMs = timeToNextRobot;
-		timeLimitMs = 20000;	// Spiel dauert nun 20 sekunden
+		timeLimitMs = 30000;	// Spiel dauert nun 20 sekunden
 		this.behaviourFactory = behaviourFactory;
 		// add battle to users
 		final List<Vector2D> startPoints = calculateStartpoints(users.size());
@@ -174,6 +180,14 @@ public class Battle extends Thread implements Runnable {
 		}
 		
 		frameLoop();
+	}
+	
+	public void addLaserShot (Robot shooter, Robot target) {
+		laserShotList.add(new LaserShot(shooter, target));
+	}
+	
+	public List<LaserShot> getShotMap () {
+		return laserShotList;
 	}
 	
 	public void addBullet(final Bullet bullet){

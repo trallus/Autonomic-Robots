@@ -20,6 +20,7 @@ import de.game.RobotPrototype;
 import de.game.exceptions.NotInQueryException;
 import de.game.weapon.LaserShot;
 import de.game.weapon.WeaponPrototype;
+import de.httpServer.ClientClasses.ChangeBehaviour;
 import de.httpServer.ClientClasses.ClientNextRobot;
 import de.httpServer.ClientClasses.ClientUser;
 import de.logger.LogLevel;
@@ -157,7 +158,6 @@ public class ServerRequest extends Request {
 			final Battle b = user.getBattle();
 			final List<User> ul = b.getUsers();
 			for(User u : ul) {
-				
 				// add Robots
 				final String un = u.getDBUser().getName();
 				final ArrayList<Map<String, Object>> robotList = new ArrayList<Map<String, Object>>();
@@ -197,7 +197,13 @@ public class ServerRequest extends Request {
 			gameInterface.joinBattleQuery(user);
 		} else if (uri.indexOf("setBehaviour") != -1) {
  			final String jsonString = readInputStream();
- 			System.out.println(jsonString);
+ 			final ChangeBehaviour cb = gsonIn.fromJson(jsonString, ChangeBehaviour.class);
+ 			for (final Robot r : user.getBattleRobots()) {
+ 				if (r.getID() == cb.robotID) {
+ 					r.setBehaviour(cb.behaviour);
+ 					return;
+ 				}
+ 			}
  		}
 	}
 

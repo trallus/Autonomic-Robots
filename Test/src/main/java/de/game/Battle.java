@@ -112,9 +112,7 @@ public class Battle extends Thread implements Runnable {
 	 * Calculate the battle situation per frame
 	 */
 	private void frameLoop () {
-	    while(true){
 		final long robotIntervall = 5000;
-		final long frameIntervall = 100;	// 1/10 sec
 		final double elapsedTime = .1;
 		final long currentTime = System.currentTimeMillis();
 		
@@ -136,7 +134,10 @@ public class Battle extends Thread implements Runnable {
 		// set next robot
 		if (timeToNextRobot < currentTime) {
 			for (final User u : users) {
-				if (u.getNextRobot() == null) return;
+				if (u.getNextRobot() == null) {
+					nextFrame();
+					return;
+				}
 				final RobotPrototype rp = u.getNextRobot();
 				final Vector2D sp = u.getStartPoint();
 				final Robot nextRobot = rp.generateRobot(robotIdCounter, sp,u,behaviourFactory);
@@ -161,13 +162,18 @@ public class Battle extends Thread implements Runnable {
 			}
 		}
 		
+		nextFrame();
+	}
+	
+	private void nextFrame () {
+		final long frameIntervall = 100;	// 1/10 sec
 		try {
 			Thread.sleep(frameIntervall);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
-	    }
+		frameLoop();
 	}
 	
 	public void addBullet(final Bullet bullet){

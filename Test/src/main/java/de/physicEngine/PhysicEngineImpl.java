@@ -1,6 +1,6 @@
 package de.physicEngine;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import de.game.Battle;
 import de.game.Tick;
@@ -12,12 +12,12 @@ public class PhysicEngineImpl implements Tick{
 	/**
 	 * alle bekannten PhysicObject`s
 	 */
-	private final ArrayList<PhysikObject> physicObjects;
+	private final List<PhysikObject> physicObjects;
 	
 	/**
 	 * @param physicObjects referenz auf die Liste der bekannten physicObject`s
 	 */
-	public PhysicEngineImpl (final ArrayList<PhysikObject> physicObjects) {
+	public PhysicEngineImpl (final List<PhysikObject> physicObjects) {
 		this.physicObjects = physicObjects;
 	}
 

@@ -31,7 +31,7 @@ public abstract class PhysikObject {
     /**
      * The Radius (Size) of this PhysikObject
      */
-    private double radius;
+    private double radius = 10;
     /**
      * The Mass of this PhysikObject
      */
@@ -77,7 +77,14 @@ public abstract class PhysikObject {
     public void setMoveVector(final Vector2D moveVector) {
         this.moveVector = moveVector;
         this.speed = moveVector.getMagnitude();
-        this.direction = Math.asin(moveVector.getN1());
+        
+        final double pih = Math.PI/2;
+        direction = Math.asin(moveVector.getN1());
+        if (moveVector.getN1() > 0 && moveVector.getN2() < 0) {
+        	this.direction = Math.PI - direction;
+        } else if (moveVector.getN1() <= 0 && moveVector.getN2() < 0) {
+        	this.direction = - Math.PI - direction;
+        }
     }
     /**
      * @return the radius

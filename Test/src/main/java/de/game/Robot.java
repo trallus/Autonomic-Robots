@@ -27,6 +27,7 @@ public class Robot extends PhysikObject implements Tick {
     private final User user;
     private final BehaviourFactory behaviourFactory;
     private final LoggerIF log;
+    private long deathTime = 0;
 
     public Robot(final long id, final Vector2D position,
 	    final RobotPrototype rb, final Weapon weapon, final User user, final BehaviourFactory behaviourFactory, final String behaviour, final LoggerAndExceptionHandlerFacadeIF logFacade) {
@@ -98,6 +99,7 @@ public class Robot extends PhysikObject implements Tick {
     	double hp = getHitPoints() - power;
     	if (hp < 0) hp = 0;
     	setHitPoints(hp);
+    	die();
     }
 
     public void turnLeft() {
@@ -117,26 +119,44 @@ public class Robot extends PhysikObject implements Tick {
     }
 
     private void die() {
-	log.log("Robot die: " + id, this.getClass().getName(), LogLevel.DEBUG);
-	behaviour = null; // Break the bidirectional association so that gc can
-			  // clean both, needs confirmation of necessarity
+		log.log("Robot die: " + id, this.getClass().getName(), LogLevel.DEBUG);
+		behaviour = null; // Break the bidirectional association so that gc can
+				  // clean both, needs confirmation of necessarity
+		deathTime = System.currentTimeMillis();
+    }
+    
+    public boolean isDead () {
+    	if (deathTime == 0) return false;
+    	
+    	final long liveDeathTime = 3000; //ist noch 3 sekunden nach tot zu sehen
+    	final long timeLeft = (liveDeathTime + deathTime) - System.currentTimeMillis();
+    	
+    	if (timeLeft > 0) return false;
+    	
+    	return true;
     }
 
     @Override
     public void onTick(final Battle battle, final double elapsedTime) {
-    	lookAround(battle);
-	behaviour.onTick(battle, elapsedTime); // Must be first so the Behaviour
-					       // can say what to do
-	if (turnLeft)
-	    turn(turningSpeed * elapsedTime);
-	else
-	    turn(-turningSpeed * elapsedTime);
-	
-	if (accelerate)
-	    accelerate(acceleration * elapsedTime);
-	else
-	    accelerate(-acceleration * elapsedTime);
-	move(elapsedTime);
+    	// roboter is dead
+    	if (behaviour != null) {
+	    	lookAround(battle);
+			behaviour.onTick(battle, elapsedTime); // Must be first so the Behaviour
+							       // can say what to do
+			if (turnLeft)
+			    turn(turningSpeed * elapsedTime);
+			else
+			    turn(-turningSpeed * elapsedTime);
+			
+			if (accelerate)
+			    accelerate(acceleration * elapsedTime);
+			else
+			    accelerate(-acceleration * elapsedTime);
+    	} else {
+    		accelerate(-acceleration * elapsedTime * 5);
+    	}
+	    	
+    	move(elapsedTime);
     }
     
     public HashMap<User, List<Robot>> getKnownRobots () {

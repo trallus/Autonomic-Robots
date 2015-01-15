@@ -179,7 +179,6 @@ public class ServerRequest extends Request {
 					}
 					robotList.add(robot);
 				}
-				
 			}
 			replyJson.put("gameSituation", gameSituation);
 		} else if (uri.indexOf("setNextRobot") != -1) {

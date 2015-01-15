@@ -2,6 +2,7 @@ package de.game;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -163,7 +164,15 @@ public class Battle extends Thread implements Runnable {
 		}
 		// handle robots
 		for (final User u : users) {
-			for (final Robot r : u.getBattleRobots()) {
+			final Iterator<Robot> rli = u.getBattleRobots().iterator();
+			
+			while (rli.hasNext()) {
+				final Robot r = rli.next();
+				if (r.isDead()){
+					//cleane up dead robots
+					rli.remove();
+					continue;
+				}
 				r.onTick(this, elapsedTime);
 			}
 		}

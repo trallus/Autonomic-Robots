@@ -13,6 +13,7 @@ function GUI(frameControler, controllerName) {
 	var mult = 0; 
 	var robotNum = 1; 
 	var allRobots = [];
+	var allShots = [];
 	var RIP = [];
 	var canvas = document.getElementById('scene');
 	this.context;
@@ -30,8 +31,8 @@ function GUI(frameControler, controllerName) {
 		canvas.height = 600;
 		obj.context = canvas.getContext("2d");
 		frameControler.addOnNewFrame(draw);
-		physic = new CollisionControler(allRobots);
-		frameControler.addOnNewFrame(physic.onFrame);
+		//physic = new CollisionControler(allRobots);
+		//frameControler.addOnNewFrame(physic.onFrame);
 	};
 
 	//Get current count of robots
@@ -49,13 +50,35 @@ function GUI(frameControler, controllerName) {
 	 * @param {Number} i - robot id
 	 * @param {Array} position - array with position values
 	 */
-	this.setBot = function (i, position) {
+	this.setBot = function (i, position, hp, shot) {
+		//console.log(' id' + i + ' hp: ' + hp);
 		size = Object.keys(allRobots).length;
+		var hold;
+		var s = [];
 		for(var j = 0; j < size; j++) {
 			r = allRobots[j];
-			if(r && r.getId() == i+1) r.setDestination(position);
+			if(r && r.getId() == i+1) {
+				r.setHealth(hp);
+				r.setDestination(position);
+				s[0] = r.getPosition();
+			} 
+if (r.getId() == shot[1]+1) {
+				s[1] = r.getPosition();
+				//console.log(s);
+			} 
+ if(s[0] && s[1]) new Shot(frameControler, s);
 		}
 	};
+	
+	//Set a shot from a robot to another robot
+	/**
+	 * set shot position array
+	 * @param {Array} shot - array with position values
+	 */
+	this.setShot = function () {
+		s = shot;
+	};
+	
 	//Create a new robot
 	/**
 	 * create a new robot
@@ -192,20 +215,10 @@ function GUI(frameControler, controllerName) {
 		x.arc( canvas.width/2, canvas.height/2, 300, 0, 2 * Math.PI, true);
 		x.fill();
 		
+		
+		
 		//draw map radar when there is a gameSituation, valid set by obj.newRobot()
 		if(valid){
-			/*
-			x.beginPath();
-			x.strokeStyle = "#000";
-			x.lineWidth = 600;
-			
-			x.arc(canvas.width/2, canvas.height/2,300,mult*Math.PI,(1.5+mult)*Math.PI, true) ;
-			grd=x.createRadialGradient(canvas.width/2, canvas.height/2, 1500, canvas.width/2, canvas.height/2,30 );
-			grd.addColorStop(0,"#0f0");
-			grd.addColorStop(1,"#2f2f2f");
-			x.strokeStyle = grd;
-			x.stroke();
-			*/
 			time = parseInt((new Date().getTime() - start), 10);
 			x.beginPath();
 			x.font = "13px Verdana";
@@ -236,6 +249,9 @@ function GUI(frameControler, controllerName) {
 			x.stroke();
 			
 			x.translate(300.5,300.5);
+			
+			
+			
 			x.beginPath();
     		var grd=x.createLinearGradient(22,67,0,-17);
 			grd.addColorStop(1,"rgba(0, 255, 0, 0)");
@@ -247,8 +263,12 @@ function GUI(frameControler, controllerName) {
         	x.lineTo(0.5,0.5);
         	x.fill();
 
+        	
+        	
         	x.rotate(((-mult*15)%360)*Math.PI/180);
         	x.translate(0,0);
+        	
+        	
         	
 		}else{
 			//x.beginPath();

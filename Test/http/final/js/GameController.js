@@ -13,7 +13,8 @@ var GameController = {
 	 * @param {Controller} controller - controller-object to access user interactivity
 	 */
 	mainGC : function(controller) {
-		
+
+		$.ajaxSetup({cache: false});
 		/**
 	    * create a new frameContoller
 	    * @type FrameControler
@@ -26,6 +27,7 @@ var GameController = {
 	    * @memberof GameController
 	    */
 		var gui = new GUI(frameControler, controller.name);
+		
 		
 		//get into battle queue & create gameSituatuion
 		getNextServerFrame();
@@ -50,12 +52,13 @@ var GameController = {
 			$("body").append(controller.name);
 			var robot = serverRobot();
 			console.log(robot);
-			controller.setNextRobot(robot, controller.joinBattleQuery( function(json) {
+			controller.setNextRobot(robot, function () { controller.joinBattleQuery( function(json) {
 					gui.setStart();
 					console.log(json);
 					
 					//Intervall Gameloop
 					intervallCounter = 30;
+					var i = j = 0;
 					intervall = window.setInterval(function() {
 					
 						//get game situation in 1/sec up to 20x
@@ -64,51 +67,91 @@ var GameController = {
 						}).done(function(json) {
 
 							position = json;
-							
+							once = false;
 							//checking for new gameSituation & size of server robot list size to gui robot list size
 							if (position.gameSituation && position.gameSituation[controller.name]) {
+								
+								
+								//var me  = Object.keys(position.gameSituation[controller.name]);
+								//console.log(Object.keys(position.gameSituation).length);
+								
+								/*
+								
 								size = Object.keys(position.gameSituation[controller.name]).length;
+								console.log(position.gameSituation);
 								if (size > gui.getRobotNum()/2) {
+									
 											gui.newRobot(Object.getOwnPropertyNames(position.gameSituation)[0]);
 								}
+								*/
+								
+								
 								//setting new positions for each robot by robot.id in gui > allRobots[]
+								var target;
+								var shot = [];
 								for (var names in position.gameSituation) {
 									for (var keys in position.gameSituation[names]) {
-										gui.setBot(position.gameSituation[names][keys].id, position.gameSituation[names][keys].position);
+										//console.log(position.gameSituation[names][keys].id);
+										if (position.gameSituation[names][keys].shotTarget) {
+											//console.log(position.gameSituation[names][keys].position + '   ' + position.gameSituation[names][keys].shotTarget);
+											
+											shot[0] = position.gameSituation[names][keys].position;
+											shot[1] = position.gameSituation[names][keys].shotTarget;
+										}
+										
+										if(position.gameSituation[names][keys].id > i){
+											i = position.gameSituation[names][keys].id;
+											if (i%2 == 1) gui.newRobot(Object.getOwnPropertyNames(position.gameSituation)[0]);
+										}
+										
+										gui.setBot(position.gameSituation[names][keys].id, position.gameSituation[names][keys].position, position.gameSituation[names][keys].hitPoints, shot);
+										
+										
 									}
 								}
+								
+								once = true;
 							}
+							//console.log(once + '    ' + !position.gameSituation);
+							if (!once && position.gameSituation) {
+								$.ajaxSetup({cache: true});
+								window.clearInterval(intervall);
+								$.ajax({
+									url : "home.html"
+								}).done(function(html) {
+									$("#content").html(html).promise().done(function() {
+										
+										regisButtons();
+										//$("#setNext").hide();
+										//$("section").hide();
+										//controller.logOut();
+										//$("#overlay").append("Just refresh this page" + "<br>");
+										//$("#overlay").show();
+									});
+								});
+							}
+							
 						});
 						//end game after 30x
 						intervallCounter--;
 						//Intervall next robot
+						/*
 						if(intervallCounter%10 == 0) {
 							controller.getRobot();
 							robot = serverRobot();
 							controller.setNextRobot(robot, function () {});
 							console.log(robot);
 						}
-
+						*/
 						//SERVERPOINT -> auskommentieren Zeile 65 & 72
 						//kommentiert es aus und probierts
 						//bzw, das Spiel muss dann serverseitig irgendwie enden
 
 						//if ( ! obj.position && ! obj.position.gameSituation.name) {
-						if (intervallCounter == 0) {
-							window.clearInterval(intervall);
-							$.ajax({
-								url : "home.html"
-							}).done(function(html) {
-								$("#content").html(html).promise().done(function() {
-									regisButtons();
-									$("#setNext").hide();
-									controller.logOut();
-									controller.overlay('JUST REFRESH THE PAGE');
-								});
-							});
-						}
-					}, 1000);
-				})
+						
+						}, 1000);
+					});
+				}
 			);
 		}
 		//Set next serverRobot

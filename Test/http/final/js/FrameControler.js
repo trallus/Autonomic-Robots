@@ -14,6 +14,16 @@ function FrameControler ( ) {
     var gui;
     var pause = false;
     
+    window.requestAnimFrame = (function(){
+        return  window.requestAnimationFrame       || 
+                window.webkitRequestAnimationFrame || 
+                window.mozRequestAnimationFrame    || 
+                window.oRequestAnimationFrame      || 
+                window.msRequestAnimationFrame     || 
+                function(/* function */ callback, /* DOMElement */ element){
+                  window.setTimeout(callback, 1000 / 60);
+                };
+      })();
     /**
      * set a GUI to render on frame
      * @param {} extGUI
@@ -68,7 +78,9 @@ function FrameControler ( ) {
             return;
         }
        nextFrame(); 
+       //requestAnimFrame(nextFrame);
     }
+
     
     //Request Animation Frame
     /**
@@ -76,18 +88,8 @@ function FrameControler ( ) {
      * @method requestAnimFrame
      * @param {Function} callback - callback function
      */
-    window.requestAnimFrame = (function(){
-        return  window.requestAnimationFrame       || 
-                window.webkitRequestAnimationFrame || 
-                window.mozRequestAnimationFrame    || 
-                window.oRequestAnimationFrame      || 
-                window.msRequestAnimationFrame     || 
-                function(/* function */ callback, /* DOMElement */ element){
-                  window.setTimeout(callback, 1000 / 60);
-                };
-      })();
+    
   
-    //requestAnimFrame(nextFrame);
     //Add context on new frame
     /**
      * possibility to add a context to frameController

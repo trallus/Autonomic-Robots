@@ -124,6 +124,7 @@ function Controller() {
 	 */
 	this.loadHome = function() {
 		getAJAX("home.html");
+		thisObj.getBehavior();
 	};
 	
 	//Load login-page
@@ -201,10 +202,12 @@ function Controller() {
 	 */
 	this.startGame = function() {
 		
-		var e = thisObj.name;
+		/*var e = thisObj.name;
 		if (e) {
 			backendCom.logIn("", e +'@', function(json) {
 				if (json.logedIn) {
+					*/
+					
 					$.ajax({
 						url : "robots.html"
 					}).done(function(html) {
@@ -213,14 +216,25 @@ function Controller() {
 							document.getElementById("setNext").appendChild(setNext());
 							$("#setNext").show();
 							
+							var e = document.createElement("div");
+							e.setAttribute("class", "button");
+							e.setAttribute("onClick", "controller.setNextRobot(controller.getRobot(), function () {});");
+							e.innerHTML = "confirm";
+							e.setAttribute("style", "cursor: pointer");
+							style = "cursor: pointer";
+							e.id = "confirmRobot";
+							
+							$("#setNext").append(e);
 							regisButtons();
 						});
 					});
+					
+			/*		
 				} else
 					thisObj.overlay('Wrong mail or password!<br>Please try again!!!');
 			});
 			e = '';
-		}
+		}*/
 	};
 	
 	//Inner methods
@@ -294,6 +308,7 @@ function Controller() {
 		backendCom.logIn(password, eMail, function(json) {
 
 			if (json.logedIn) {
+				thisObj.name = json.username;
 				thisObj.valid = true;
 				thisObj.loadHome();
 
@@ -457,18 +472,18 @@ function Controller() {
 	 * get the values and behavior of the next robot from document inputs
 	 */
 	this.getRobot = function() {
-		/*
-		 thisObj.roboSet = {
+		
+		 var roboter = {
 		 weaponPrototype : {
-		 range : $("#range").val(),
-		 rateOfFire : $("#rateOfFire").val(),
-		 damage : $("#damage").val()
+		 range : $("#range-setter").val(),
+		 rateOfFire : $("#rateOfFire-setter").val(),
+		 damage : $("#damage-setter").val(),
 		 },
-		 armor : $("#armor").val(),
-		 enginePower : $("#enginePower").val(),
-		 behaviour : $("#behavior").val()
+		 armor : $("#armor-setter").val(),
+		 enginePower : $("#enginePower-setter").val(),
+		 behaviour : $("#behavior-setter").val()
 		 };
-		 */
+		 
 		thisObj.roboSet[0] = $("#range-setter").val();
 		thisObj.roboSet[1] = $("#rateOfFire-setter").val();
 		thisObj.roboSet[2] = $("#damage-setter").val();
@@ -476,7 +491,7 @@ function Controller() {
 		thisObj.roboSet[4] = $("#enginePower-setter").val();
 		thisObj.roboSet[5] = $("#behavior-setter").val();
 		//console.log(thisObj.roboSet);
-		//return thisObj.roboSet;
+		return roboter;
 	};
 
 	//Create a SetRobot-DIV-element for the overlay
@@ -484,11 +499,11 @@ function Controller() {
 	 * function for setting the first robot via function overlay
 	 */
 	this.setRobot = function() {
-		if($("#users :selected")){
+		/*if($("#users :selected")){
 			var e = $("#users :selected").attr("value");
 			console.log(e);
 			thisObj.name = e;
-		}
+		}*/
 		$("#overlay").empty();
 		var div = setNext();
 		document.getElementById("overlay").appendChild(div);

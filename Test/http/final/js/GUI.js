@@ -52,22 +52,33 @@ function GUI(frameControler, controllerName) {
 	 */
 	this.setBot = function (i, position, hp, shot) {
 		//console.log(' id' + i + ' hp: ' + hp);
-		size = Object.keys(allRobots).length;
 		var hold;
 		var s = [];
+		size = Object.keys(allRobots).length;
+		
 		for(var j = 0; j < size; j++) {
 			r = allRobots[j];
-			if(r && r.getId() == i+1) {
+			if(r && r.setHealth() > 0 && r.getId() == i+1) {
 				r.setHealth(hp);
 				r.setDestination(position);
 				s[0] = r.getPosition();
-			} 
-if (r.getId() == shot[1]+1) {
-				s[1] = r.getPosition();
-				//console.log(s);
-			} 
- if(s[0] && s[1]) new Shot(frameControler, s);
+			} else if (r && hp == 0 && r.getId() == i+1) allRobots.splice(j,1);
 		}
+		if (shot[1]) {
+			for(var j = 0; j < size; j++) {
+				r = allRobots[j];
+				if (s[0] && r.setHealth() > 0 && r.getId() == shot[1]+1) {
+					s[1] = r.getPosition();
+					new Shot(frameControler, s);
+				}
+			}
+		}
+		
+		/*size = Object.keys(allShots).length;
+		for(var j = 0; j < size; j++) {
+			shot = allShots[j];
+			
+		}*/
 	};
 	
 	//Set a shot from a robot to another robot
@@ -147,21 +158,67 @@ if (r.getId() == shot[1]+1) {
 	 * detect mouse over robot
 	 * @param {event} e - mouse event
 	 */
+	var timer;
+	this.clear = function () {
+		window.clearInterval(timer);
+	};
 	canvas.onmousedown = function(e) {
+		
 		pt = getMouse(e, canvas);
+		var j;
 		for (var i = 0, l = allRobots.length; i < l; i++) {
 			if (allRobots[i].hitTest(pt.x-300, pt.y-300)) {
+				window.clearInterval(timer);
 				/*
 				console.log("AUSGEWAEHLTER ROBOT: " + (i+1));
 				console.log(pt);
 				*/
 				//$("#auswahl p").empty();
 				//$("#auswahl p").append("AUSGEWAEHLTER ROBOT: robot #"+ (i+1));
-				document.getElementById("selectedRobot").value=i;
-				selectedRobot("AUSGEWAEHLTER ROBOT: "+allRobots[i].getUser()+" #"+ (i));
+				var r = allRobots[i];
+				if (r.getUser()) {
+					try {
+						document.getElementById("selectedRobot").value=i;
+						selectedRobot("choosen robot:<br> "+ r.getUser()+"r robot" +" #"+ (r.getId()-1) + '\n<br><p id=\"roboHP\">'+ 'HP: ' + r.setHealth() + '<!p><br>', (r.getId()-1));
+						timer = window.setInterval(function() {
+							if (r.setHealth()) document.getElementById("roboHP").innerHTML= 'HP: ' +  r.setHealth() + '';
+							else if (document.getElementById("roboHP").innerHTML) document.getElementById("roboHP").innerHTML= 'HP: ' + '0';
+						}, 750);
+					}
+					catch (e) {
+						
+					}
+					return;
+				}
 			}
 		}
 	};
+	function selectedRobot (info, id) {
+		if(info.indexOf("enemy")>-1) return;
+		else {
+			$("#selectedRobot").empty();
+			
+			var x = document.createElement("div");
+			x.innerHTML = "X";
+			x.id=id;
+			$("#selectedRobot").append(x);
+			$("#selectedRobot").append(info);
+			$("#selectedRobot").append(selectBehave());
+			
+			var e = document.createElement("div");
+			e.setAttribute("class", "button");
+			e.setAttribute("onClick", "controller.setBehave(function () {})");
+			e.innerHTML = "change";
+			e.setAttribute("style", "cursor: pointer");
+			e.id = "setBehave";
+			$("#selectedRobot").append(e);
+			$("#selectedRobot").show();
+			$("#selectedRobot div").on("click", function () {
+				$("#selectedRobot").hide();
+				window.clearInterval(timer);
+			});
+		}
+	}
 	//END mouse detection
 	
 	//Utility
@@ -258,16 +315,15 @@ if (r.getId() == shot[1]+1) {
 			grd.addColorStop(0,"rgba(0, 255, 0, 0.5)");
 
     		x.fillStyle=grd;
-    		x.rotate(((mult*15)%360)*Math.PI/180);
+    		x.rotate(((mult*19)%360)*Math.PI/180);
     		x.arc(0,0,300,0,1.9*Math.PI,true);
         	x.lineTo(0.5,0.5);
         	x.fill();
 
         	
         	
-        	x.rotate(((-mult*15)%360)*Math.PI/180);
+        	x.rotate(((-mult*19)%360)*Math.PI/180);
         	x.translate(0,0);
-        	
         	
         	
 		}else{

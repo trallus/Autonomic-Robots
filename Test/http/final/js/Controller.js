@@ -65,7 +65,7 @@ function Controller() {
     * @type Array
     * @memberof Controller
     */
-	var roboName = ["range", "rateOfFire", "damage", "armor", "enginePower", "behavior"];
+	var roboName = ["range", "rateOFire", "damage", "armor", "enginePower", "behavior"];
 	/**
     *array for default values configuration
     * @type Array
@@ -83,14 +83,18 @@ function Controller() {
 	 * get html parts via AJAX
 	 * @param {String} destination - specifies the path URL
 	 */
-	function getAJAX(destination) {
+	function getAJAX(destination, callback) {
+		$.ajaxSetup({cache: true});
 		$.ajax({
 			url : destination
 		}).done(function(html) {
 			$("#content").html(html).promise().done(function() {
 				regisButtons();
+				if(callback) callback();
 			});
+			$.ajaxSetup({cache: true});
 		});
+		
 	}
 	
 	//Outer methods
@@ -123,8 +127,10 @@ function Controller() {
 	 * load home-page
 	 */
 	this.loadHome = function() {
-		getAJAX("home.html");
-		thisObj.getBehavior();
+		getAJAX("home.html", function () {
+			thisObj.getBehavior();
+			$("#nameSpace").append('<p id=\"helloName\">... Hey ' + thisObj.name + '!');
+		});
 	};
 	
 	//Load login-page
@@ -137,7 +143,7 @@ function Controller() {
 	
 	//load logout-page
 	/**
-	 * user loguut
+	 * user logout
 	 */
 	this.logOut = function() {
 		backendCom.logOut(function() {
@@ -193,7 +199,7 @@ function Controller() {
 			robotID : $("#selectedRobot").attr("value"),
 		    behaviour : $("#new-behavior").val()
 		}
-		console.log(b);
+		//console.log(b);
 		backendCom.setBehave(b, callback);
 	}
 	//Start a game
@@ -201,40 +207,24 @@ function Controller() {
 	 * start a Game
 	 */
 	this.startGame = function() {
-		
-		/*var e = thisObj.name;
-		if (e) {
-			backendCom.logIn("", e +'@', function(json) {
-				if (json.logedIn) {
-					*/
-					
-					$.ajax({
-						url : "robots.html"
-					}).done(function(html) {
-						$("#content").html(html).promise().done(function() {
-							GameController.mainGC(thisObj);
-							document.getElementById("setNext").appendChild(setNext());
-							$("#setNext").show();
-							
-							var e = document.createElement("div");
-							e.setAttribute("class", "button");
-							e.setAttribute("onClick", "controller.setNextRobot(controller.getRobot(), function () {});");
-							e.innerHTML = "confirm";
-							e.setAttribute("style", "cursor: pointer");
-							style = "cursor: pointer";
-							e.id = "confirmRobot";
-							
-							$("#setNext").append(e);
-							regisButtons();
-						});
-					});
-					
-			/*		
-				} else
-					thisObj.overlay('Wrong mail or password!<br>Please try again!!!');
-			});
-			e = '';
-		}*/
+		getAJAX("robots.html", function() {
+			$.ajaxSetup({cache: false});
+			
+			GameController.mainGC(thisObj);
+			
+			document.getElementById("setNext").appendChild(setNext());
+			plusMinusButton ();
+			var e = document.createElement("div");
+			e.setAttribute("class", "button");
+			e.setAttribute("onClick", "controller.setNextRobot(controller.getRobot(), function () {});");
+			e.innerHTML = "confirm";
+			e.setAttribute("style", "cursor: pointer");
+			style = "cursor: pointer";
+			e.id = "confirmRobot";
+			
+			$("#setNext").append(e);
+			$("#setNext").show();
+		});
 	};
 	
 	//Inner methods
@@ -283,11 +273,18 @@ function Controller() {
 	 */
 	function changeUser() {
 		readInputFealds();
+		thisObj.name = name;
 		backendCom.changeUser(name, password, eMail, function(json) {
-			if (json.userChanged) {
-				thisObj.overlay(JSON.stringify(json));
+			if (json.userChanged) { 
+				var s = '';
+				if (name) s += "new name: " + name + "<br>";
+				if (eMail) s += "new email: " + eMail + "<br>";
+				if (password) s += "password: " + "<br>successfully changed";
+				thisObj.overlay(s);
 				thisObj.loadHome();
 			}
+			if (json.failure) thisObj.overlay(json.failure); 
+			
 		});
 	}
 
@@ -420,7 +417,7 @@ function Controller() {
 		$("#btnOverlayOff").hide();
 		
 		var div = document.createElement("div");
-		div.id = "setRobot";
+		div.id = "setNext";
 		div.setAttribute("class", "setRobot");
 		
 		var x = document.createElement("LABEL");
@@ -428,28 +425,75 @@ function Controller() {
 		div.appendChild(x);
 		
 		for (var i = 0; i < 5; i++) {
+			
+			var n = document.createElement('br');
+			
+			
+			var hug = document.createElement("div");
+			//hug.setAttribute("style", "float: left;");
+			hug.setAttribute("class", "roboTableSet")
+			hug.appendChild(n);
+			
+			var z = document.createElement("div");
+			hug.innerHTML = roboName[i] + '';
+			z.setAttribute("style", "text-align: left;float: none;width:90px;")
+			
+			var m = document.createElement("div");
+			m.innerHTML = "-";
+			m.id = roboName[i] + "-min";
+			m.value=roboName[i];
+			m.setAttribute("style", "float: right;text-align:  center;width: 20px;cursor: pointer;")
+			//m.setAttribute("onClick", "plusMinusButton()");
+			
 			var e = document.createElement("input");
 			e.id = roboName[i] + "-setter";
-			var n = document.createElement('br');
 			e.setAttribute("class", "inputRobo");
 			if(i<5){
 				e.setAttribute("type", "number");
+				e.setAttribute("disabled", "disabled");
+				e.setAttribute("style", "text-align: center;float: right;");
 			}else{
 				e.setAttribute("type", "text");
 			}
-			e.appendChild(n);
+			//e.appendChild(n);
 			e.value = roboVal[i];
-			e.name = "number";
+			//e.name = "number";
 			e.title = roboName[i];
-			div.appendChild(e);
+			
+			var p = document.createElement("div");
+			p.innerHTML = "+";
+			p.id = roboName[i] + "-add";
+			p.value=roboName[i];
+			p.setAttribute("style", "float: right;text-align:  center;width: 20px;cursor: pointer;")
+			//p.setAttribute("onClick", "plusMinusButton()");
+			
+			hug.appendChild(p);
+			
+			hug.appendChild(e);
+			
+			hug.appendChild(m);
+			
+			//hug.appendChild(z);
+			
+			//hug.appendChild(n);
+			
+			div.appendChild(hug);
 		}
 		
+		var hug = document.createElement("div");
+		//hug.setAttribute("style", "width: 200; height: 18px;");
+		hug.setAttribute("class", "roboTableSet")
+		
 		var n = document.createElement('br');
-		div.appendChild(n);
+		//hug.appendChild(n);
+		
+		var b = document.createElement("div");
+		hug.innerHTML = "behavior";
+		b.setAttribute("style", "text-align:  left;width:85px;height:18px;")
 		
 		var s = document.createElement("select");
 		s.id=roboName[5] + "-setter";
-		
+		s.setAttribute("style", "text-align:  left;float: right;width: 90px;")
 		var r = roboBeh;
 		
 		for (var key in r) {
@@ -458,11 +502,13 @@ function Controller() {
 			e.text = r[key];
 			s.appendChild(e);
 		}
-		div.appendChild(s);
+		hug.appendChild(s);
 		
-		var min = document.createElement("p");
-		min.id = "setRobotControl";
-		div.appendChild(min);
+		//hug.appendChild(b);
+		//hug.appendChild(n);
+		div.appendChild(hug);
+		
+		
 		
 		return div;
 	}
@@ -504,7 +550,7 @@ function Controller() {
 			console.log(e);
 			thisObj.name = e;
 		}*/
-		$("#overlay").empty();
+		$("#overlay p").empty();
 		var div = setNext();
 		document.getElementById("overlay").appendChild(div);
 		document.getElementById("overlay").insertBefore(div, document.getElementById("infoPush"));
@@ -520,6 +566,8 @@ function Controller() {
 		$("#overlay").remove("#infoText");
 		$('#content').hide();
 		$("#overlay").show();	
+		
+		plusMinusButton ();
   			
 	};
 	
@@ -539,6 +587,8 @@ function Controller() {
 		$("#btnAccount").click(account);
 		$("#btnChangeUser").click(changeUser);
 		$("#btnSearchUser").click(searchUser);
+		
+		
 	};
 
 	//Input read
@@ -646,28 +696,7 @@ function Controller() {
 	
 	
 	//utility.js
-	function selectedRobot (info) {
-		if(info.indexOf("enemy")>-1) return;
-		else {
-			$("#selectedRobot").empty();
-			
-			var x = document.createElement("div");
-			x.innerHTML = "X";
-			$("#selectedRobot").append(x);
-			$("#selectedRobot").append(info);
-			$("#selectedRobot").append(selectBehave());
-			
-			var e = document.createElement("div");
-			e.setAttribute("class", "button");
-			e.setAttribute("onClick", "controller.setBehave(function () {})");
-			e.innerHTML = "change";
-			e.setAttribute("style", "cursor: pointer");
-			e.id = "setBehave";
-			$("#selectedRobot").append(e);
-			$("#selectedRobot").show();
-			$("#selectedRobot div").on("click", function () {$("#selectedRobot").hide();});
-		}
-	}
+	
 	function selectBehave () {
 		var s = document.createElement("select");
 		s.id= "new-behavior";
@@ -681,5 +710,11 @@ function Controller() {
 		});
 		
 		return s;
+	}
+	function plusMinusButton () {
+		$('#setNext').click(function (event) {
+			if(event.originalEvent.target.id.indexOf("add")>0) document.getElementById(event.originalEvent.target.value + "-setter").value++;
+			else if(event.originalEvent.target.id.indexOf("min")>0) document.getElementById(event.originalEvent.target.value + "-setter").value--;
+		});
 	}
 	

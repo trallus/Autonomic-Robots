@@ -14,7 +14,7 @@ var GameController = {
 	 */
 	mainGC : function(controller) {
 
-		$.ajaxSetup({cache: false});
+		
 		/**
 	    * create a new frameContoller
 	    * @type FrameControler
@@ -51,14 +51,15 @@ var GameController = {
 		function getNextServerFrame() {
 			$("body").append(controller.name);
 			var robot = serverRobot();
-			console.log(robot);
+			//console.log(robot);
 			controller.setNextRobot(robot, function () { controller.joinBattleQuery( function(json) {
 					gui.setStart();
-					console.log(json);
+					//console.log(json);
 					
 					//Intervall Gameloop
 					intervallCounter = 30;
 					var i = j = 0;
+					var size;
 					intervall = window.setInterval(function() {
 					
 						//get game situation in 1/sec up to 20x
@@ -67,7 +68,7 @@ var GameController = {
 						}).done(function(json) {
 
 							position = json;
-							once = false;
+							
 							//checking for new gameSituation & size of server robot list size to gui robot list size
 							if (position.gameSituation && position.gameSituation[controller.name]) {
 								
@@ -109,31 +110,23 @@ var GameController = {
 										
 									}
 								}
-								
-								once = true;
 							}
-							//console.log(once + '    ' + !position.gameSituation);
-							if (!once && position.gameSituation) {
-								$.ajaxSetup({cache: true});
+							if (Object.keys(position.gameSituation).length == 0) {
+								
 								window.clearInterval(intervall);
-								$.ajax({
+								gui.clear();
+								controller.loadHome();
+								/*$.ajax({
 									url : "home.html"
 								}).done(function(html) {
 									$("#content").html(html).promise().done(function() {
-										
 										regisButtons();
-										//$("#setNext").hide();
-										//$("section").hide();
-										//controller.logOut();
-										//$("#overlay").append("Just refresh this page" + "<br>");
-										//$("#overlay").show();
 									});
-								});
+								});*/
 							}
 							
 						});
 						//end game after 30x
-						intervallCounter--;
 						//Intervall next robot
 						/*
 						if(intervallCounter%10 == 0) {
@@ -149,7 +142,7 @@ var GameController = {
 
 						//if ( ! obj.position && ! obj.position.gameSituation.name) {
 						
-						}, 1000);
+						}, 300);
 					});
 				}
 			);

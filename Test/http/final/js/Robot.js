@@ -136,9 +136,8 @@ function Robot ( frameControler, color, id) {
     	if(hp == 0) {
     		dead = true;
     		//console.log("death" + id);
-    	}
+    	} else if(!hp) return health;
     	health = hp;
-    	
     }
     
     //Set behavior
@@ -206,17 +205,17 @@ function Robot ( frameControler, color, id) {
 	        context.fill();
 	        context.stroke(); 
 	        //draw destination
-	        context.beginPath();
-	        context.arc( destinationX, destinationY, 2, 0, 2 * Math.PI, false);
+	        //context.beginPath();
+	        //context.arc( destinationX, destinationY, 2, 0, 2 * Math.PI, false);
 	        //actually start drawing
-	        context.stroke();  
+	        //context.stroke();  
 	        
     		//context.beginPath();
     		//context.fillText( 'FICK DICH', posX-7, posY-13);
 	        } else {
 	        	context.beginPath();
 	        	context.fillStyle= colors[color];
-	        	context.fillText( 'X', posX, posY);
+	        	context.fillText( 'X', posX-3, posY+4);
 	        }
     	
     }
@@ -306,6 +305,7 @@ function Shot ( frameControler, s) {
      * give every player his start position
      */
     function startPosition () {
+    	
     	posX = s[0][0];
     	posY = s[0][1];
     	destinationX = s[1][0];
@@ -319,6 +319,11 @@ function Shot ( frameControler, s) {
      */
     function construct () {
         frameControler.addOnNewFrame ( onFrame );
+        
+    }
+    
+    thisObj.setPos = function (pos) {
+    	s = pos;
     }
     
     
@@ -346,12 +351,14 @@ function Shot ( frameControler, s) {
     		
     		context.beginPath();
     		context.lineWidth = 1;
+    		context.fillStyle="#000";
+    		context.fillText('+', s[0][0]-4,s[0][1]+3);
     		context.strokeStyle = "#fff";
     		context.lineCap = "round";
     		context.moveTo(s[0][0],s[0][1]);
     		context.lineTo(s[1][0],s[1][1]);
-    		context.stroke();
     		
+    		context.stroke();
     		
     		
     		} else {
@@ -369,7 +376,7 @@ function Shot ( frameControler, s) {
         //angle between direction and pos, destination
         //treeangle abc: tan @ = a/b
         b = parseInt(destinationX) - parseInt(posX);
-        if ( parseInt(b) == 0) dead = true;
+        if ( parseInt(b) <= 5 && parseInt(b) >= -5) dead = true;
         //if ( parseInt(a) == 0) dead = true;
         if ( b > 0 ) {
             	posX+=1;

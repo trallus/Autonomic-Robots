@@ -88,15 +88,17 @@ function Controller() {
 	 * @param {String} destination - specifies the path URL
 	 */
 	function getAJAX(destination, callback) {
-		//$.ajaxSetup({cache: true});
+		$.ajaxSetup({cache: true});
 		$.ajax({
 			url : destination
 		}).done(function(html) {
 			$("#content").html(html).promise().done(function() {
+				
 				regisButtons();
 				if(callback) callback();
+				
 			});
-			//$.ajaxSetup({cache: false});
+			$.ajaxSetup({cache: false});
 		});
 		
 	}
@@ -153,10 +155,12 @@ function Controller() {
 	 * end a game
 	 */
 	this.endGame = function (score, win) {
+		$.ajaxSetup({cache: false});
 		backendCom.endGame(thisObj.name, score, eMail, function() {
 			if(win == true) s = "V I C T O R Y";
 			else if(win == false) s = "D E F E A T";
-			else s ="D R A W";
+			else if (win == null) s ="D R A W";
+			else s = win;
 			thisObj.overlay(s);
 			
 			var e = document.createElement("div");
@@ -167,7 +171,9 @@ function Controller() {
 			style = "cursor: pointer";
 			e.id = "home";
 			$("#overlay p").append(e);
-
+			
+			
+			
 			thisObj.loadHome();
 		});
 	};
@@ -215,9 +221,10 @@ function Controller() {
 	 */
 	this.startGame = function() {
 		var robot = thisObj.getRobot();
+		$.ajaxSetup({cache: false});
+		
 		getAJAX("robots.html", function() {
 			
-			//$.ajaxSetup({cache: false});
 			
 			GameController.mainGC(thisObj, robot);
 			
@@ -500,11 +507,14 @@ function Controller() {
 		$("#btnLogIn").click(logIn);
 		$("#btnLogOut").click(logOut);
 		$("#btnRemove").click(remove);
-		$("#btnEndGame").click(thisObj.endGame);
+		$("#btnEndGame").click(endGame);
 		$("#btnAccount").click(account);
 		$("#btnChangeUser").click(changeUser);
 		$("#btnSearchUser").click(searchUser);
 	};
+	function endGame () {
+		thisObj.endGame([], "You canceled this game!");
+	}
 	//Input read
 	/**
 	 * input fields read
@@ -542,6 +552,7 @@ function Controller() {
 	this.overlay = function(info) {
 		$(document).ready(function() {
 			$('#content').hide();
+			$('#overlay #setNext').remove();
 			var el = $("#overlay").show();
 			$('<p id="infoText">INFO!<br><br>' + info + '</p>').insertBefore(".infoPush");
 		});

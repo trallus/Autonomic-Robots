@@ -46,8 +46,11 @@ var GameController = {
 		/**
 		 * start game request, joining batlle queue
 		 */
+		once = false;
 		function getNextServerFrame() {
 			//$("body").append(controller.name);
+			$('#btnEndGame').click(function () {/*$.ajaxSetup({cache: true});*/window.clearInterval(intervall);gui.clear();/*console.log("in game ending");*/});
+			$.ajaxSetup({cache: false});
 			controller.setNextRobot(robot, function () { controller.joinBattleQuery( function(json) {
 					gui.setStart();
 					//Intervall Gameloop
@@ -79,16 +82,20 @@ var GameController = {
 										}
 										gui.setBot(position.gameSituation[names][keys].id, position.gameSituation[names][keys].position, position.gameSituation[names][keys].hitPoints, shot);
 									}
+									once = true;
 								}
 							}
 							//ending a game if gameSituation is empty
-							if (Object.keys(position.gameSituation).length == 0) {
+							if (once && Object.keys(position.gameSituation).length == 0) {
+								$.ajaxSetup({cache: true});
 								window.clearInterval(intervall);
 								gui.clear();
 								controller.endGame(gui.getScore(), gui.getWinner());
 								delete thisObj;
 							}
+							
 						});}, 300);
+					$.ajaxSetup({cache: true});
 					});
 				}
 			);

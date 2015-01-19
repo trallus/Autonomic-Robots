@@ -332,7 +332,7 @@ function GUI(frameControler, controllerName) {
 
     		x.fillStyle=grd;
     		x.rotate(((mult*19)%360)*Math.PI/180);
-    		x.arc(0,0,300,0,1.9*Math.PI,true);
+    		x.arc(0,0,301,0,1.9*Math.PI,true);
         	x.lineTo(0.5,0.5);
         	x.fill();
         	

@@ -52,6 +52,12 @@ function Controller() {
     * @memberof Controller
     */
 	var user;
+	/**
+    *to hold maxPoints to ajust roboter settings
+    * @type number
+    * @memberof Controller
+    */
+	var maxPoints = 0;;
 	//- access for changed robot values by user
 	/**
     * array to hold all robot-objects, static access
@@ -65,7 +71,7 @@ function Controller() {
     * @type Array
     * @memberof Controller
     */
-	var roboName = ["range", "rateOFire", "damage", "armor", "enginePower", "behavior"];
+	var roboName = ["range", "rateOfFire", "damage", "armor", "enginePower", "behavior"];
 	/**
     *array for default values configuration
     * @type Array
@@ -155,9 +161,13 @@ function Controller() {
 	/**
 	 * end a game
 	 */
-	this.endGame = function() {
-		backendCom.endGame(name, password, eMail, function() {
+	this.endGame = function (score) {
+		backendCom.endGame(thisObj.name, score, eMail, function() {
 			thisObj.loadHome();
+			//$("#overlay").hide();
+			//thisObj.roboSet = roboVal;
+			//maxPoints = 0;
+			//$("#setNext").hide();
 		});
 	};
 	
@@ -222,6 +232,7 @@ function Controller() {
 			style = "cursor: pointer";
 			e.id = "confirmRobot";
 			
+			
 			$("#setNext").append(e);
 			$("#setNext").show();
 		});
@@ -232,11 +243,13 @@ function Controller() {
 	/**
 	 * end a Game
 	 */
-	function endGame() {
-		backendCom.endGame(name, password, eMail, function() {
+	function endGame(score) {
+		backendCom.endGame(thisObj.name, score, eMail, function() {
 			thisObj.loadHome();
 			//$("#overlay").hide();
-			$("#setNext").hide();
+			thisObj.roboSet = roboVal;
+			maxPoints = 0;
+			//$("#setNext").hide();
 		});
 	}
 
@@ -456,7 +469,9 @@ function Controller() {
 				e.setAttribute("type", "text");
 			}
 			//e.appendChild(n);
-			e.value = roboVal[i];
+			if (Object.keys(thisObj.roboSet).length >0) e.value = thisObj.roboSet[i];
+			//else e.value = roboVal[i];
+			else e.value = "0";
 			//e.name = "number";
 			e.title = roboName[i];
 			
@@ -536,9 +551,26 @@ function Controller() {
 		thisObj.roboSet[3] = $("#armor-setter").val();
 		thisObj.roboSet[4] = $("#enginePower-setter").val();
 		thisObj.roboSet[5] = $("#behavior-setter").val();
-		//console.log(thisObj.roboSet);
+		
 		return roboter;
 	};
+	
+	//Set current robot values
+	/**
+	 * set the values and behavior of the next robot from document inputs
+	 */
+	this.setRobotStats = function() {
+		 
+		$("#range-setter").val() = thisObj.roboSet[0];
+		$("#rateOfFire-setter").val() = thisObj.roboSet[1];
+		$("#damage-setter").val() = thisObj.roboSet[2];
+		$("#armor-setter").val()= thisObj.roboSet[3];
+		$("#enginePower-setter").val() = thisObj.roboSet[4];
+		$("#behavior-setter").val() = thisObj.roboSet[5];
+		//console.log(thisObj.roboSet);
+		
+	};
+
 
 	//Create a SetRobot-DIV-element for the overlay
 	/**
@@ -652,7 +684,22 @@ function Controller() {
 			$('#users').remove();
 		});
 	};
-	
+	function plusMinusButton () {
+		
+		$('#setNext').click(function (event) {
+			if (maxPoints >= 10 && event.originalEvent.target.id.indexOf("add")>0) {
+				window.alert("You already added 10 points!");
+			} else if (event.originalEvent.target.id.indexOf("min")>0 && document.getElementById(event.originalEvent.target.value + "-setter").value == 0) {
+				window.alert("No negative numbers allowed!");
+			} else if(event.originalEvent.target.id.indexOf("add")>0) {
+				maxPoints++;
+				document.getElementById(event.originalEvent.target.value + "-setter").value++;
+			} else if(event.originalEvent.target.id.indexOf("min")>0) {
+				maxPoints--;
+				document.getElementById(event.originalEvent.target.value + "-setter").value--;
+			}
+		});
+	}
 };
 
 	//DEBUG FEATURES
@@ -711,10 +758,5 @@ function Controller() {
 		
 		return s;
 	}
-	function plusMinusButton () {
-		$('#setNext').click(function (event) {
-			if(event.originalEvent.target.id.indexOf("add")>0) document.getElementById(event.originalEvent.target.value + "-setter").value++;
-			else if(event.originalEvent.target.id.indexOf("min")>0) document.getElementById(event.originalEvent.target.value + "-setter").value--;
-		});
-	}
+	
 	

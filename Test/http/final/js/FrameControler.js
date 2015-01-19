@@ -13,7 +13,13 @@ function FrameControler ( ) {
     var onNewFrameFunctions = [];
     var gui;
     var pause = false;
-    
+
+    //Request Animation Frame
+    /**
+     * Request Animation Frame - setting request animation frame for different browsers
+     * @method requestAnimFrame
+     * @param {Function} callback - callback function
+     */
     window.requestAnimFrame = (function(){
         return  window.requestAnimationFrame       || 
                 window.webkitRequestAnimationFrame || 
@@ -66,9 +72,10 @@ function FrameControler ( ) {
         
         // Eigentliche Frame-tätigkeit
         for (var i in onNewFrameFunctions) {
-            onNewFrameFunctions[i]( gui.context, timeSinceLastDraw );
+        	
+        	hold = onNewFrameFunctions[i]( gui.context, timeSinceLastDraw );
+        	//if (hold == true) obj.check(i);
         }
-        
         // Sicherstellen das die maximale Framerate nicht überschritten wird
         var actFrameTime = new Date().getTime();
         var timeDiff = actFrameTime - lastFrameTime;
@@ -77,18 +84,16 @@ function FrameControler ( ) {
             setTimeout ( nextFrame , minFrameLength - timeDiff);
             return;
         }
-       nextFrame(); 
-       //requestAnimFrame(nextFrame);
+        onNewFrameFunctions = [];
+       //nextFrame(); 
+       requestAnimFrame(nextFrame);
     }
-
     
-    //Request Animation Frame
-    /**
-     * Request Animation Frame - setting request animation frame for different browsers
-     * @method requestAnimFrame
-     * @param {Function} callback - callback function
-     */
-    
+    this.check = function (i) {
+    	var x = onNewFrameFunctions;
+    	x.splice(i,1);
+    	onNewFrameFunctions = x;
+    };
   
     //Add context on new frame
     /**

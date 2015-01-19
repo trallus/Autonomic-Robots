@@ -8,7 +8,7 @@
  * @param {Number} id - unique robot id
  */
 
-function Robot ( frameControler, color, id) {
+function Robot ( frameControler, color, id, name) {
     var thisObj = this; 
     var health = 100;
     var posX;
@@ -21,11 +21,11 @@ function Robot ( frameControler, color, id) {
     var moveVector = new Array(0, 0);
     var speed = 0; // pix / sec
     var dead;
-    var radius = 12;
+    var radius = 15;
     var mass = 1;
     canvaswidth = 600;
     canvasheight = 600;
-    var colors = ["#0f0","red"];
+    var colors = ["LimeGreen","red"];
     thisObj.user;
     startPosition();
     if(color==0) thisObj.user="you";
@@ -70,12 +70,22 @@ function Robot ( frameControler, color, id) {
         ret = [posX, posY];
         return ret;
     };
+    //Get Name
+    /**
+     * get position
+     * @return {Array} ret - position array
+     */
+    thisObj.getName = function () {
+        return name;
+    };
     
     thisObj.getUser = function () { return thisObj.user; };
     
     thisObj.getColor = function (i) { 
-    	if(i%2 == 0) {return colors[0];}
-    	else{ return colors[1];}
+    	/*if(color == 0) {return colors[0];}
+    	else{ return colors[1];}*/
+    	if(color == 0) {return "rgba(50,205,50,0.5)";}
+    	else{ return "rgba(255,0,0,0.5)";}
     };
     
     //Get move vector
@@ -135,7 +145,7 @@ function Robot ( frameControler, color, id) {
     	//console.log(hp);
     	if(hp == 0) {
     		dead = true;
-    		//console.log("death" + id);
+    		
     	} else if(!hp) return health;
     	health = hp;
     }
@@ -176,8 +186,12 @@ function Robot ( frameControler, color, id) {
      * @param {Number} timeSinceLastDraw - time since last draw
      */
     function onFrame ( context, timeSinceLastDraw ) {
-        calcPosition ( timeSinceLastDraw );
-        draw ( context );
+    	
+        	calcPosition ( timeSinceLastDraw );
+            draw ( context );
+            if ( dead )  {
+            	return dead;
+            } 
     }
     
     //Draw
@@ -216,6 +230,7 @@ function Robot ( frameControler, color, id) {
 	        	context.beginPath();
 	        	context.fillStyle= colors[color];
 	        	context.fillText( 'X', posX-3, posY+4);
+	        	delete thisObj;
 	        }
     	
     }
@@ -289,7 +304,7 @@ function Robot ( frameControler, color, id) {
 
 function Shot ( frameControler, s) {
     var thisObj = this; 
-    
+    var health = 100;
     var posX;
     var posY;
     var destinationX; 
@@ -326,6 +341,10 @@ function Shot ( frameControler, s) {
     	s = pos;
     }
     
+    thisObj.setHealth = function (hp) {
+    	if (!hp) return hp;
+    	else health = hp;
+    }
     
     //On frame
     /**
@@ -334,8 +353,14 @@ function Shot ( frameControler, s) {
      * @param {Number} timeSinceLastDraw - time since last draw
      */
     function onFrame ( context, timeSinceLastDraw ) {
-        calcPosition ( timeSinceLastDraw );
-        draw ( context );
+       
+        	calcPosition ( timeSinceLastDraw );
+            draw ( context );
+            if ( dead )  {
+            	return dead;
+            }
+            
+        
     }
     
     //Draw
@@ -350,10 +375,11 @@ function Shot ( frameControler, s) {
 	        
     		
     		context.beginPath();
-    		context.lineWidth = 1;
-    		context.fillStyle="#000";
-    		context.fillText('+', s[0][0]-4,s[0][1]+3);
-    		context.strokeStyle = "#fff";
+    		context.lineWidth = 2.5;
+    		//context.fillStyle="#000";
+    		//context.fillText('+', s[0][0]-4,s[0][1]+3);
+    		context.strokeStyle = s[2];
+    		//context.strokeStyle = "#fff";
     		context.lineCap = "round";
     		context.moveTo(s[0][0],s[0][1]);
     		context.lineTo(s[1][0],s[1][1]);
@@ -362,6 +388,7 @@ function Shot ( frameControler, s) {
     		
     		
     		} else {
+    			delete thisObj;
 	        }
     	
     }

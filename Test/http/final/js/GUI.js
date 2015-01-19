@@ -19,8 +19,9 @@ function GUI(frameControler, controllerName) {
 	this.context;
 	valid = false;
 	var test;
-	
-
+	var myScore = 0;
+	var eScore = 0;
+	var score = [];
 	//Construct
 	//
 	/**
@@ -50,6 +51,7 @@ function GUI(frameControler, controllerName) {
 	 * @param {Number} i - robot id
 	 * @param {Array} position - array with position values
 	 */
+	
 	this.setBot = function (i, position, hp, shot) {
 		//console.log(' id' + i + ' hp: ' + hp);
 		var hold;
@@ -62,7 +64,14 @@ function GUI(frameControler, controllerName) {
 				r.setHealth(hp);
 				r.setDestination(position);
 				s[0] = r.getPosition();
-			} else if (r && hp == 0 && r.getId() == i+1) allRobots.splice(j,1);
+				s[2] = r.getColor(i);
+			} else if (r && hp == 0 && r.getId() == i+1) {
+				score.push(r.getUser());
+				score.push(r);
+				score.push('#######');
+				checkScore();
+				allRobots.splice(j,1);
+			}
 		}
 		if (shot[1]) {
 			for(var j = 0; j < size; j++) {
@@ -80,7 +89,25 @@ function GUI(frameControler, controllerName) {
 			
 		}*/
 	};
+	function checkScore () {
+		var i= 0,j = 0;
+		for (var keys in score) {
+			str = score[keys] + '';
+			if(str.indexOf("you") >= 0) j++;
+			else if(str.indexOf("enemy") >= 0) i++;
+		}
+		myScore = i;
+		eScore = j;
+	}
 	
+	this.getScore = function () {
+		return score;
+	}
+	this.getWinner = function () {
+		if (myScore<eScore) return false;
+		else if( myScore == eScore) return null;
+		else return true;
+	}
 	//Set a shot from a robot to another robot
 	/**
 	 * set shot position array
@@ -95,19 +122,21 @@ function GUI(frameControler, controllerName) {
 	 * create a new robot
 	 * @param {String} name - user name (for displaying right color of an friendly or enemy robot)
 	 */
-	this.newRobot = function(name) {
+	this.newRobot = function(i,n) {
 		//on first start -> drawing play time via valid=true, set start time
-		c = 1;
-		//console.log(controllerName+'  '+name);
-		if(controllerName == name) {c = 0;}
-		for(var i = 0; i<=1; i++){
-			robo = new Robot(frameControler, c%2, robotNum, controllerName );
+		c = 0;
+		if(controllerName == n) {c = 1;}
+		for (var k = 0; k<2; k++) {
+			robo = new Robot(frameControler, c%2, robotNum, n );
 			//increase number of robots
 			robotNum++;
+			c++;
 			//push robot into my robot list
 			allRobots.push(robo);
-			c++;
+			
 		}
+			
+		
 	};
 
 	//Gui Utility
@@ -163,7 +192,7 @@ function GUI(frameControler, controllerName) {
 		window.clearInterval(timer);
 	};
 	canvas.onmousedown = function(e) {
-		
+		//console.log(score);
 		pt = getMouse(e, canvas);
 		var j;
 		for (var i = 0, l = allRobots.length; i < l; i++) {
@@ -181,8 +210,8 @@ function GUI(frameControler, controllerName) {
 						document.getElementById("selectedRobot").value=i;
 						selectedRobot("choosen robot:<br> "+ r.getUser()+"r robot" +" #"+ (r.getId()-1) + '\n<br><p id=\"roboHP\">'+ 'HP: ' + r.setHealth() + '<!p><br>', (r.getId()-1));
 						timer = window.setInterval(function() {
-							if (r.setHealth()) document.getElementById("roboHP").innerHTML= 'HP: ' +  r.setHealth() + '';
-							else if (document.getElementById("roboHP").innerHTML) document.getElementById("roboHP").innerHTML= 'HP: ' + '0';
+							if (r.setHealth() && document.getElementById("roboHP")) document.getElementById("roboHP").innerHTML= 'HP: ' +  r.setHealth() + '';
+							else if (document.getElementById("roboHP")) document.getElementById("roboHP").innerHTML= 'HP: ' + '0';
 						}, 750);
 					}
 					catch (e) {
@@ -280,9 +309,10 @@ function GUI(frameControler, controllerName) {
 			x.beginPath();
 			x.font = "13px Verdana";
 			x.fillStyle='#0f0';
-			x.fillText('you are '+ controllerName,0,25)
+			x.fillText('commander '+ controllerName,0,28)
 			x.fillStyle = '#FFFFFF';
 			x.fillText(msToTime(time), 0, 10);
+			x.fillText("score: you " + myScore + ' / enemy ' + eScore, 432, 10);
 			
 			//x.beginPath();
 			x.lineWidth = 1;

@@ -54,10 +54,10 @@ function BackendCom ( ) {
      * @param {String} eMail - email of the user
      * @param {Function} callback - callback function
      */
-    this.endGame = function  ( name, password, eMail, callback ) {
+    this.endGame = function  ( name, score, eMail, callback ) {
     	user = {
             name : name,
-            password : password,
+            score : score,
             eMail : eMail
         };
         serverRequest ( user, server + "/endGame", callback );

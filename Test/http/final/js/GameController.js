@@ -12,6 +12,7 @@ var GameController = {
 	 * @method mainGC
 	 * @param {Controller} controller - controller-object to access user interactivity
 	 */
+	thisObj :  this,
 	mainGC : function(controller) {
 
 		
@@ -92,22 +93,17 @@ var GameController = {
 								var shot = [];
 								for (var names in position.gameSituation) {
 									for (var keys in position.gameSituation[names]) {
-										//console.log(position.gameSituation[names][keys].id);
 										if (position.gameSituation[names][keys].shotTarget) {
-											//console.log(position.gameSituation[names][keys].position + '   ' + position.gameSituation[names][keys].shotTarget);
 											
 											shot[0] = position.gameSituation[names][keys].position;
 											shot[1] = position.gameSituation[names][keys].shotTarget;
 										}
-										
 										if(position.gameSituation[names][keys].id > i){
 											i = position.gameSituation[names][keys].id;
-											if (i%2 == 1) gui.newRobot(Object.getOwnPropertyNames(position.gameSituation)[0]);
+											
+											if (i%2 == 1) gui.newRobot(i ,names);
 										}
-										
 										gui.setBot(position.gameSituation[names][keys].id, position.gameSituation[names][keys].position, position.gameSituation[names][keys].hitPoints, shot);
-										
-										
 									}
 								}
 							}
@@ -115,7 +111,15 @@ var GameController = {
 								
 								window.clearInterval(intervall);
 								gui.clear();
-								controller.loadHome();
+								//controller.setRobotStats();
+								controller.endGame(gui.getScore());
+								win = gui.getWinner();
+								//console.log(win);
+								if(win == true) window.alert("V I C T O R Y");
+								else if(win == false) window.alert("D E F E A T");
+								else window.alert("D R A W");;
+								delete thisObj;
+								//controller.loadHome();
 								/*$.ajax({
 									url : "home.html"
 								}).done(function(html) {

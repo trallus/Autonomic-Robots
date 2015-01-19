@@ -26,8 +26,8 @@ function FrameControler ( ) {
                 window.mozRequestAnimationFrame    || 
                 window.oRequestAnimationFrame      || 
                 window.msRequestAnimationFrame     || 
-                function(/* function */ callback, /* DOMElement */ element){
-                  window.setTimeout(callback, 1000 / 60);
+                function(callback, element){
+                  window.setTimeout(callback, 1000 / maxFrameRate);
                 };
       })();
     /**
@@ -56,9 +56,9 @@ function FrameControler ( ) {
             pause = true;
         }
     };
-    
+    //Next frame
     /**
-     * calculates next frame
+     * calculates next frames
      */
     function nextFrame () {
         
@@ -74,7 +74,6 @@ function FrameControler ( ) {
         for (var i in onNewFrameFunctions) {
         	
         	hold = onNewFrameFunctions[i]( gui.context, timeSinceLastDraw );
-        	//if (hold == true) obj.check(i);
         }
         // Sicherstellen das die maximale Framerate nicht überschritten wird
         var actFrameTime = new Date().getTime();
@@ -88,12 +87,6 @@ function FrameControler ( ) {
        //nextFrame(); 
        requestAnimFrame(nextFrame);
     }
-    
-    this.check = function (i) {
-    	var x = onNewFrameFunctions;
-    	x.splice(i,1);
-    	onNewFrameFunctions = x;
-    };
   
     //Add context on new frame
     /**

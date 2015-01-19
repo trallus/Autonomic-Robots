@@ -5,9 +5,7 @@
  * @author Florian Krüllke
  * @version 0.1
  */
-
 function Controller() {
-	
 	//Global var's
 	/**
     *to create a static methods
@@ -90,7 +88,7 @@ function Controller() {
 	 * @param {String} destination - specifies the path URL
 	 */
 	function getAJAX(destination, callback) {
-		$.ajaxSetup({cache: true});
+		//$.ajaxSetup({cache: true});
 		$.ajax({
 			url : destination
 		}).done(function(html) {
@@ -98,11 +96,10 @@ function Controller() {
 				regisButtons();
 				if(callback) callback();
 			});
-			$.ajaxSetup({cache: true});
+			//$.ajaxSetup({cache: false});
 		});
 		
 	}
-	
 	//Outer methods
 	//Load debug-mode
 	/**
@@ -111,7 +108,6 @@ function Controller() {
 	this.loadDebug = function() {
 		window.open("auto.html");
 	}; 
-	
 	//Load account settings
 	/**
 	 * load account-settings-page
@@ -119,7 +115,6 @@ function Controller() {
 	this.loadAccount = function() {
 		getAJAX("account.html");
 	};
-	
 	//Registration
 	/**
 	 * load sign-up-page
@@ -127,7 +122,6 @@ function Controller() {
 	this.loadRegister = function() {
 		getAJAX("signup.html");
 	};
-	
 	//Load home-page
 	/**
 	 * load home-page
@@ -138,7 +132,6 @@ function Controller() {
 			$("#nameSpace").append('<p id=\"helloName\">... Hey ' + thisObj.name + '!');
 		});
 	};
-	
 	//Load login-page
 	/**
 	 * load login-page
@@ -146,7 +139,6 @@ function Controller() {
 	this.loadLogin = function() {
 		getAJAX("login.html");
 	};
-	
 	//load logout-page
 	/**
 	 * user logout
@@ -156,21 +148,29 @@ function Controller() {
 			thisObj.loadLogin();
 		});
 	};
-	
 	//End a game
 	/**
 	 * end a game
 	 */
-	this.endGame = function (score) {
+	this.endGame = function (score, win) {
 		backendCom.endGame(thisObj.name, score, eMail, function() {
+			if(win == true) s = "V I C T O R Y";
+			else if(win == false) s = "D E F E A T";
+			else s ="D R A W";
+			thisObj.overlay(s);
+			
+			var e = document.createElement("div");
+			e.setAttribute("class", "button");
+			e.setAttribute("onClick", "controller.overlayOff();");
+			e.innerHTML = "home";
+			e.setAttribute("style", "cursor: pointer; margin-left: 100px;margin-top: 60px;");
+			style = "cursor: pointer";
+			e.id = "home";
+			$("#overlay p").append(e);
+
 			thisObj.loadHome();
-			//$("#overlay").hide();
-			//thisObj.roboSet = roboVal;
-			//maxPoints = 0;
-			//$("#setNext").hide();
 		});
 	};
-	
 	//Set next robot
 	/**
 	 * set next robot
@@ -178,7 +178,6 @@ function Controller() {
 	this.setNextRobot = function (robot, callback) {
 		backendCom.setNext(robot, callback);
 	};
-	
 	//Get behaviors
 	/**
 	 * get behaviors
@@ -194,7 +193,6 @@ function Controller() {
 			}
 			roboBeh = r;
 		});
-		//return r;
 	}
 	//Join batlle query
     /**
@@ -209,21 +207,23 @@ function Controller() {
 			robotID : $("#selectedRobot").attr("value"),
 		    behaviour : $("#new-behavior").val()
 		}
-		//console.log(b);
 		backendCom.setBehave(b, callback);
 	}
 	//Start a game
 	/**
-	 * start a Game
+	 * starts a Game
 	 */
 	this.startGame = function() {
+		var robot = thisObj.getRobot();
 		getAJAX("robots.html", function() {
-			$.ajaxSetup({cache: false});
 			
-			GameController.mainGC(thisObj);
+			//$.ajaxSetup({cache: false});
+			
+			GameController.mainGC(thisObj, robot);
 			
 			document.getElementById("setNext").appendChild(setNext());
 			plusMinusButton ();
+			
 			var e = document.createElement("div");
 			e.setAttribute("class", "button");
 			e.setAttribute("onClick", "controller.setNextRobot(controller.getRobot(), function () {});");
@@ -232,26 +232,10 @@ function Controller() {
 			style = "cursor: pointer";
 			e.id = "confirmRobot";
 			
-			
 			$("#setNext").append(e);
 			$("#setNext").show();
 		});
 	};
-	
-	//Inner methods
-	//End a game
-	/**
-	 * end a Game
-	 */
-	function endGame(score) {
-		backendCom.endGame(thisObj.name, score, eMail, function() {
-			thisObj.loadHome();
-			//$("#overlay").hide();
-			thisObj.roboSet = roboVal;
-			maxPoints = 0;
-			//$("#setNext").hide();
-		});
-	}
 
 	//Registration
 	/**
@@ -259,16 +243,16 @@ function Controller() {
 	 */
 	function registration() {
 		readInputFealds();
-		if (name.trim() == '') {
+		if (thisObj.name.trim() == '') {
 			thisObj.overlay('Your name can\'t be empty');
 		} else {
 			if (eMail.indexOf('@') < 0) {
 				thisObj.overlay('This is no valid eMail');
 			} else {
-				backendCom.registration(name, password, eMail, function(json) {
+				backendCom.registration(thisObj.name, password, eMail, function(json) {
 
 					if (json.registered) {
-						var text = 'Successfully registered... <br>Welcome ' + name + '!!!<br>';
+						var text = 'Successfully registered... <br>Welcome ' + thisObj.name + '!!!<br>';
 						thisObj.overlay(text);
 						logIn();
 
@@ -286,11 +270,10 @@ function Controller() {
 	 */
 	function changeUser() {
 		readInputFealds();
-		thisObj.name = name;
-		backendCom.changeUser(name, password, eMail, function(json) {
+		backendCom.changeUser(thisObj.name, password, eMail, function(json) {
 			if (json.userChanged) { 
 				var s = '';
-				if (name) s += "new name: " + name + "<br>";
+				if (thisObj.name) s += "new name: " + thisObj.name + "<br>";
 				if (eMail) s += "new email: " + eMail + "<br>";
 				if (password) s += "password: " + "<br>successfully changed";
 				thisObj.overlay(s);
@@ -345,16 +328,16 @@ function Controller() {
 	function remove() {
 		readInputFealds();
 		user = {
-			name : name,
+			name : thisObj.name,
 			password : password,
 			eMail : eMail
 		};
-		backendCom.remove(name, password, eMail, function(json) {
+		backendCom.remove(thisObj.name, password, eMail, function(json) {
 			if (json.removed) {
-				thisObj.overlay('User ' + name + ' has been removed');
+				thisObj.overlay('User ' + thisObj.name + ' has been removed');
 				thisObj.loadRegister();
 			} else {
-				thisObj.overlay('There is no User: ' + name + '\n... Please try again...\nType in name, eMail and password');
+				thisObj.overlay('There is no User: ' + thisObj.name + '\n... Please try again...\nType in name, eMail and password');
 			}
 		});
 	}
@@ -376,50 +359,6 @@ function Controller() {
 			}
 		});
 	}
-
-	//Debug load player feature
-	/**
-	 * load dummy players for default users select
-	 * @param {JSON} users - default dummy users
-	 */
-	this.loadPlayer = function(users) {
-		$("#overlay").empty();
-		
-		$("#overlay").append("D E B U G M O D E" + "<br>");
-		
-		var e = document.createElement("select");
-		e.setAttribute("name", "users");
-		e.setAttribute("style", "cursor: pointer");
-		e.id = "users";
-		document.getElementById("overlay").insertBefore(e, document.getElementById("infoPush"));
-		
-		$('#content').hide();
-		$("#overlay").show();
-		var $select = $('#users');
-		for (var key in users) {
-			$select.append($('<option />', {
-				value : users[key],
-				text : users[key] 
-			}));
-		}
-		e = document.createElement("div");
-		e.setAttribute("class", "button");
-		e.setAttribute("onClick", "controller.setRobot();");
-		e.innerHTML = "startGame";
-		e.setAttribute("style", "cursor: pointer");
-		style = "cursor: pointer";
-		e.id = "btnStartGame";
-		document.getElementById("overlay").insertBefore(e, document.getElementById("infoPush"));
-		var index = navigator.userAgent;
-		if (index.indexOf("Chrome/") > -1) {
-		    $("#users").val("b");
-		    //controller.name = '' + $("#users").val();
-		}else if (index.indexOf("Safari/") > -1) {
-		    $("#users").val("c");
-		    //controller.name = '' + $("#users").val();
-		}
-	};
-
 	//Robot Stuff
 	//Set next robot HTML-element
 	/**
@@ -438,12 +377,9 @@ function Controller() {
 		div.appendChild(x);
 		
 		for (var i = 0; i < 5; i++) {
-			
 			var n = document.createElement('br');
 			
-			
 			var hug = document.createElement("div");
-			//hug.setAttribute("style", "float: left;");
 			hug.setAttribute("class", "roboTableSet")
 			hug.appendChild(n);
 			
@@ -456,7 +392,6 @@ function Controller() {
 			m.id = roboName[i] + "-min";
 			m.value=roboName[i];
 			m.setAttribute("style", "float: right;text-align:  center;width: 20px;cursor: pointer;")
-			//m.setAttribute("onClick", "plusMinusButton()");
 			
 			var e = document.createElement("input");
 			e.id = roboName[i] + "-setter";
@@ -468,11 +403,8 @@ function Controller() {
 			}else{
 				e.setAttribute("type", "text");
 			}
-			//e.appendChild(n);
 			if (Object.keys(thisObj.roboSet).length >0) e.value = thisObj.roboSet[i];
-			//else e.value = roboVal[i];
 			else e.value = "0";
-			//e.name = "number";
 			e.title = roboName[i];
 			
 			var p = document.createElement("div");
@@ -480,27 +412,16 @@ function Controller() {
 			p.id = roboName[i] + "-add";
 			p.value=roboName[i];
 			p.setAttribute("style", "float: right;text-align:  center;width: 20px;cursor: pointer;")
-			//p.setAttribute("onClick", "plusMinusButton()");
-			
 			hug.appendChild(p);
-			
 			hug.appendChild(e);
-			
 			hug.appendChild(m);
-			
-			//hug.appendChild(z);
-			
-			//hug.appendChild(n);
-			
 			div.appendChild(hug);
 		}
 		
 		var hug = document.createElement("div");
-		//hug.setAttribute("style", "width: 200; height: 18px;");
 		hug.setAttribute("class", "roboTableSet")
 		
 		var n = document.createElement('br');
-		//hug.appendChild(n);
 		
 		var b = document.createElement("div");
 		hug.innerHTML = "behavior";
@@ -518,13 +439,7 @@ function Controller() {
 			s.appendChild(e);
 		}
 		hug.appendChild(s);
-		
-		//hug.appendChild(b);
-		//hug.appendChild(n);
 		div.appendChild(hug);
-		
-		
-		
 		return div;
 	}
 
@@ -533,9 +448,7 @@ function Controller() {
 	 * get the values and behavior of the next robot from document inputs
 	 */
 	this.getRobot = function() {
-		
 		 var roboter = {
-
 		 range : $("#range-setter").val(),
 		 rateOfFire : $("#rateOfFire-setter").val(),
 		 damage : $("#damage-setter").val(),
@@ -553,39 +466,15 @@ function Controller() {
 		
 		return roboter;
 	};
-	
-	//Set current robot values
-	/**
-	 * set the values and behavior of the next robot from document inputs
-	 */
-	this.setRobotStats = function() {
-		 
-		$("#range-setter").val() = thisObj.roboSet[0];
-		$("#rateOfFire-setter").val() = thisObj.roboSet[1];
-		$("#damage-setter").val() = thisObj.roboSet[2];
-		$("#armor-setter").val()= thisObj.roboSet[3];
-		$("#enginePower-setter").val() = thisObj.roboSet[4];
-		$("#behavior-setter").val() = thisObj.roboSet[5];
-		//console.log(thisObj.roboSet);
-		
-	};
-
-
 	//Create a SetRobot-DIV-element for the overlay
 	/**
 	 * function for setting the first robot via function overlay
 	 */
 	this.setRobot = function() {
-		/*if($("#users :selected")){
-			var e = $("#users :selected").attr("value");
-			console.log(e);
-			thisObj.name = e;
-		}*/
 		$("#overlay p").empty();
 		var div = setNext();
 		document.getElementById("overlay").appendChild(div);
 		document.getElementById("overlay").insertBefore(div, document.getElementById("infoPush"));
-		//thisObj.overlay('<div class="button" id="btnStartGame" style="cursor: pointer" onClick="controller.setRoboColor();controller.startGame();controller.overlayOff()">startGame</div></div>');
 		var e = document.createElement("div");
 		e.setAttribute("class", "button");
 		e.setAttribute("onClick", "controller.getRobot();controller.startGame();controller.overlayOff();");
@@ -599,9 +488,7 @@ function Controller() {
 		$("#overlay").show();	
 		
 		plusMinusButton ();
-  			
 	};
-	
 	//UtilityStuff
 	//
 	//Button initialization
@@ -609,25 +496,21 @@ function Controller() {
 	 * button initialization
 	 */
 	regisButtons = function() {
-
 		$("#btnRegister").click(registration);
 		$("#btnLogIn").click(logIn);
 		$("#btnLogOut").click(logOut);
 		$("#btnRemove").click(remove);
-		$("#btnEndGame").click(endGame);
+		$("#btnEndGame").click(thisObj.endGame);
 		$("#btnAccount").click(account);
 		$("#btnChangeUser").click(changeUser);
 		$("#btnSearchUser").click(searchUser);
-		
-		
 	};
-
 	//Input read
 	/**
 	 * input fields read
 	 */
 	function readInputFealds() {
-		name = $("#inputUserName").val();
+		thisObj.name = $("#inputUserName").val();
 		password = $("#inputUserPass").val();
 		eMail = $("#inputUserEMail").val();
 	}
@@ -651,7 +534,6 @@ function Controller() {
 		}
 		return false;
 	}
-
 	//Overlay opener
 	/**
 	 * open a overlay with a text string called info
@@ -664,7 +546,6 @@ function Controller() {
 			$('<p id="infoText">INFO!<br><br>' + info + '</p>').insertBefore(".infoPush");
 		});
 	};
-
 	//Overlay closer
 	/**
 	 * close the overlay and remove the tag with id "infoText"
@@ -673,7 +554,6 @@ function Controller() {
 		$(document).ready(function() {
 			$("#content").show();
 			var el = $("#overlay").hide();
-			//el.remove('#infoText');
 			$("#infoText").remove();
 			$("#btnOverlayOff").show();
 			$("#btnStartGame").remove();
@@ -683,8 +563,11 @@ function Controller() {
 			$('#users').remove();
 		});
 	};
+	//Plus minus functionality for setting a robot
+	/**
+	 * creates a click-listener for the setRobot-div (HTML), handle logic for max clicks
+	 */
 	function plusMinusButton () {
-		
 		$('#setNext').click(function (event) {
 			if (maxPoints >= 10 && event.originalEvent.target.id.indexOf("add")>0) {
 				window.alert("You already added 10 points!");
@@ -700,62 +583,28 @@ function Controller() {
 		});
 	}
 };
-
-	//DEBUG FEATURES
-	/**
-	 * DEBUG FEATURES
-	 */
-	var controller;
-	/**
-	 * registers a bunch of auto-users for development
-	 */
-	function regist(users) {
-		var controller;
-	
-		var backendCom = new BackendCom();
-		for (var i in users) {
-			backendCom.registration(users[i], "", users[i] + '@', function(json) {
-				//console.log(json);
-	
-			});
-		}
-	};
-	
-	/**
-	 * initialization method for creating a new instance of class Controller
-	 */
-	function start() {
-		controller = new Controller();
-	};
-	
-	/**
-	 * initialization method for debugging mode, creates a bunch of dummy users
-	 */
-	function startDebug() {
-		var users = ["a", "b", "c", "d", "e", "f", "g", "h"];
-		//regist(users);
-		controller = new Controller();
-		controller.getBehavior();
-		//controller.setRobot();
-		controller.loadPlayer(users);
-	};
-	
-	
-	//utility.js
-	
-	function selectBehave () {
-		var s = document.createElement("select");
-		s.id= "new-behavior";
-		$("#behavior-setter option").each(function(){
-			
-			var x = document.createElement("option");
-			x.value = this.value;
-			x.text = this.value;
-			s.appendChild(x);
-			
-		});
-		
-		return s;
-	}
-	
-	
+//Start
+/**
+ * default start for whole application
+ */
+//Global var controller
+/**
+*to create user related controller-object
+* @type Controller
+*/
+var controller;
+function start() {
+	controller = new Controller();
+}
+//utility.js
+function selectBehave () {
+	var s = document.createElement("select");
+	s.id= "new-behavior";
+	$("#behavior-setter option").each(function(){
+		var x = document.createElement("option");
+		x.value = this.value;
+		x.text = this.value;
+		s.appendChild(x);
+	});
+	return s;
+}

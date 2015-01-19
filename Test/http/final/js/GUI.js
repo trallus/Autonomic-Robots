@@ -35,7 +35,6 @@ function GUI(frameControler, controllerName) {
 		//physic = new CollisionControler(allRobots);
 		//frameControler.addOnNewFrame(physic.onFrame);
 	};
-
 	//Get current count of robots
 	/**
 	 * get actual robot number
@@ -44,20 +43,18 @@ function GUI(frameControler, controllerName) {
 	this.getRobotNum = function () {
 		return robotNum;
 	};
-	
-	//Change position of a robot
+	//Set settings of a robot
 	/**
-	 * set robot position
+	 * set settings of a robot
 	 * @param {Number} i - robot id
 	 * @param {Array} position - array with position values
+	 * @param {Number} hp - current health of a robot
+	 * @param {Array} shot - array with position values
 	 */
-	
 	this.setBot = function (i, position, hp, shot) {
-		//console.log(' id' + i + ' hp: ' + hp);
 		var hold;
 		var s = [];
 		size = Object.keys(allRobots).length;
-		
 		for(var j = 0; j < size; j++) {
 			r = allRobots[j];
 			if(r && r.setHealth() > 0 && r.getId() == i+1) {
@@ -82,13 +79,11 @@ function GUI(frameControler, controllerName) {
 				}
 			}
 		}
-		
-		/*size = Object.keys(allShots).length;
-		for(var j = 0; j < size; j++) {
-			shot = allShots[j];
-			
-		}*/
 	};
+	//Check score
+	/**
+	 * for updating actual score vars myScore & eScore
+	 */
 	function checkScore () {
 		var i= 0,j = 0;
 		for (var keys in score) {
@@ -99,10 +94,19 @@ function GUI(frameControler, controllerName) {
 		myScore = i;
 		eScore = j;
 	}
-	
+	//Get current score
+	/**
+	 * get current score
+	 * @return {Array} score - array with game data (killed robots)
+	 */
 	this.getScore = function () {
 		return score;
 	}
+	//Get winner
+	/**
+	 * get winner
+	 * @return {Boolean} boolean - true for victory, false for defeat, null for draw
+	 */
 	this.getWinner = function () {
 		if (myScore<eScore) return false;
 		else if( myScore == eScore) return null;
@@ -116,7 +120,6 @@ function GUI(frameControler, controllerName) {
 	this.setShot = function () {
 		s = shot;
 	};
-	
 	//Create a new robot
 	/**
 	 * create a new robot
@@ -133,12 +136,8 @@ function GUI(frameControler, controllerName) {
 			c++;
 			//push robot into my robot list
 			allRobots.push(robo);
-			
 		}
-			
-		
 	};
-
 	//Gui Utility
 	//
 	//mouse on canvas detection (using robot.hitTest)
@@ -146,13 +145,11 @@ function GUI(frameControler, controllerName) {
 	var html = document.body.parentNode;
 	htmlTop = html.offsetTop;
 	htmlLeft = html.offsetLeft;
-	
 	//correct mouse position to the canavs
 	stylePaddingLeft = parseInt(document.defaultView.getComputedStyle(canvas, null)['paddingLeft'], 10) || 0;
 	stylePaddingTop = parseInt(document.defaultView.getComputedStyle(canvas, null)['paddingTop'], 10) || 0;
 	styleBorderLeft = parseInt(document.defaultView.getComputedStyle(canvas, null)['borderLeftWidth'], 10) || 0;
 	styleBorderTop = parseInt(document.defaultView.getComputedStyle(canvas, null)['borderTopWidth'], 10) || 0;
-	
 	/**
 	 * return a set of x & y coordinates
 	 * @param {Event} e - mouse event
@@ -161,7 +158,6 @@ function GUI(frameControler, controllerName) {
 	 */
 	function getMouse(e, canvas) {
 		var element = canvas, offsetX = 0, offsetY = 0;
-
 		// Compute the total offset. It's possible to cache this if you want
 		if (element.offsetParent !== undefined) {
 			do {
@@ -192,18 +188,11 @@ function GUI(frameControler, controllerName) {
 		window.clearInterval(timer);
 	};
 	canvas.onmousedown = function(e) {
-		//console.log(score);
 		pt = getMouse(e, canvas);
 		var j;
 		for (var i = 0, l = allRobots.length; i < l; i++) {
 			if (allRobots[i].hitTest(pt.x-300, pt.y-300)) {
 				window.clearInterval(timer);
-				/*
-				console.log("AUSGEWAEHLTER ROBOT: " + (i+1));
-				console.log(pt);
-				*/
-				//$("#auswahl p").empty();
-				//$("#auswahl p").append("AUSGEWAEHLTER ROBOT: robot #"+ (i+1));
 				var r = allRobots[i];
 				if (r.getUser()) {
 					try {
@@ -214,14 +203,18 @@ function GUI(frameControler, controllerName) {
 							else if (document.getElementById("roboHP")) document.getElementById("roboHP").innerHTML= 'HP: ' + '0';
 						}, 750);
 					}
-					catch (e) {
-						
-					}
+					catch (e) {}
 					return;
 				}
 			}
 		}
 	};
+	//Selected on robot detection for HTML
+	/**
+	 * selected robot to push in HTML Data
+	 * @param {String} info - sets a String into HMTL Data
+	 * @param {Number} id - to create an unique id for related HTML tag 
+	 */
 	function selectedRobot (info, id) {
 		if(info.indexOf("enemy")>-1) return;
 		else {
@@ -271,7 +264,6 @@ function GUI(frameControler, controllerName) {
 		s = (s - secs) / 60;
 		mins = s % 60;
 		hrs = (s - mins) / 60;
-
 		return addZ(hrs) + ':' + addZ(mins) + ':' + addZ(secs);
 	}
 	
@@ -289,43 +281,39 @@ function GUI(frameControler, controllerName) {
 	 * drawing the GUI context
 	 */
 	function draw() {
-		
+		//to increase other values over time
 		mult += 0.03;
 		if(mult == 2){ mult=0;}
 		canvas.width = canvas.width;
 		canvas.height = canvas.height;
 		x = canvas.getContext("2d");
-		
+		//draw a round map
 		x.beginPath();
 		x.fillStyle = '#2F2F2F';
 		x.arc( canvas.width/2, canvas.height/2, 300, 0, 2 * Math.PI, true);
 		x.fill();
-		
-		
 		
 		//draw map radar when there is a gameSituation, valid set by obj.newRobot()
 		if(valid){
 			time = parseInt((new Date().getTime() - start), 10);
 			x.beginPath();
 			x.font = "13px Verdana";
-			x.fillStyle='#0f0';
-			x.fillText('commander '+ controllerName,0,28)
+			x.fillStyle='LimeGreen';
+			x.fillText('commander '+ controllerName, 75, 10);
+			x.fillText("you " + myScore, 465, 10);
 			x.fillStyle = '#FFFFFF';
-			x.fillText(msToTime(time), 0, 10);
-			x.fillText("score: you " + myScore + ' / enemy ' + eScore, 432, 10);
-			
-			//x.beginPath();
+			x.fillText(msToTime(time) + " | ", 0, 10);
+			x.fillText(' | ', 510, 10);
+			x.fillStyle='red';
+			x.fillText("enemy " + eScore, 535, 10);
 			x.lineWidth = 1;
 			x.strokeStyle = "#0d0";
-			
 			for(var i = 0; i <= 10; i++){
 				x.beginPath();
 				
 				x.arc( canvas.width/2, canvas.height/2, 30*i/*(59*i+i)*/, 0, 2 * Math.PI, false);
 				x.stroke();
 			}
-			//x.stroke();
-			
 			x.beginPath();
 			x.strokeStyle = "#0f0";
 			x.moveTo(canvas.width/2, 0);
@@ -337,8 +325,6 @@ function GUI(frameControler, controllerName) {
 			
 			x.translate(300.5,300.5);
 			
-			
-			
 			x.beginPath();
     		var grd=x.createLinearGradient(22,67,0,-17);
 			grd.addColorStop(1,"rgba(0, 255, 0, 0)");
@@ -349,21 +335,15 @@ function GUI(frameControler, controllerName) {
     		x.arc(0,0,300,0,1.9*Math.PI,true);
         	x.lineTo(0.5,0.5);
         	x.fill();
-
-        	
         	
         	x.rotate(((-mult*19)%360)*Math.PI/180);
         	x.translate(0,0);
         	
-        	
 		}else{
-			//x.beginPath();
 			x.font = "13px Verdana";
 			x.fillStyle = '#FFFFFF';
 			x.fillText('WAITING FOR OTHER PLAYER', 200, 300);
 		}
-        // actually start drawing
-		 //x.stroke();
 	}
 	construct();
 }

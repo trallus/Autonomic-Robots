@@ -161,11 +161,7 @@ function BackendCom ( ) {
             password : password,
             eMail : eMail
         };
-        
         serverRequest( user, server + "/changeUser", callback );
-       /* serverRequest( user, server + "/changeUser", function () {
-        	controller.overlay('Changed into:<br>' + name + '<br>' + password + '<br>'  + eMail);
-        });*/
     };
     
     //Set next robot

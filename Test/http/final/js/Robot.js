@@ -210,7 +210,6 @@ function Robot ( frameControler, color, id, name) {
 	    	//draw robot
 	    	context.font = "10px Verdana";
 	        context.fillStyle = '#FFFFFF';
-	        //context.fillText( '#' + (id-1), posX-7, posY-13);
 	        context.arc( posX, posY, radius/2, 0, 2 * Math.PI, false);
 	        //set drawing style
 	        context.lineWidth = 1;
@@ -218,21 +217,12 @@ function Robot ( frameControler, color, id, name) {
 	        context.fillStyle= colors[color];
 	        context.fill();
 	        context.stroke(); 
-	        //draw destination
-	        //context.beginPath();
-	        //context.arc( destinationX, destinationY, 2, 0, 2 * Math.PI, false);
-	        //actually start drawing
-	        //context.stroke();  
-	        
-    		//context.beginPath();
-    		//context.fillText( 'FICK DICH', posX-7, posY-13);
 	        } else {
 	        	context.beginPath();
 	        	context.fillStyle= colors[color];
 	        	context.fillText( 'X', posX-3, posY+4);
 	        	delete thisObj;
 	        }
-    	
     }
     
     //Physics
@@ -299,7 +289,7 @@ function Robot ( frameControler, color, id, name) {
  * @author Florian Krüllke
  * @version 0.1
  * @param {FrameControler} frameControler - controls frame activity
- * @param {Array} s - shot with start and end position
+ * @param {Array} s - shot with start and end position, color data
  */
 
 function Shot ( frameControler, s) {
@@ -310,24 +300,17 @@ function Shot ( frameControler, s) {
     var destinationX; 
     var destinationY; 
     var dead;
-    var radius = 6;
-    canvaswidth = 600;
-    canvasheight = 600;
-    var colors = ["#0f0","red"];
     startPosition();
     //Start Position
     /**
-     * give every player his start position
+     * give every shot his start and end position
      */
     function startPosition () {
-    	
     	posX = s[0][0];
     	posY = s[0][1];
     	destinationX = s[1][0];
     	destinationY = s[1][1];
-   
     }
-    
     //Construct
     /**
      * add onFrame (draw, check for updates) to frameController
@@ -336,7 +319,6 @@ function Shot ( frameControler, s) {
         frameControler.addOnNewFrame ( onFrame );
         
     }
-    
     thisObj.setPos = function (pos) {
     	s = pos;
     }
@@ -345,7 +327,6 @@ function Shot ( frameControler, s) {
     	if (!hp) return hp;
     	else health = hp;
     }
-    
     //On frame
     /**
      * onframe - global ticker for drawing methods
@@ -353,16 +334,9 @@ function Shot ( frameControler, s) {
      * @param {Number} timeSinceLastDraw - time since last draw
      */
     function onFrame ( context, timeSinceLastDraw ) {
-       
         	calcPosition ( timeSinceLastDraw );
             draw ( context );
-            if ( dead )  {
-            	return dead;
-            }
-            
-        
     }
-    
     //Draw
     /**
      * drawing method
@@ -370,27 +344,18 @@ function Shot ( frameControler, s) {
      */
     function draw ( context ) {
     	
-    	
     	if(!dead){    		
-	        
     		
     		context.beginPath();
     		context.lineWidth = 2.5;
-    		//context.fillStyle="#000";
-    		//context.fillText('+', s[0][0]-4,s[0][1]+3);
     		context.strokeStyle = s[2];
-    		//context.strokeStyle = "#fff";
     		context.lineCap = "round";
     		context.moveTo(s[0][0],s[0][1]);
     		context.lineTo(s[1][0],s[1][1]);
-    		
     		context.stroke();
-    		
-    		
     		} else {
     			delete thisObj;
 	        }
-    	
     }
     
     //Physics
@@ -399,12 +364,10 @@ function Shot ( frameControler, s) {
      * @param {Number} timeSinceLastDraw - time since last draw
      */
     function calcPosition ( timeSinceLastDraw ) {
-    
         //angle between direction and pos, destination
         //treeangle abc: tan @ = a/b
         b = parseInt(destinationX) - parseInt(posX);
         if ( parseInt(b) <= 5 && parseInt(b) >= -5) dead = true;
-        //if ( parseInt(a) == 0) dead = true;
         if ( b > 0 ) {
             	posX+=1;
                 posY+=1;
@@ -413,7 +376,6 @@ function Shot ( frameControler, s) {
             	posX-=1;
                 posY-=1;
             }
-       
     }
     construct ();
 }

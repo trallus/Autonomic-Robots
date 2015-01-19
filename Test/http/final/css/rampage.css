@@ -40,6 +40,9 @@ input::-webkit-outer-spin-button {
 	-moz-appearance: textfield;
 	margin: 0;
 }
+#content table .button {
+	margin-left: 20px;
+}
 #setRobot{
 	text-align: center;
 }

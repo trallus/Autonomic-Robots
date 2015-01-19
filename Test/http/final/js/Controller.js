@@ -535,11 +535,10 @@ function Controller() {
 	this.getRobot = function() {
 		
 		 var roboter = {
-		 weaponPrototype : {
+
 		 range : $("#range-setter").val(),
 		 rateOfFire : $("#rateOfFire-setter").val(),
 		 damage : $("#damage-setter").val(),
-		 },
 		 armor : $("#armor-setter").val(),
 		 enginePower : $("#enginePower-setter").val(),
 		 behaviour : $("#behavior-setter").val()

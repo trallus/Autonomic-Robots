@@ -160,11 +160,10 @@ var GameController = {
 			roboSet = controller.roboSet;
 			//var roboSet = set;
 			r = {
-				weaponPrototype : {
-					range : roboSet[0],
-					rateOfFire : roboSet[1],
-					damage : roboSet[2]
-				},
+				range : roboSet[0],
+				rateOfFire : roboSet[1],
+				damage : roboSet[2],
+				
 				armor : roboSet[3],
 				enginePower : roboSet[4],
 				behaviour : roboSet[5]

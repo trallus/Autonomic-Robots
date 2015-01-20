@@ -93,6 +93,12 @@ public abstract class PhysikObject {
         return radius;
     }
     /**
+     * @return the speed
+     */
+    public double getSpeed() {
+        return speed;
+    }
+    /**
      * @param radius the radius to set
      */
     public void setRadius(final double radius) {
@@ -148,6 +154,7 @@ public abstract class PhysikObject {
     	if (this.speed <= 0) {
     		this.speed = 0;
     	}
+    	
         updateMoveVector();
     }
 	/**

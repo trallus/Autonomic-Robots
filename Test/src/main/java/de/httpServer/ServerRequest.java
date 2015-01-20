@@ -184,9 +184,18 @@ public class ServerRequest extends Request {
 		} else if (uri.indexOf("setNextRobot") != -1) {
 			final String jsonString = readInputStream();
 			final ClientNextRobot cnr = gsonIn.fromJson(jsonString, ClientNextRobot.class);
-			//final WeaponPrototype wp = new WeaponPrototype(cnr.range, cnr.rateOfFire, cnr.damage);
-			final WeaponPrototype wp = new WeaponPrototype(200, 30, 10);
-			final RobotPrototype rp = new RobotPrototype(wp, cnr.armor, cnr.enginePower, cnr.behaviour, logFacade);
+			//balangcing
+			final long baseVal = 50;
+			final long multip = 10;
+			final WeaponPrototype wp = new WeaponPrototype(
+					balance(cnr.range, baseVal, multip),
+					balance(cnr.rateOfFire, 10, 1),
+					balance(cnr.damage, 10, 1));
+			final RobotPrototype rp = new RobotPrototype(wp,
+					balance(cnr.armor, baseVal, multip),
+					balance(cnr.enginePower, baseVal, multip),
+					cnr.behaviour,
+					logFacade);
 			user.setNextRobot(rp);
 		} else if (uri.indexOf("getBehaviours") != -1) {
 			replyJson.put("behaviours", gameInterface.getBehaviours());
@@ -204,6 +213,10 @@ public class ServerRequest extends Request {
  				}
  			}
  		}
+	}
+	
+	private long balance (final long val, final long baseVal, final long multip) {
+		return (baseVal + (val * multip));
 	}
 
 	/**

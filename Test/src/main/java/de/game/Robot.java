@@ -28,6 +28,7 @@ public class Robot extends PhysikObject implements Tick {
     private final BehaviourFactory behaviourFactory;
     private final LoggerIF log;
     private long deathTime = 0;
+    private final double topSpeet;
 
     public Robot(final long id, final Vector2D position,
 	    final RobotPrototype rb, final Weapon weapon, final User user, final BehaviourFactory behaviourFactory, final String behaviour, final LoggerAndExceptionHandlerFacadeIF logFacade) {
@@ -40,6 +41,7 @@ public class Robot extends PhysikObject implements Tick {
 	this.armor = rb.getArmor();
 	this.turningSpeed = 1 / armor * enginePower;
 	this.acceleration = 1 / armor * enginePower;
+	this.topSpeet = acceleration * 10; //10 sec beschleunigungsphase
 	this.weapon = weapon;
 	this.behaviour = behaviourFactory.getInstanceOfBehaviour(behaviour, this);
 	this.user = user;
@@ -148,7 +150,7 @@ public class Robot extends PhysikObject implements Tick {
 			else
 			    turn(-turningSpeed * elapsedTime);
 			
-			if (accelerate)
+			if (accelerate && getSpeed() < topSpeet)
 			    accelerate(acceleration * elapsedTime);
 			else
 			    accelerate(-acceleration * elapsedTime);

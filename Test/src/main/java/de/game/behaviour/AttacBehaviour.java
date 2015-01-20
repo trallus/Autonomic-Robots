@@ -54,7 +54,7 @@ public class AttacBehaviour extends Behaviour {
 		
 		// if target alive
 		for (final Robot r : anamyTeam) {
-			if (r == target) {
+			if (r == target && r.getHitPoints() > 0) {
 				navigateTo(target);
 				shoot(target, battle, elapsedTime);
 				return;

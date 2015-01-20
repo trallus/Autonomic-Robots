@@ -210,7 +210,7 @@ public class Battle extends Thread implements Runnable {
 	 */
 	private List<Vector2D> calculateStartpoints (final int numberOfUsers) {
 		final long angle = (long) (2 * Math.PI / numberOfUsers); // angle between players
-		final long distance = 100; //distance from the center of the battle field
+		final long distance = 200; //distance from the center of the battle field
 		final List<Vector2D> vectorList = new ArrayList<Vector2D>();
 		
 		for (int i=0; i<numberOfUsers; i++) {

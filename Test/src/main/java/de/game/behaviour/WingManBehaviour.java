@@ -3,6 +3,7 @@ import java.util.List;
 
 import de.game.Battle;
 import de.game.Robot;
+import de.game.weapon.WeaponLaser;
 import de.httpServer.User;
 import de.math.Vector2D;
 
@@ -33,38 +34,12 @@ public class WingManBehaviour extends Behaviour {
 
 	@Override
 	public void onTick(final Battle battle, final double elapsedTime) {
-		/*
-		if (robot.getID() % 3 == 0 || robot.getID() % 4 == 0 ) {
-			robot.accelerate();
-			if (tmp) {
-				tmp = false;
-				robot.turnLeft();
-			} else {
-				tmp = true;
-				robot.turnRight();
-			}
-			if (robot.getMoveVector().getMagnitude() > 10) {
-				robot.breack();
-			}
-			return;
-		}
-		*/
 		
 		if (ownTeam == null) {
 			initialOwnTeam(battle.getUsers());
 			robot.accelerate();
 			return;
 		}
-		
-		/*
-		if (ownTeam.size() < 2) {
-			robot.accelerate();
-			if (robot.getMoveVector().getMagnitude() > 10) {
-				robot.breack();
-			}
-			return;
-		}
-		*/
 
 		final double[] distances = new double[ownTeam.size()];
 		
@@ -83,8 +58,45 @@ public class WingManBehaviour extends Behaviour {
 		}
 		
 		navigateTo(ownTeam.get(closest));
+		
+		shootOnClosestAnemy(battle);
 	}
 
+	private void shootOnClosestAnemy(final Battle battle) {
+		//find closest anamy
+		Robot closestAnamyRobot = null;
+		double distance = Double.MAX_VALUE;
+		
+		for (final User u : battle.getUsers()) {
+			if (u.getBattleRobots() == ownTeam) continue;
+			for (final Robot r : u.getBattleRobots()){
+				if (closestAnamyRobot == null){
+					closestAnamyRobot = r;
+					continue;
+				}
+				final double nextDistance = robot.getPosition().substraction(r.getPosition()).getMagnitude();
+				
+				if (nextDistance < distance) {
+					closestAnamyRobot = r;
+				}
+			}
+		}
+		
+		if (closestAnamyRobot == null) return;
+		
+		final int range = robot.getWeapon().getRange();
+
+		final double a = robot.getPosition().getN1() - closestAnamyRobot.getPosition().getN1();
+		final double b = robot.getPosition().getN2() - closestAnamyRobot.getPosition().getN2();
+		
+		if (distance <= range) {
+			final WeaponLaser wp = (WeaponLaser) robot.getWeapon();
+			wp.laserShoot(robot, closestAnamyRobot, battle);
+		}
+		
+		
+	}
+	
 	/**
 	 * This robot navigate to parm Robot
 	 * @param robotDest this robot should navigate to robotDest

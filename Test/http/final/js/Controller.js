@@ -114,8 +114,8 @@ function Controller() {
 	/**
 	 * load account-settings-page
 	 */
-	this.loadAccount = function() {
-		getAJAX("account.html");
+	this.loadAccount = function(callback) {
+		getAJAX("account.html", callback);
 	};
 	//Registration
 	/**
@@ -250,16 +250,16 @@ function Controller() {
 	 */
 	function registration() {
 		readInputFealds();
-		if (thisObj.name.trim() == '') {
+		if (name.trim() == '') {
 			thisObj.overlay('Your name can\'t be empty');
 		} else {
 			if (eMail.indexOf('@') < 0) {
 				thisObj.overlay('This is no valid eMail');
 			} else {
-				backendCom.registration(thisObj.name, password, eMail, function(json) {
+				backendCom.registration(name, password, eMail, function(json) {
 
 					if (json.registered) {
-						var text = 'Successfully registered... <br>Welcome ' + thisObj.name + '!!!<br>';
+						var text = 'Successfully registered... <br>Welcome ' + name + '!!!<br>';
 						thisObj.overlay(text);
 						logIn();
 
@@ -276,19 +276,28 @@ function Controller() {
 	 * change user settings via readInputFields()
 	 */
 	function changeUser() {
-		readInputFealds();
-		backendCom.changeUser(thisObj.name, password, eMail, function(json) {
-			if (json.userChanged) { 
-				var s = '';
-				if (thisObj.name) s += "new name: " + thisObj.name + "<br>";
-				if (eMail) s += "new email: " + eMail + "<br>";
-				if (password) s += "password: " + "<br>successfully changed";
-				thisObj.overlay(s);
-				thisObj.loadHome();
-			}
-			if (json.failure) thisObj.overlay(json.failure); 
-			
-		});
+		//readInputFealds();
+		n = $("#inputUserName").val();
+		p = $("#inputUserPass").val();
+		e = $("#inputUserEMail").val();
+		
+		if(n.length == 0 && p.length == 0 && e.length == 0) thisObj.overlay("If you want to change any property, use the related textfield input.");
+		else {
+			backendCom.changeUser(n, p, e, function(json) {
+				console.log(json);
+				if (json.userChanged == true) { 
+					var s = '';
+					if (n.length > 0) s += "new name: " + n + "<br>";
+					if (e.length > 0) s += "new email: " + e + "<br>";
+					if (p.length > 0) s += "password: " + "<br>successfully changed";
+					thisObj.name = n;
+					eMail = e;
+					thisObj.overlay(s);
+					thisObj.loadHome();
+				}
+				if (json.failure) thisObj.overlay(json.failure); 
+			});
+		}
 	}
 
 	//Open account
@@ -296,7 +305,13 @@ function Controller() {
 	 * open account settings page
 	 */
 	function account() {
-		thisObj.loadAccount();
+		thisObj.loadAccount(function () {
+			document.getElementById('name').innerHTML = "name: " + thisObj.name;
+			document.getElementById('email').innerHTML = "email: " + eMail;
+			$('#accHome').click(function () {
+				thisObj.loadHome();
+			});
+		});
 	}
 
 	//Login
@@ -306,7 +321,7 @@ function Controller() {
 	function logIn() {
 		readInputFealds();
 		backendCom.logIn(password, eMail, function(json) {
-
+			
 			if (json.logedIn) {
 				thisObj.name = json.username;
 				thisObj.valid = true;
@@ -333,20 +348,27 @@ function Controller() {
 	 * remove an User
 	 */
 	function remove() {
-		readInputFealds();
-		user = {
-			name : thisObj.name,
-			password : password,
-			eMail : eMail
-		};
-		backendCom.remove(thisObj.name, password, eMail, function(json) {
-			if (json.removed) {
-				thisObj.overlay('User ' + thisObj.name + ' has been removed');
-				thisObj.loadRegister();
-			} else {
-				thisObj.overlay('There is no User: ' + thisObj.name + '\n... Please try again...\nType in name, eMail and password');
+		n = $("#inputUserName").val();
+		p = $("#inputUserPass").val();
+		e = $("#inputUserEMail").val();
+		if(n.length == 0 && p.length == 0 && e.length == 0) thisObj.overlay("If you want to remove yourself, use the related inputs to type your name, eMail and password.");
+		else {
+			var r = window.confirm("Are you sure you want to remove yourself?'" +
+					"'\n\nYes - Press the \'OK\'-button." +
+					'\n\nNo - Press the \'cancel\'-button.');
+			if (r == true) {
+				console.log(n + e + p);
+				backendCom.remove(n, e, p, function(json) {
+			
+					if (json.removed) {
+						thisObj.overlay('User ' + n + ' has been removed');
+						thisObj.loadRegister();
+					} else {
+						thisObj.overlay('There is no User: ' + n + '\n... Please try again...\n\nType in name, eMail and password');
+					}
+				});
 			}
-		});
+		}
 	}
 
 	//Search for other online users
@@ -366,6 +388,33 @@ function Controller() {
 			}
 		});
 	}
+	//Button initialization
+	/**
+	 * button initialization
+	 */
+	regisButtons = function() {
+		$("#btnRegister").click(registration);
+		$("#btnLogIn").click(logIn);
+		$("#btnLogOut").click(logOut);
+		$("#btnRemove").click(remove);
+		$("#btnEndGame").click(endGame);
+		$("#btnAccount").click(account);
+		$("#btnChangeUser").click(changeUser);
+		$("#btnSearchUser").click(searchUser);
+	};
+	function endGame () {
+		thisObj.endGame([], "You canceled this game!");
+	}
+	//Input read
+	/**
+	 * input fields read
+	 */
+	function readInputFealds() {
+		name = $("#inputUserName").val();
+		password = $("#inputUserPass").val();
+		eMail = $("#inputUserEMail").val();
+	}
+
 	//Robot Stuff
 	//Set next robot HTML-element
 	/**
@@ -380,7 +429,7 @@ function Controller() {
 		div.setAttribute("class", "setRobot");
 		
 		var x = document.createElement("LABEL");
-		x.innerHTML = "Set next robot<br><br>";
+		x.innerHTML = "set next robot<br><br>";
 		div.appendChild(x);
 		
 		for (var i = 0; i < 5; i++) {
@@ -485,46 +534,33 @@ function Controller() {
 		var e = document.createElement("div");
 		e.setAttribute("class", "button");
 		e.setAttribute("onClick", "controller.getRobot();controller.startGame();controller.overlayOff();");
-		e.innerHTML = "startGame";
-		e.setAttribute("style", "cursor: pointer");
+		e.innerHTML = "start game";
+		e.setAttribute("style", "cursor: pointer; width: 120px; background: rgba(255,0,0,0.5); margin-left: 90px;");
 		style = "cursor: pointer";
 		e.id = "btnStartGame";
 		document.getElementById("overlay").insertBefore(e, document.getElementById("infoPush"));
 		$("#overlay").remove("#infoText");
+		
+		e = document.createElement("div");
+		e.setAttribute("class", "button");
+		e.setAttribute("onClick", "controller.overlayOff();controller.reset();");
+		e.innerHTML = "home";
+		e.setAttribute("style", "cursor: pointer; margin-left: 100px;margin-top: 90px;");
+		style = "cursor: pointer";
+		e.id = "home";
+		document.getElementById("overlay").insertBefore(e, document.getElementById("infoPush"));
+		
 		$('#content').hide();
 		$("#overlay").show();	
 		
 		plusMinusButton ();
 	};
+	this.reset = function () {
+		maxPoints = 0;
+	}
 	//UtilityStuff
 	//
-	//Button initialization
-	/**
-	 * button initialization
-	 */
-	regisButtons = function() {
-		$("#btnRegister").click(registration);
-		$("#btnLogIn").click(logIn);
-		$("#btnLogOut").click(logOut);
-		$("#btnRemove").click(remove);
-		$("#btnEndGame").click(endGame);
-		$("#btnAccount").click(account);
-		$("#btnChangeUser").click(changeUser);
-		$("#btnSearchUser").click(searchUser);
-	};
-	function endGame () {
-		thisObj.endGame([], "You canceled this game!");
-	}
-	//Input read
-	/**
-	 * input fields read
-	 */
-	function readInputFealds() {
-		thisObj.name = $("#inputUserName").val();
-		password = $("#inputUserPass").val();
-		eMail = $("#inputUserEMail").val();
-	}
-
+	
 	//Check JSON for two values
 	/**
 	 * Description JSON CHECK for 2 values
@@ -572,6 +608,7 @@ function Controller() {
 			$("#overlay p").remove();
 			$("#setNext").remove();
 			$('#users').remove();
+			$('#home').remove();
 		});
 	};
 	//Plus minus functionality for setting a robot

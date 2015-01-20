@@ -5,13 +5,14 @@
 }
 
 body {
-/*
-	font-size: 100%;
-	font-family: Trebuchet MS, sans-serif;
-	*/
+
+	//font-size: 100%;
+	//font-family: Trebuchet MS, sans-serif;
+	font-family: Arial Rounded MT, sans-serif;
+	
 	color: #ffffff;
-	font-family:   Andale Mono, Courier New, Sans-serif;
-	font-size: 100%;
+	//font-family:   Andale Mono, Courier New, Sans-serif;
+	font-size: 90%;
 	background: url("images/background.png");
 	background-size: 100%;
 	background-repeat:no-repeat;
@@ -33,6 +34,7 @@ input {
 	width: 200px;
 	float: left;
 	text-align: left;
+	padding: 1px;
 }
 input::-webkit-inner-spin-button,
 input::-webkit-outer-spin-button {
@@ -42,6 +44,24 @@ input::-webkit-outer-spin-button {
 }
 #content table .button {
 	margin-left: 20px;
+}
+#content a{
+	position: relative;
+	margin-top: -2px;
+}
+#content p{
+	padding: 2px;
+}
+#content table {
+	//background-color: rgba(15, 15, 15, 0.5);
+	
+	background: rgba(50,50,50, 0.75);
+	border-top-left-radius: 7px;
+	border-top-right-radius: 7px;
+	border-bottom-left-radius: 7px;
+	border-bottom-right-radius: 7px;
+	border: 1px solid rgba(256,256,256, 0.3);
+	padding: 10px;
 }
 #setRobot{
 	text-align: center;
@@ -75,7 +95,13 @@ input::-webkit-outer-spin-button {
 	margin-top: 20px;
 	margin-left: 17%;
 }
-
+#input-login {
+  
+	margin-left: 40px;
+}
+#input-login .button{
+	background: rgba(256,256,256, 0.35);
+}
 
 #content{
 	position: absolute;
@@ -125,7 +151,7 @@ display: -webkit-flex;
     margin:0 0 0 -150px;
     
 	//background: gray;
-	background: none repeat scroll 0 0 rgba(0, 0, 0, 0.2);
+	background: none repeat scroll 0 0 rgba(20,20,20, 0.75););
     width:300px;
     height:220px;
     padding:30px;
@@ -159,10 +185,12 @@ display: -webkit-flex;
 }
 
 .overlay > .button {
-	margin-top: 120px;
+	margin-top: 130px;
 	margin-left: 33%;
 }
-
+h2 {
+	margin-left: 40px;
+}
 
 .button {
 	width: 100px;
@@ -174,7 +202,7 @@ display: -webkit-flex;
 	border-top-right-radius: 7px;
 	border-bottom-left-radius: 7px;
 	border-bottom-right-radius: 7px;
-	background: rgba(256,256,256, 0.25);
+	background: rgba(256,256,256, 0.35);
 	border: 2px solid rgba(256,256,256, 0.3);
 	margin-top: 10px;
     cursor: pointer;

@@ -54,6 +54,14 @@ public class Robot extends PhysikObject implements Tick {
 	return id;
     }
     
+    public boolean getAccelerate () {
+    	return accelerate;
+    }
+    
+    public boolean getTurnLeft () {
+    	return turnLeft;
+    }
+    
     public User getUser(){
     	return user;
     }

@@ -5,8 +5,8 @@
 			This means the class name with package for example de.game.behaviour.BehaviourFactory 
 			ofcourse the named class should implement the Behaviour Interface -->
 		<entry>
-			<key>DefaultBehaviour</key>
-			<value>de.game.behaviour.DefaultBehaviour</value>
+			<key>Distance Attac</key>
+			<value>de.game.behaviour.DistanceAttacBehaviour</value>
 		</entry>
 		<entry>
 			<key>WingManBehaviour</key>
@@ -15,6 +15,10 @@
 		<entry>
 			<key>AttacBehaviour</key>
 			<value>de.game.behaviour.AttacBehaviour</value>
+		</entry>
+		<entry>
+			<key>DefaultBehaviour</key>
+			<value>de.game.behaviour.DefaultBehaviour</value>
 		</entry>
 	</behaviours>
 </BehaviourFactory-Map>

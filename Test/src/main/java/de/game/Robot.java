@@ -41,7 +41,7 @@ public class Robot extends PhysikObject implements Tick {
 	this.armor = rb.getArmor();
 	this.turningSpeed = 1 / armor * enginePower;
 	this.acceleration = 1 / armor * enginePower;
-	this.topSpeet = acceleration * 10; //10 sec beschleunigungsphase
+	this.topSpeet = acceleration * 5; //10 sec beschleunigungsphase
 	this.weapon = weapon;
 	this.behaviour = behaviourFactory.getInstanceOfBehaviour(behaviour, this);
 	this.user = user;
@@ -101,7 +101,7 @@ public class Robot extends PhysikObject implements Tick {
     	double hp = getHitPoints() - power;
     	if (hp < 0) hp = 0;
     	setHitPoints(hp);
-    	die();
+    	if (hp == 0) die();
     }
 
     public void turnLeft() {

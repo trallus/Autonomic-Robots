@@ -70,14 +70,10 @@ public class WingManBehaviour extends Behaviour {
 		for (final User u : battle.getUsers()) {
 			if (u.getBattleRobots() == ownTeam) continue;
 			for (final Robot r : u.getBattleRobots()){
-				if (closestAnamyRobot == null){
-					closestAnamyRobot = r;
-					continue;
-				}
 				final double nextDistance = robot.getPosition().substraction(r.getPosition()).getMagnitude();
-				
-				if (nextDistance < distance) {
+				if (closestAnamyRobot == null || nextDistance < distance){
 					closestAnamyRobot = r;
+					distance = nextDistance;
 				}
 			}
 		}
@@ -85,16 +81,11 @@ public class WingManBehaviour extends Behaviour {
 		if (closestAnamyRobot == null) return;
 		
 		final int range = robot.getWeapon().getRange();
-
-		final double a = robot.getPosition().getN1() - closestAnamyRobot.getPosition().getN1();
-		final double b = robot.getPosition().getN2() - closestAnamyRobot.getPosition().getN2();
 		
 		if (distance <= range) {
 			final WeaponLaser wp = (WeaponLaser) robot.getWeapon();
 			wp.laserShoot(robot, closestAnamyRobot, battle);
 		}
-		
-		
 	}
 	
 	/**

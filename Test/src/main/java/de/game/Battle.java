@@ -200,26 +200,40 @@ public class Battle extends Thread implements Runnable {
 		return true;
 	}
 	
+	/**
+	 * Fire a Laser shot
+	 * @param Robot the shooter of the shot
+	 * @param Robot the target of the shoot
+	 */
 	public void addLaserShot (Robot shooter, Robot target) {
 		laserShotList.add(new LaserShot(shooter, target));
 	}
 	
+	/**
+	 * Get the list of laser shots
+	 * @return List<LaserShot> the list of the laser shots
+	 */
 	public List<LaserShot> getShotMap () {
 		return laserShotList;
 	}
 	
+	
+	/**
+	 * Add a bullet to the battle
+	 * @param Bullt the bullet for the battle
+	 */
 	public void addBullet(final Bullet bullet){
 	    physicObjects.add(bullet);
 	}
 	
 	/**
 	 * Calculate the start points of the users on the battle field
-	 * @param int numberOfUsers
-	 * @return List<Vector2D>
+	 * @param int the number of the battle users
+	 * @return List<Vector2D> a list of the startpoints
 	 */
 	private List<Vector2D> calculateStartpoints (final int numberOfUsers) {
 		final long angle = (long) (2 * Math.PI / numberOfUsers); // angle between players
-		final long distance = 200; //distance from the center of the battle field
+		final long distance = 100; //distance from the center of the battle field
 		final List<Vector2D> vectorList = new ArrayList<Vector2D>();
 		
 		for (int i=0; i<numberOfUsers; i++) {

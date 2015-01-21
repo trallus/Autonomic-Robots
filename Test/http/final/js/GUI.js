@@ -57,23 +57,24 @@ function GUI(frameControler, controllerName) {
 		size = Object.keys(allRobots).length;
 		for(var j = 0; j < size; j++) {
 			r = allRobots[j];
+			if (r && r.getId() == robotNum) console.log(hp);
 			if(r && r.setHealth() > 0 && r.getId() == i+1) {
 				r.setHealth(hp);
 				r.setDestination(position);
 				s[0] = r.getPosition();
 				s[2] = r.getColor(i);
-			} else if (r && hp == 0 && r.getId() == i+1) {
+			}
+			if (r && hp == 0 && r.getId() == i+1) {
 				score.push(r.getUser());
-				score.push(r);
-				score.push('#######');
 				checkScore();
 				allRobots.splice(j,1);
 			}
 		}
 		if (shot[1]) {
+			//console.log(shot);
 			for(var j = 0; j < size; j++) {
 				r = allRobots[j];
-				if (s[0] && r.setHealth() > 0 && r.getId() == shot[1]+1) {
+				if (r && s[0] && r.setHealth() > 0 && r.getId() == shot[1]+1) {
 					s[1] = r.getPosition();
 					new Shot(frameControler, s);
 				}
@@ -125,13 +126,15 @@ function GUI(frameControler, controllerName) {
 	 * create a new robot
 	 * @param {String} name - user name (for displaying right color of an friendly or enemy robot)
 	 */
-	this.newRobot = function(i,n) {
+	this.newRobot = function(i,n,p) {
 		//on first start -> drawing play time via valid=true, set start time
 		c = 0;
 		if(controllerName == n) {c = 1;}
 		for (var k = 0; k<2; k++) {
-			robo = new Robot(frameControler, c%2, robotNum, n );
+			var robo = new Robot(frameControler, c%2, robotNum, n, p );
 			//increase number of robots
+			//console.log(robotNum);
+			i++;
 			robotNum++;
 			c++;
 			//push robot into my robot list
@@ -186,6 +189,8 @@ function GUI(frameControler, controllerName) {
 	var timer;
 	this.clear = function () {
 		window.clearInterval(timer);
+		allRobots = [];
+		delete obj;
 	};
 	canvas.onmousedown = function(e) {
 		pt = getMouse(e, canvas);

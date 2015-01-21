@@ -8,9 +8,9 @@
  * @param {Number} id - unique robot id
  */
 
-function Robot ( frameControler, color, id, name) {
+function Robot ( frameControler, color, id, name, p) {
     var thisObj = this; 
-    var health = 100;
+    var health = 0.001;
     var posX;
     var posY;
     var direction = Math.PI;
@@ -27,23 +27,25 @@ function Robot ( frameControler, color, id, name) {
     canvasheight = 600;
     var colors = ["LimeGreen","red"];
     thisObj.user;
+    once = false;
     startPosition();
     if(color==0) thisObj.user="you";
     else thisObj.user="enemy";
+    var h = false;
     //Start Position
     /**
      * give every player his start position
      */
     function startPosition () {
     	if(id%2 == 1){
-    		posX=0;/*+ canvaswidth/2;*/
-    		posY=100;/*+ canvasheight/2;*/
+    		posX=0;
+    		posY=200;
     		
     	}else{
-    		posX=14;/*+ canvaswidth/2;*/
-    		posY=-98;/*+ canvasheight/2;*/
-    		
-    	}
+    		posX=28;
+    		posY=-198;
+    	}	
+    	
     }
     
     //Construct
@@ -143,13 +145,16 @@ function Robot ( frameControler, color, id, name) {
      */
     thisObj.setHealth = function (hp) {
     	//console.log(hp);
-    	if(hp == 0) {
+    	if(hp == undefined) return health;
+    		if(hp == 0) {
     		dead = true;
     		
-    	} else if(!hp) return health;
-    	health = hp;
+    		} 
+    		health = hp;
+        	once = true;
+    		
+    	
     }
-    
     //Set behavior
     /**
      * set an specified behavior
@@ -165,6 +170,9 @@ function Robot ( frameControler, color, id, name) {
      * @return {Number} id - robot id
      */
     thisObj.getId = function () { return id; };
+    thisObj.setFirst = function (hp) {
+    	h = hp;
+    }
     
     //Hit test
      /**
@@ -186,12 +194,8 @@ function Robot ( frameControler, color, id, name) {
      * @param {Number} timeSinceLastDraw - time since last draw
      */
     function onFrame ( context, timeSinceLastDraw ) {
-    	
         	calcPosition ( timeSinceLastDraw );
             draw ( context );
-            if ( dead )  {
-            	return dead;
-            } 
     }
     
     //Draw
@@ -201,12 +205,13 @@ function Robot ( frameControler, color, id, name) {
      */
     function draw ( context ) {
     	if(!dead){
+    		if (once){
 	    	//draw info
 	    	context.beginPath();
-	    	context.fillStyle = '#000000';
-	    	context.fillRect(posX-16,posY-14,32,5);
+	    	//context.fillStyle = '#000000';
+	    	//context.fillRect(posX-16,posY-14,32,5);
 	    	context.fillStyle = '#0F0';
-	    	context.fillRect(posX-15,posY-13,health*0.3,3);
+	    	context.fillRect((posX-(health/2)*((100/70)*0.3)),posY-13,health*((100/70)*0.3),3);
 	    	//draw robot
 	    	context.font = "10px Verdana";
 	        context.fillStyle = '#FFFFFF';
@@ -217,12 +222,14 @@ function Robot ( frameControler, color, id, name) {
 	        context.fillStyle= colors[color];
 	        context.fill();
 	        context.stroke(); 
+    		}
 	        } else {
 	        	context.beginPath();
 	        	context.fillStyle= colors[color];
 	        	context.fillText( 'X', posX-3, posY+4);
 	        	delete thisObj;
 	        }
+    
     }
     
     //Physics

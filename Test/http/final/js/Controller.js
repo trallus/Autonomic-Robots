@@ -429,7 +429,7 @@ function Controller() {
 		div.setAttribute("class", "setRobot");
 		
 		var x = document.createElement("LABEL");
-		x.innerHTML = "set next robot<br><br>";
+		x.innerHTML = "set next robot<br><br>add max 10 points to change robot settings<br><br>";
 		div.appendChild(x);
 		
 		for (var i = 0; i < 5; i++) {

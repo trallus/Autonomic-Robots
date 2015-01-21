@@ -112,13 +112,37 @@ public class Battle extends Thread implements Runnable {
 	@Override
 	public void run() {
 		log.log("Battle Start: "+id, this.getClass().getName(), LogLevel.DEBUG);
-		frameLoop();
+		
+		// check if next rosot set
+		while(true) {
+			boolean ready = true;;
+			for (final User u : users) {
+				if (u.getNextRobot() == null) {
+					ready = false;
+					break;
+				}
+			}
+			if (ready) break;
+		}
+		
+		while(frameLoop()) {
+			final long frameIntervall = 100;	// 1/10 sec
+			sleepMs(frameIntervall);
+		}
+	}
+	
+	private void sleepMs (final long time) {
+		try {
+			Thread.sleep(time);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
 	 * Calculate the battle situation per frame
 	 */
-	private void frameLoop () {
+	private boolean frameLoop () {
 		final long robotIntervall = 15000;
 		final double elapsedTime = .1;
 		final long currentTime = System.currentTimeMillis();
@@ -135,16 +159,12 @@ public class Battle extends Thread implements Runnable {
 				users.remove(0);
 			}
 			log.log("Battle End: "+id, this.getClass().getName(), LogLevel.DEBUG);
-			return;	// Battle End
+			return false;	// Battle End
 		}
 		
 		// set next robot
 		if (timeToNextRobot < currentTime) {
 			for (final User u : users) {
-				if (u.getNextRobot() == null) {
-					nextFrame();
-					return;
-				}
 				final RobotPrototype rp = u.getNextRobot();
 				final Vector2D sp = u.getStartPoint();
 				final Robot nextRobot = rp.generateRobot(robotIdCounter, sp,u,behaviourFactory);
@@ -177,18 +197,7 @@ public class Battle extends Thread implements Runnable {
 			}
 		}
 		
-		nextFrame();
-	}
-	
-	private void nextFrame () {
-		final long frameIntervall = 100;	// 1/10 sec
-		try {
-			Thread.sleep(frameIntervall);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
-		frameLoop();
+		return true;
 	}
 	
 	public void addLaserShot (Robot shooter, Robot target) {

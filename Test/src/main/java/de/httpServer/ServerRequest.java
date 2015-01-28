@@ -223,7 +223,7 @@ public class ServerRequest extends Request {
 	 * convert json to ClientUser Object
 	 * 
 	 * @param jsonString
-	 * @return
+	 * @return the User for this Client
 	 * @throws IOException 
 	 */
 	private ClientUser readClientUser () throws IOException {
@@ -235,7 +235,7 @@ public class ServerRequest extends Request {
 	 * get the SID from browser cookie
 	 * 
 	 * @param httpExchange
-	 * @return
+	 * @return return the session id in the cookie or null if no found
 	 */
 	private String getSessionID(HttpExchange httpExchange) {
 		final String SID;
@@ -271,7 +271,7 @@ public class ServerRequest extends Request {
 
 	/**
 	 * read the datas how are send from client to jsonString
-	 * @return 
+	 * @return the input stream as a String
 	 * 
 	 * @throws IOException
 	 */

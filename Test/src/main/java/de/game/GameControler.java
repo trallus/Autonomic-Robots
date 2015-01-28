@@ -12,16 +12,34 @@ import de.logger.LoggerAndExceptionHandlerFacadeIF;
 /**
  * Controls the Game
  * @author ko
- *
  */
 public class GameControler implements GameInterface {
 	
+	/**
+	 * Contains the waiting Players
+	 */
 	private final List<User> battleQerry;
+	/**
+	 * Contains all running Battles
+	 */
 	private final List<Battle> battles;
+	/**
+	 * the next BAttle id
+	 */
 	private long battleID;
+	/**
+	 * reference to the behaviour factory
+	 */
 	private final BehaviourFactory behaviourFactory;
+	/**
+	 * reference to handle logging and exceptions
+	 */
 	private final LoggerAndExceptionHandlerFacadeIF logFacade;
 	
+	/**
+	 * @param logFacade to handle logging and exceptions
+	 * @throws Exception
+	 */
 	public GameControler (final LoggerAndExceptionHandlerFacadeIF logFacade ) throws Exception{
 		battleQerry = new ArrayList<User>();
 		battles = new ArrayList<Battle>();
@@ -30,6 +48,9 @@ public class GameControler implements GameInterface {
 		this.logFacade = logFacade;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.game.GameInterface#joinBattleQuery(de.httpServer.User)
+	 */
 	@Override
 	public long joinBattleQuery(final User user) throws InterruptedException {
 		if (battleQerry.size() > 0) { // two player
@@ -65,21 +86,33 @@ public class GameControler implements GameInterface {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see de.game.GameInterface#leaveBattleQuery(de.httpServer.User)
+	 */
 	@Override
 	public void leaveBattleQuery(final User user) throws NotInQueryException {
 		battleQerry.remove(user);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.game.GameInterface#setNextRobot(de.httpServer.User, de.game.RobotPrototype)
+	 */
 	@Override
 	public void setNextRobot(final User user, final RobotPrototype rp) {
 		user.setNextRobot(rp);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.game.GameInterface#getGameSituation(de.httpServer.User)
+	 */
 	@Override
 	public Battle getGameSituation(final User user) {
 		return user.getBattle();
 	}
 
+	/* (non-Javadoc)
+	 * @see de.game.GameInterface#getBehaviours()
+	 */
 	@Override
 	public String[] getBehaviours() {		
 		final Collection<String> behaviours = behaviourFactory.getBehaviours();
@@ -87,6 +120,9 @@ public class GameControler implements GameInterface {
 		return behaviours.toArray(behaviourNames);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.game.GameInterface#setBehaviour(long, java.lang.String, de.httpServer.User)
+	 */
 	@Override
 	public void setBehaviour(final long robotID, final String behaviour, final User user) {
 		user.setBehavior(robotID, behaviour);

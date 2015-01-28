@@ -17,7 +17,7 @@ public interface GameInterface {
 	/**
 	 * try to enter a Battle
 	 * @param user
-	 * @return
+	 * @return return the ID of the Battle
 	 * @throws InterruptedException 
 	 */
 	long joinBattleQuery (User user) throws InterruptedException;
@@ -35,12 +35,12 @@ public interface GameInterface {
 	/**
 	 * get a actual snapshot from the battlefald
 	 * @param user
-	 * @return
+	 * @return the Batte from the User
 	 */
 	Battle getGameSituation ( User user );
 	/**
-	 * get a list of all possible robot behaviours
-	 * @return
+	 * get a list of all possible robot behaviors
+	 * @return the list of all behaviors
 	 */
 	String[] getBehaviours();
 	/**

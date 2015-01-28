@@ -28,7 +28,7 @@ public interface UserManager {
 	 * get the user with this SID or create a new one
 	 * 
 	 * @param sessionID
-	 * @return
+	 * @return the User of the SID or a new one if no found
 	 */
 	User getUser(CRUDIF db, String sessionID);
 
@@ -39,7 +39,7 @@ public interface UserManager {
 	 * @param eMail
 	 * @param password
 	 * @param user
-	 * @return
+	 * @return a String with the Message for the User
 	 * @throws NoSuchAlgorithmException
 	 * @throws EmailInUseException
 	 * @throws NameInUseException 

@@ -77,7 +77,7 @@ public class UserManagerImpl implements UserManager {
 	 * get the user with this SID or create a new one
 	 * 
 	 * @param sessionID
-	 * @return
+	 * @return the User with this SID or a new one if no User found
 	 */
 	public User getUser(final CRUDIF db, String sessionID) {
 
@@ -92,16 +92,9 @@ public class UserManagerImpl implements UserManager {
 		return (createUser());
 	}
 
-	/**
-	 * registrate e new user in database
-	 * 
-	 * @param userName
-	 * @param eMail
-	 * @param password
-	 * @param user
-	 * @return
-	 * @throws NoSuchAlgorithmException
-	 * @throws EmailInUseException
+	
+	/* (non-Javadoc)
+	 * @see de.httpServer.UserManager#register(de.persistence.CRUDIF, java.lang.String, java.lang.String, java.lang.String, de.httpServer.User)
 	 */
 	public String register(final CRUDIF db, String userName, String eMail, String password, User user)
 			throws NoSuchAlgorithmException, EmailInUseException, NameInUseException {
@@ -209,7 +202,7 @@ public class UserManagerImpl implements UserManager {
 	/**
 	 * create a new user
 	 * 
-	 * @return
+	 * @return a new User
 	 */
 	private User createUser() {
 		final String sessionID = sessionManager.getSessionID();
@@ -223,10 +216,10 @@ public class UserManagerImpl implements UserManager {
 	}
 
 	/**
-	 * create a md5 sum
+	 * create the md5 sum
 	 * 
 	 * @param string
-	 * @return
+	 * @return the md5 sum for the string
 	 * @throws NoSuchAlgorithmException
 	 */
 	private String convertToMD5Hash(String string)

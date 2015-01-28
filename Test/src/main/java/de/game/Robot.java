@@ -14,22 +14,77 @@ import de.math.Vector2D;
 import de.physicEngine.PhysikObject;
 
 public class Robot extends PhysikObject implements Tick {
+    /**
+     * the identifier of
+     */
     private final long id;
+    /**
+     * the turning speed in rad per second
+     */
     private final double turningSpeed;
+    /**
+     * the abstract engine power
+     */
     private final double enginePower;
+    /**
+     * the hit points
+     */
     private final double armor;
+    /**
+     * the acceleration per second
+     */
     private final double acceleration;
+    /**
+     * if should accelerate or break
+     */
     private boolean accelerate;
+    /**
+     * if turn left or turn right
+     */
     private boolean turnLeft;
+    /**
+     * the weapon
+     */
     private final Weapon weapon;
+    /**
+     * to control the robot
+     */
     private Behaviour behaviour;
+    /**
+     * the known robots
+     */
     private HashMap<User, List<Robot>> knownRobots;
+    /**
+     * the owner
+     */
     private final User user;
+    /**
+     * to create a behavior
+     */
     private final BehaviourFactory behaviourFactory;
+    /**
+     * the logger
+     */
     private final LoggerIF log;
+    /**
+     * the death time point
+     */
     private long deathTime = 0;
+    /**
+     * the top speed
+     */
     private final double topSpeet;
 
+    /**
+     * @param id
+     * @param position
+     * @param rb
+     * @param weapon
+     * @param user
+     * @param behaviourFactory
+     * @param behaviour
+     * @param logFacade
+     */
     public Robot(final long id, final Vector2D position,
 	    final RobotPrototype rb, final Weapon weapon, final User user, final BehaviourFactory behaviourFactory, final String behaviour, final LoggerAndExceptionHandlerFacadeIF logFacade) {
 	super(0, 0); // start direction 0°, speed 0 pixel/sec
@@ -50,18 +105,30 @@ public class Robot extends PhysikObject implements Tick {
 	setHitPoints(armor);
     }
 
+    /**
+     * @return long the identifire
+     */
     public long getID() {
 	return id;
     }
     
+    /**
+     * @return boolean if accelerate or break
+     */
     public boolean getAccelerate () {
     	return accelerate;
     }
     
+    /**
+     * @return boolean if turn left or right
+     */
     public boolean getTurnLeft () {
     	return turnLeft;
     }
     
+    /**
+     * @return the owner
+     */
     public User getUser(){
     	return user;
     }
@@ -82,16 +149,21 @@ public class Robot extends PhysikObject implements Tick {
      * Calls the shoot methode of weapon
      * @param targetPosition the postion of the target
      * @param battle the battle in which this robot is
-     * @see Weapon#shoot(Vector2D, Battle)
      */
     public void shoot(final Vector2D targetPosition, final Battle battle, final double elapsedTime) {
 	weapon.shoot(targetPosition, battle, elapsedTime, this.getPosition());
     }
     
+    /**
+     * @return Weapon the weapon
+     */
     public Weapon getWeapon () {
     	return weapon;
     }
 
+    /* (non-Javadoc)
+     * @see de.physicEngine.PhysikObject#onHit(de.physicEngine.PhysikObject)
+     */
     @Override
     public void onHit(final PhysikObject po) {
 	// TODO noch keine physik, nur ph abzug durch kollision
@@ -105,6 +177,9 @@ public class Robot extends PhysikObject implements Tick {
 	}
     }
     
+    /**
+     * @param power
+     */
     public void laserHit (final int power) {
     	double hp = getHitPoints() - power;
     	if (hp < 0) hp = 0;
@@ -112,22 +187,37 @@ public class Robot extends PhysikObject implements Tick {
     	if (hp == 0) die();
     }
 
+    /**
+     * the robot turns left
+     */
     public void turnLeft() {
 	turnLeft = true;
     }
 
+    /**
+     * the robot turns right
+     */
     public void turnRight() {
 	turnLeft = false;
     }
 
+    /**
+     * the robot move faster
+     */
     public void accelerate() {
 	accelerate = true;
     }
 
+    /**
+     * the robot move slower
+     */
     public void breack() {
 	accelerate = false;
     }
 
+    /**
+     *  kill the robot
+     */
     private void die() {
 		log.log("Robot die: " + id, this.getClass().getName(), LogLevel.DEBUG);
 		behaviour = null; // Break the bidirectional association so that gc can
@@ -135,6 +225,9 @@ public class Robot extends PhysikObject implements Tick {
 		deathTime = System.currentTimeMillis();
     }
     
+    /**
+     * @return true if the robot is dead
+     */
     public boolean isDead () {
     	if (deathTime == 0) return false;
     	
@@ -146,6 +239,9 @@ public class Robot extends PhysikObject implements Tick {
     	return true;
     }
 
+    /* (non-Javadoc)
+     * @see de.game.Tick#onTick(de.game.Battle, double)
+     */
     @Override
     public void onTick(final Battle battle, final double elapsedTime) {
     	// roboter is dead
@@ -169,10 +265,16 @@ public class Robot extends PhysikObject implements Tick {
     	move(elapsedTime);
     }
     
+    /**
+     * @return all the known Robots
+     */
     public HashMap<User, List<Robot>> getKnownRobots () {
     	return knownRobots;
     }
     
+    /**
+     * @param battle
+     */
     private void lookAround (final Battle battle) {
     	knownRobots = new HashMap<User, List<Robot>>();
     	for (final User u : battle.getUsers()) {
@@ -182,7 +284,6 @@ public class Robot extends PhysikObject implements Tick {
     }
     
     /**
-     * Returns the armor value of this robot
      * @return the armor value of this robot
      */
     public double getArmor(){

@@ -28,7 +28,7 @@ public abstract class Weapon {
      * Initializes the Weapon with the given range, rateOfFire and damage
      * @param range of the weapon, greater zero
      * @param rateOfFire of this weapon, greater zero
-     * @param damage, not equal zero
+     * @param damage not equal zero
      */
     public Weapon(final int range, final int rateOfFire, final int damage) {
 	if(range<=0 || damage==0 || rateOfFire<=0){

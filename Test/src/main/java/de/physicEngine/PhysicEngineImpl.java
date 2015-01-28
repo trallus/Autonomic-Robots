@@ -120,7 +120,7 @@ public class PhysicEngineImpl implements Tick{
 	 * Verkürzte einen Vektor nach einer Plastizitätskonstande
 	 * @param plast
 	 * @param v
-	 * @return
+	 * @return den verkürzten Vektor
 	 */
 	private Vector2D addPlast(final Vector2D v) {
         final double plast = .8;
@@ -132,7 +132,7 @@ public class PhysicEngineImpl implements Tick{
 	 * @param kV
 	 * @param tV
 	 * @param mV
-	 * @return
+	 * @return ein Vektor Array mit den zwei neuen Vektoren
 	 */
 	private Vector2D[] sliceVectors (final Vector2D kV, final Vector2D tV, final Vector2D mV) {
 		final Matrix matrix = new Matrix(

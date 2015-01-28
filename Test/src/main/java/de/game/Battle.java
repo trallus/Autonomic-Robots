@@ -91,7 +91,7 @@ public class Battle extends Thread implements Runnable {
 	
 	/**
 	 * Get the users in the battle
-	 * @return
+	 * @return the Users in the Battle
 	 */
 	public List<User> getUsers () {
 		return users;
@@ -99,7 +99,7 @@ public class Battle extends Thread implements Runnable {
 	
 	/**
 	 * get the id of the battle
-	 * @return
+	 * @return the ID of the Battle
 	 */
 	public long getID () {
 		return id;
@@ -141,9 +141,10 @@ public class Battle extends Thread implements Runnable {
 	
 	/**
 	 * Calculate the battle situation per frame
+	 * @return true if bettle not end
 	 */
 	private boolean frameLoop () {
-		final long robotIntervall = 15000;
+		final long robotIntervall = 150000;
 		final double elapsedTime = .1;
 		final long currentTime = System.currentTimeMillis();
 		
@@ -202,8 +203,8 @@ public class Battle extends Thread implements Runnable {
 	
 	/**
 	 * Fire a Laser shot
-	 * @param Robot the shooter of the shot
-	 * @param Robot the target of the shoot
+	 * @param shooter the shooter of the shot
+	 * @param target the target of the shoot
 	 */
 	public void addLaserShot (Robot shooter, Robot target) {
 		laserShotList.add(new LaserShot(shooter, target));
@@ -220,7 +221,7 @@ public class Battle extends Thread implements Runnable {
 	
 	/**
 	 * Add a bullet to the battle
-	 * @param Bullt the bullet for the battle
+	 * @param bullet the bullet for the battle
 	 */
 	public void addBullet(final Bullet bullet){
 	    physicObjects.add(bullet);

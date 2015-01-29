@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-import de.game.GameControler;
 import de.game.GameInterface;
 import de.logger.LogLevel;
 import de.logger.LoggerAndExceptionHandlerFacadeIF;

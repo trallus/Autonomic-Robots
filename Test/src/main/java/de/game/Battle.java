@@ -28,7 +28,7 @@ public class Battle extends Thread implements Runnable {
      */
     private int fieldRadius;
     /**
-     * The Timelimit in ms until the match ends
+     * The time limit in ms until the match ends
      */
     private final long timeLimitMs;
     /**
@@ -48,7 +48,7 @@ public class Battle extends Thread implements Runnable {
      */
     private final List<PhysikObject> physicObjects;
     /**
-     * Time betwen create new robots
+     * Time between create new robots
      */
     private long timeToNextRobot;
     /**

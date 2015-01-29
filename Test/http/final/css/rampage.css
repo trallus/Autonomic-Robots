@@ -193,6 +193,7 @@ h2 {
 }
 
 .button {
+	line-height: 20px;
 	width: 100px;
 	height: 20px;
 	text-align: center;

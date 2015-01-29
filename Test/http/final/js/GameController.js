@@ -54,13 +54,10 @@ var GameController = {
 			controller.setNextRobot(robot, function () { controller.joinBattleQuery( function(json) {
 					gui.setStart();
 					//Intervall Gameloop
-					intervallCounter = 30;
 					var i = 0;
-					twice = false;
 					var size;
 					intervall = window.setInterval(function() {
 
-						var c = 0;
 						//get game situation in 1/sec up to 20x
 						$.ajax({
 							url : "serverRequest/game-getGameSituation"
@@ -70,17 +67,13 @@ var GameController = {
 							if (position.gameSituation && position.gameSituation[controller.name]) {
 								//setting new positions for each robot by robot.id in gui > allRobots[]
 
-								
-								var target;
-								var shot = [];
 								for (var names in position.gameSituation) {
 									for (var keys in position.gameSituation[names]) {
-										if (position.gameSituation[names][keys].shotTarget) {
+										shot = -1;
+										if (position.gameSituation[names][keys].shotTarget > -1) {
 											
-											shot[0] = position.gameSituation[names][keys].position;
-											shot[1] = position.gameSituation[names][keys].shotTarget;
-											//console.log(shot);
-										}
+											shot = position.gameSituation[names][keys].shotTarget;
+										} 
 										if(position.gameSituation[names][keys].id > i){
 
 											i = position.gameSituation[names][keys].id;
@@ -90,12 +83,11 @@ var GameController = {
 										}
 										gui.setBot(position.gameSituation[names][keys].id, position.gameSituation[names][keys].position, position.gameSituation[names][keys].hitPoints, shot);
 									}
-									c++;
 									once = true;
 								}
 							}
 							//ending a game if gameSituation is empty
-							if (!twice && once && Object.keys(position.gameSituation).length == 0) {
+							if (once && Object.keys(position.gameSituation).length == 0) {
 								$.ajaxSetup({cache: true});
 								window.clearInterval(intervall);
 								gui.clear();

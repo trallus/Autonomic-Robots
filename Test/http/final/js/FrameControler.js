@@ -8,7 +8,7 @@
 function FrameControler ( ) {
     var obj = this;
     var lastFrameTime = 0;
-    var maxFrameRate = 30;
+    var maxFrameRate = 24;
     var minFrameLength = 1000 / maxFrameRate;
     var onNewFrameFunctions = [];
     var gui;

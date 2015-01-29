@@ -32,8 +32,8 @@ function GUI(frameControler, controllerName) {
 		canvas.height = 600;
 		obj.context = canvas.getContext("2d");
 		frameControler.addOnNewFrame(draw);
-		//physic = new CollisionControler(allRobots);
-		//frameControler.addOnNewFrame(physic.onFrame);
+		physic = new CollisionControler(allRobots);
+		frameControler.addOnNewFrame(physic.onFrame);
 	};
 	//Get current count of robots
 	/**
@@ -57,30 +57,32 @@ function GUI(frameControler, controllerName) {
 		size = Object.keys(allRobots).length;
 		for(var j = 0; j < size; j++) {
 			r = allRobots[j];
-			if (r && r.getId() == robotNum) console.log(hp);
 			if(r && r.setHealth() > 0 && r.getId() == i+1) {
 				r.setHealth(hp);
 				r.setDestination(position);
 				s[0] = r.getPosition();
 				s[2] = r.getColor(i);
-			}
-			if (r && hp == 0 && r.getId() == i+1) {
-				score.push(r.getUser());
-				checkScore();
-				allRobots.splice(j,1);
+				if (hp == 0) {
+					score.push(r.getUser());
+					checkScore();
+					allRobots.splice(j,1);
+				}
 			}
 		}
-		if (shot[1]) {
-			//console.log(shot);
+		if (shot > -1) {
 			for(var j = 0; j < size; j++) {
 				r = allRobots[j];
-				if (r && s[0] && r.setHealth() > 0 && r.getId() == shot[1]+1) {
+				if (r && s[0] && r.setHealth() > 0 && r.getId() == shot+1) {
 					s[1] = r.getPosition();
-					new Shot(frameControler, s);
+					//console.log(i + ' on ' + shot);
+					//new Shot(frameControler, s);
+					
+					new shotGun(s);
 				}
 			}
 		}
 	};
+	
 	//Check score
 	/**
 	 * for updating actual score vars myScore & eScore
@@ -101,7 +103,10 @@ function GUI(frameControler, controllerName) {
 	 * @return {Array} score - array with game data (killed robots)
 	 */
 	this.getScore = function () {
-		return score;
+		var h = [];
+		h[0] = myScore;
+		h[1] = eScore;
+		return h;
 	}
 	//Get winner
 	/**
@@ -342,7 +347,7 @@ function GUI(frameControler, controllerName) {
         	x.fill();
         	
         	x.rotate(((-mult*19)%360)*Math.PI/180);
-        	x.translate(0,0);
+        	x.translate(0.5,0.5);
         	
 		}else{
 			x.font = "13px Verdana";
@@ -351,4 +356,17 @@ function GUI(frameControler, controllerName) {
 		}
 	}
 	construct();
+}
+function shotGun(s) {
+	var canvas = document.getElementById('scene');
+	for (var i = 0; i < 10000;i++) {
+		context = canvas.getContext("2d");
+		context.beginPath();
+		context.lineWidth = 2.5;
+		context.strokeStyle = s[2];
+		context.lineCap = "round";
+		context.moveTo(s[0][0],s[0][1]);
+		context.lineTo(s[1][0],s[1][1]);
+		context.stroke();
+	}
 }

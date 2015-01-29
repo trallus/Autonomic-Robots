@@ -161,6 +161,7 @@ function Controller() {
 			else if(win == false) s = "D E F E A T";
 			else if (win == null) s ="D R A W";
 			else s = win;
+			s += '<br><br>You: ' + score[0] + ' | Enemy: ' + score[1];
 			thisObj.overlay(s);
 			
 			var e = document.createElement("div");

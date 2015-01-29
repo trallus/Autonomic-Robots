@@ -145,7 +145,7 @@ function Robot ( frameControler, color, id, name, p) {
      */
     thisObj.setHealth = function (hp) {
     	//console.log(hp);
-    	if(hp == undefined) return health;
+    	if(hp === undefined) return health;
     		if(hp == 0) {
     		dead = true;
     		
@@ -225,8 +225,10 @@ function Robot ( frameControler, color, id, name, p) {
     		}
 	        } else {
 	        	context.beginPath();
+
+				context.font = "13px Verdana";
 	        	context.fillStyle= colors[color];
-	        	context.fillText( 'X', posX-3, posY+4);
+	        	context.fillText( 'X', parseInt(posX-3), parseInt(posY+4));
 	        	delete thisObj;
 	        }
     
@@ -331,7 +333,7 @@ function Shot ( frameControler, s) {
     }
     
     thisObj.setHealth = function (hp) {
-    	if (!hp) return hp;
+    	if (hp === undefined) return hp;
     	else health = hp;
     }
     //On frame

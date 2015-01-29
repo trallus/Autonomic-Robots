@@ -1,7 +1,6 @@
 /**
  * This package holds the additional math library
- * @author Mike Kiekebusch
+ * @author Mike Kiekebusch, Christian Köditz
  * @version 0.1
- * @since 
  */
 package de.math;

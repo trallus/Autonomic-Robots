@@ -16,25 +16,26 @@ import de.httpServer.User;
 public interface GameInterface {
 	/**
 	 * try to enter a Battle
-	 * @param user
+	 * @param user which wants to enter battle
 	 * @return return the ID of the Battle
-	 * @throws InterruptedException 
+	 * @throws InterruptedException when the query thread is interupted
 	 */
 	long joinBattleQuery (User user) throws InterruptedException;
 	/**
 	 * try to leave the beattle querry
-	 * @param user
+	 * @param user which leaves the battle
+	 * @throws NotInQueryException when invoked without being in a query
 	 */
 	void leaveBattleQuery (User user) throws NotInQueryException;
 	/**
 	 * set the next Robot for the running Battle
-	 * @param user
-	 * @param rp
+	 * @param user for which to set the robot configuration
+	 * @param rp robotprototype for the next robot
 	 */
 	void setNextRobot ( User user, RobotPrototype rp );
 	/**
 	 * get a actual snapshot from the battlefald
-	 * @param user
+	 * @param user to identify the battle
 	 * @return the Batte from the User
 	 */
 	Battle getGameSituation ( User user );
@@ -45,9 +46,12 @@ public interface GameInterface {
 	String[] getBehaviours();
 	/**
 	 * set a behaviour to a exist robot
-	 * @param robotID
-	 * @param behaviour
-	 * @param user
+	 * @param robotID id of the robot
+	 * @param behaviour name of the behaviour to set
+	 * @param user to which the robot belongs
+	 * @throws RobotNotFoundException when the robot is not found
+	 * @throws BehaviorNotFoundException when the behaviour is not found
+	 * @throws BattleNotFoundException when the battle is not found
 	 */
 	void setBehaviour(long robotID, String behaviour, User user) throws RobotNotFoundException, BehaviorNotFoundException, BattleNotFoundException;
 }

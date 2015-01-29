@@ -64,21 +64,12 @@ public class UserManagerImpl implements UserManager {
 		}
 	}
 
-	/**
-	 * update a user in database
-	 * 
-	 * @param user
-	 */
+	@Override
 	public void upDate(final CRUDIF db, User user) {
 		db.update(user.getDBUser());
 	}
 
-	/**
-	 * get the user with this SID or create a new one
-	 * 
-	 * @param sessionID
-	 * @return the User with this SID or a new one if no User found
-	 */
+	@Override
 	public User getUser(final CRUDIF db, String sessionID) {
 
 		if (sessionID != null) {
@@ -108,15 +99,7 @@ public class UserManagerImpl implements UserManager {
 		return "Registrierung erfolgreich";
 	}
 
-	/**
-	 * log in a user
-	 * 
-	 * @param eMail
-	 * @param password
-	 * @param user
-	 * @throws NoSuchAlgorithmException
-	 * @throws EmailNotFoundException
-	 */
+	@Override
 	public void logIn(final CRUDIF db, String eMail, String password, User user)
 			throws NoSuchAlgorithmException, EmailNotFoundException {
 		DBUser dbUser = getUserWithEmail(db, eMail);
@@ -138,24 +121,14 @@ public class UserManagerImpl implements UserManager {
 		throw e;
 	}
 
-	/**
-	 * log out a user
-	 * 
-	 * @param user
-	 */
+	@Override
 	public void logOut(final CRUDIF db, User user) {
 		userList.remove(user);
 		user.logOut();
 		logger.log("User loged out, user name: " + user.getDBUser().getName(), this.getClass().toString()+".logOut", LogLevel.DEBUG);
 	}
 	
-	/**
-	 * delete a user from database
-	 * 
-	 * @param user
-	 * @throws EmailNotFoundException 
-	 * @throws NoSuchAlgorithmException 
-	 */
+	@Override
 	public void removeUser (final CRUDIF db, String eMail, String password, User user ) throws NoSuchAlgorithmException, EmailNotFoundException {
 		logIn(db, eMail, password, user);	// to be sure that he will be removed
 		db.remove(user.getDBUser());

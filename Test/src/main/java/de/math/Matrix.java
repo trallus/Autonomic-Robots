@@ -17,11 +17,7 @@ public class Matrix {
 	private final Double[][] ma;
 
 	/**
-	 * @param Double
-	 *            [][] values: Werte der n x m Matrix
-	 */
-	/**
-	 * @param values
+	 * @param values [][] values: Werte der n x m Matrix
 	 */
 	public Matrix(final Double[][] values) {
 		this.ma = values;

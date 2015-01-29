@@ -38,7 +38,7 @@ public class GameControler implements GameInterface {
 	
 	/**
 	 * @param logFacade to handle logging and exceptions
-	 * @throws Exception
+	 * @throws Exception when a exception is invoked
 	 */
 	public GameControler (final LoggerAndExceptionHandlerFacadeIF logFacade ) throws Exception{
 		battleQerry = new ArrayList<User>();

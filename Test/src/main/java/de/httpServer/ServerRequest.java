@@ -65,11 +65,11 @@ public class ServerRequest extends Request {
 	/**
 	 * handle the request
 	 * 
-	 * @param httpExchange
-	 * @param userManager
-	 * @param gameInterface
+	 * @param httpExchange the underlying http request
+	 * @param userManager instance of the usermanager to handle user creation and login
+	 * @param gameInterface instance of the gameinterface for game specific communication
 	 * @param logFacade the LoggerAndExceptionHandlerFacade that is used to get the Logger
-	 * @throws Exception
+	 * @throws Exception invoked exceptions are thrown
 	 */
 	public ServerRequest(HttpExchange httpExchange, UserManager userManager, GameInterface gameInterface, final LoggerAndExceptionHandlerFacadeIF logFacade)
 			throws Exception {

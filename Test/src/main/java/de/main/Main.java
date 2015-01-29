@@ -23,6 +23,7 @@ public class Main {
      * 
      * @param args
      *            The First entry is the portnumber
+     * @throws Exception when the initializing of the writers for the loggin system fails
      */
     public static void main(String[] args) throws Exception {
 	final int portNumber;

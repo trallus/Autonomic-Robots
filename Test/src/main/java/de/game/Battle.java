@@ -66,9 +66,10 @@ public class Battle extends Thread implements Runnable {
 	
 	/**
 	 * Creates and starts a battle. every battle has an unique id and a pair of users
-	 * @param id
-	 * @param users
-	 * @param behaviourFactory 
+	 * @param id of this battle
+	 * @param users that take part in this battle
+	 * @param behaviourFactory that is used to create behaviours in this battle
+	 * @param logFacade of the logging system
 	 */
 	public Battle (final long id, final List<User> users, final BehaviourFactory behaviourFactory, final LoggerAndExceptionHandlerFacadeIF logFacade) {
 	    	this.log = logFacade.getLoggerInstance();
@@ -212,7 +213,7 @@ public class Battle extends Thread implements Runnable {
 	
 	/**
 	 * Get the list of laser shots
-	 * @return List<LaserShot> the list of the laser shots
+	 * @return the list of the laser shots
 	 */
 	public List<LaserShot> getShotMap () {
 		return laserShotList;

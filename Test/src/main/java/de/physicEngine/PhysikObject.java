@@ -136,7 +136,7 @@ public abstract class PhysikObject {
     }
     /**
      * turn the object with this angle
-     * @param angle
+     * @param angle by which the object will be turned
      */
     public void turn(final double angle) {
         direction += angle;
@@ -144,7 +144,7 @@ public abstract class PhysikObject {
     }
     /**
      * accelerate with this speed
-     * @param speed
+     * @param speed the value that will be used to accelerate
      */
     public void accelerate(double speed) {
     	

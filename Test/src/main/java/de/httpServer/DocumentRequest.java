@@ -15,7 +15,7 @@ public class DocumentRequest extends Request {
 	/**
 	 * Handle requests for files
 	 * 
-	 * @param httpExchange
+	 * @param httpExchange the underlying http request
 	 * @param httpPath path to the file
 	 */
 	public DocumentRequest(final HttpExchange httpExchange,

@@ -16,6 +16,10 @@ public class CouldNotCreateWeaponException extends Failure {
     /**
      * Gives all Parameters to it's Super Constructor
      * 
+     * @param message
+     *            The failure Message for the invking Message
+     * @param sendToUser
+     *            if this should be communicated to the user
      * @see de.logger.Failure#Failure(String, boolean)
      */
     public CouldNotCreateWeaponException(final String message,
@@ -26,6 +30,14 @@ public class CouldNotCreateWeaponException extends Failure {
     /**
      * Gives all Parameters to it's Super Constructor
      * 
+     * @param param
+     *            Parameter of the methode that issues this exception
+     * @param message
+     *            The failure Message for the invking Message
+     * @param cause
+     *            Exception that Caused this one
+     * @param sendToUser
+     *            if this should be communicated to the user
      * @see de.logger.Failure#Failure(HashMap, String, Exception, boolean)
      */
     public CouldNotCreateWeaponException(final HashMap<String, String> param,
@@ -37,6 +49,12 @@ public class CouldNotCreateWeaponException extends Failure {
     /**
      * Gives all Parameters to it's Super Constructor
      * 
+     * @param message
+     *            The failure Message, cant be null
+     * @param cause
+     *            Exception that Caused this one
+     * @param sendToUser
+     *            if this should be communicated to the user
      * @see de.logger.Failure#Failure(String, Exception, boolean)
      */
     public CouldNotCreateWeaponException(final String message,

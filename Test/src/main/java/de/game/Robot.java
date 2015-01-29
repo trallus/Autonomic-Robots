@@ -76,14 +76,14 @@ public class Robot extends PhysikObject implements Tick {
     private final double topSpeet;
 
     /**
-     * @param id
-     * @param position
-     * @param rb
-     * @param weapon
-     * @param user
-     * @param behaviourFactory
-     * @param behaviour
-     * @param logFacade
+     * @param id of this robot
+     * @param position of this robot
+     * @param rb underlying robotprototype of this robot
+     * @param weapon of this robot
+     * @param user this robot belongs to
+     * @param behaviourFactory is used to generate behaviours for this robot
+     * @param behaviour this robot will have
+     * @param logFacade is used for logging purposes
      */
     public Robot(final long id, final Vector2D position,
 	    final RobotPrototype rb, final Weapon weapon, final User user, final BehaviourFactory behaviourFactory, final String behaviour, final LoggerAndExceptionHandlerFacadeIF logFacade) {
@@ -149,6 +149,7 @@ public class Robot extends PhysikObject implements Tick {
      * Calls the shoot methode of weapon
      * @param targetPosition the postion of the target
      * @param battle the battle in which this robot is
+     * @param elapsedTime since the last call of this methode
      */
     public void shoot(final Vector2D targetPosition, final Battle battle, final double elapsedTime) {
 	weapon.shoot(targetPosition, battle, elapsedTime, this.getPosition());
@@ -178,7 +179,7 @@ public class Robot extends PhysikObject implements Tick {
     }
     
     /**
-     * @param power
+     * @param power represents the damage of the laser hit
      */
     public void laserHit (final int power) {
     	double hp = getHitPoints() - power;

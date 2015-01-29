@@ -25,7 +25,7 @@ public class HTTPServer {
 	 * @param httpPath the root path of the http files
 	 * @param portNumber the server listen on this port
 	 * @param logFacade the LoggerAndExceptionHandlerFacade that is used to get the Logger
-	 * @throws Exception
+	 * @throws Exception every invoked exception is thrown
 	 */
 	public HTTPServer(String keyURI, String httpPath,
 		    int portNumber, final LoggerAndExceptionHandlerFacadeIF logFacade) throws Exception {

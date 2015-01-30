@@ -359,7 +359,7 @@ function GUI(frameControler, controllerName) {
 }
 function shotGun(s) {
 	var canvas = document.getElementById('scene');
-	for (var i = 0; i < 10000;i++) {
+	for (var i = 0; i < 100;i++) {
 		context = canvas.getContext("2d");
 		context.beginPath();
 		context.lineWidth = 2.5;

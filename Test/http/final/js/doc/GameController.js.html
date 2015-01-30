@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: GameController.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: GameController.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * GameController - contorls game network communication
+ * @class GameController
+ * @author Florian Krüllke
+ * @version 0.1
+ */
+var GameController = {
+	/**
+    * relate onjekt to himself as an variable to delete it later
+    * @type GrameControler (this)
+    * @memberof GameController
+    */
+	thisObj :  this,
+	//Main
+	/**
+	 * main of GameController sets up a game
+	 * @method mainGC
+	 * @param {Controller} controller - controller-object to access user interactivity
+	 */
+	mainGC : function(controller, robot) {
+		/**
+	    * create a new frameContoller
+	    * @type FrameControler
+	    * @memberof GameController
+	    */
+		var frameControler = new FrameControler();
+		/**
+	    * create a new GUI
+	    * @type GUI
+	    * @memberof GameController
+	    */
+		var gui = new GUI(frameControler, controller.name);
+		//get into battle queue &amp; create gameSituatuion
+		getNextServerFrame();
+		//relate GUI to the frame controller
+		frameControler.setGUI(gui);
+		frameControler.start();
+		//set the game to pause via key "p" pressed
+		$("body").keydown(function(event) {
+			if (event.keyCode == 80) {
+				frameControler.pauseButton();
+				gui.on = false;
+			}
+		});
+		//Get next server frame
+		/**
+		 * start game request, joining batlle queue
+		 */
+		//for first game loop
+		once = false;
+		//for single ending state
+		twice = false;
+		function getNextServerFrame() {
+			//$("body").append(controller.name);
+			$('#btnEndGame').click(function () {/*$.ajaxSetup({cache: true});*/window.clearInterval(intervall);gui.clear();/*console.log("in game ending");*/});
+			$.ajaxSetup({cache: false});
+			controller.setNextRobot(robot, function () { controller.joinBattleQuery( function(json) {
+					gui.setStart();
+					//Intervall Gameloop
+					var i = 0;
+					var size;
+					intervall = window.setInterval(function() {
+
+						//get game situation in 1/sec up to 20x
+						$.ajax({
+							url : "serverRequest/game-getGameSituation"
+						}).done(function(json) {
+							position = json;
+							//checking for new gameSituation &amp; size of server robot list size to gui robot list size
+							if (position.gameSituation &amp;&amp; position.gameSituation[controller.name]) {
+								//setting new positions for each robot by robot.id in gui > allRobots[]
+
+								for (var names in position.gameSituation) {
+									for (var keys in position.gameSituation[names]) {
+										shot = -1;
+										if (position.gameSituation[names][keys].shotTarget > -1) {
+											
+											shot = position.gameSituation[names][keys].shotTarget;
+										} 
+										if(position.gameSituation[names][keys].id > i){
+
+											i = position.gameSituation[names][keys].id;
+											if (parseInt(i)%2 == 1) {
+												gui.newRobot(i ,names);
+											}
+										}
+										gui.setBot(position.gameSituation[names][keys].id, position.gameSituation[names][keys].position, position.gameSituation[names][keys].hitPoints, shot);
+									}
+									once = true;
+								}
+							}
+							//ending a game if gameSituation is empty
+							if (!twice &amp;&amp; once &amp;&amp; Object.keys(position.gameSituation).length == 0) {
+								$.ajaxSetup({cache: true});
+								window.clearInterval(intervall);
+								gui.clear();
+								twice = true;
+								controller.endGame(gui.getScore(), gui.getWinner());
+								delete thisObj;
+							}
+							
+						});}, 300);
+					$.ajaxSetup({cache: true});
+					});
+				}
+			);
+		}
+	}
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BackendCom.html">BackendCom</a></li><li><a href="Controller.html">Controller</a></li><li><a href="FrameControler.html">FrameControler</a></li><li><a href="GameController.html">GameController</a></li><li><a href="GUI.html">GUI</a></li><li><a href="Robot.html">Robot</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addOnNewFrame">addOnNewFrame</a></li><li><a href="global.html#changeUser">changeUser</a></li><li><a href="global.html#controller">controller</a></li><li><a href="global.html#endGame">endGame</a></li><li><a href="global.html#error">error</a></li><li><a href="global.html#getBehavior">getBehavior</a></li><li><a href="global.html#getRobot">getRobot</a></li><li><a href="global.html#getRobotNum">getRobotNum</a></li><li><a href="global.html#getScore">getScore</a></li><li><a href="global.html#getWinner">getWinner</a></li><li><a href="global.html#joinBattleQ">joinBattleQ</a></li><li><a href="global.html#joinBattleQuery">joinBattleQuery</a></li><li><a href="global.html#loadAccount">loadAccount</a></li><li><a href="global.html#loadDebug">loadDebug</a></li><li><a href="global.html#loadHome">loadHome</a></li><li><a href="global.html#loadLogin">loadLogin</a></li><li><a href="global.html#loadRegister">loadRegister</a></li><li><a href="global.html#logIn">logIn</a></li><li><a href="global.html#logOut">logOut</a></li><li><a href="global.html#mainGC">mainGC</a></li><li><a href="global.html#newRobot">newRobot</a></li><li><a href="global.html#overlay">overlay</a></li><li><a href="global.html#overlayOff">overlayOff</a></li><li><a href="global.html#pauseButton">pauseButton</a></li><li><a href="global.html#registration">registration</a></li><li><a href="global.html#remove">remove</a></li><li><a href="global.html#requestAnimFrame">requestAnimFrame</a></li><li><a href="global.html#searchUser">searchUser</a></li><li><a href="global.html#setBehave">setBehave</a></li><li><a href="global.html#setBehavior">setBehavior</a></li><li><a href="global.html#setBot">setBot</a></li><li><a href="global.html#setGUI">setGUI</a></li><li><a href="global.html#setNext">setNext</a></li><li><a href="global.html#setNextRobot">setNextRobot</a></li><li><a href="global.html#setRobot">setRobot</a></li><li><a href="global.html#setStart">setStart</a></li><li><a href="global.html#shotGun">shotGun</a></li><li><a href="global.html#start">start</a></li><li><a href="global.html#startGame">startGame</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta1</a> on Fri Jan 30 2015 06:59:05 GMT+0100 (CET)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

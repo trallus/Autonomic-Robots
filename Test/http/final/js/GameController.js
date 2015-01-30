@@ -46,7 +46,10 @@ var GameController = {
 		/**
 		 * start game request, joining batlle queue
 		 */
+		//for first game loop
 		once = false;
+		//for single ending state
+		twice = false;
 		function getNextServerFrame() {
 			//$("body").append(controller.name);
 			$('#btnEndGame').click(function () {/*$.ajaxSetup({cache: true});*/window.clearInterval(intervall);gui.clear();/*console.log("in game ending");*/});
@@ -87,7 +90,7 @@ var GameController = {
 								}
 							}
 							//ending a game if gameSituation is empty
-							if (once && Object.keys(position.gameSituation).length == 0) {
+							if (!twice && once && Object.keys(position.gameSituation).length == 0) {
 								$.ajaxSetup({cache: true});
 								window.clearInterval(intervall);
 								gui.clear();

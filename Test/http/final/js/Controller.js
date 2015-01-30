@@ -152,7 +152,9 @@ function Controller() {
 	};
 	//End a game
 	/**
-	 * end a game
+	 * end a game, sets up an overlay with battle data
+	 * @param {Array} score - win data
+	 * @param {Boolean} win - true false or null value for battle result
 	 */
 	this.endGame = function (score, win) {
 		$.ajaxSetup({cache: false});
@@ -204,11 +206,16 @@ function Controller() {
 	//Join batlle query
     /**
      * join battle query
+     * @param {function} callback - callback function 
      */
 	this.joinBattleQuery = function (callback) {
 		backendCom.joinBattleQ(callback);
 	};
-	
+	//Set a single robot behave
+    /**
+     *set a single robot behave
+     * @param {function} callback - callback function 
+     */
 	this.setBehave = function (callback) {
 		var b = {
 			robotID : $("#selectedRobot").attr("value"),

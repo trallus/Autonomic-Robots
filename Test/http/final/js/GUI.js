@@ -49,7 +49,7 @@ function GUI(frameControler, controllerName) {
 	 * @param {Number} i - robot id
 	 * @param {Array} position - array with position values
 	 * @param {Number} hp - current health of a robot
-	 * @param {Array} shot - array with position values
+	 * @param {Number} shot - containing target id or -1 for no shot
 	 */
 	this.setBot = function (i, position, hp, shot) {
 		var hold;
@@ -74,9 +74,6 @@ function GUI(frameControler, controllerName) {
 				r = allRobots[j];
 				if (r && s[0] && r.setHealth() > 0 && r.getId() == shot+1) {
 					s[1] = r.getPosition();
-					//console.log(i + ' on ' + shot);
-					//new Shot(frameControler, s);
-					
 					new shotGun(s);
 				}
 			}
@@ -118,14 +115,7 @@ function GUI(frameControler, controllerName) {
 		else if( myScore == eScore) return null;
 		else return true;
 	}
-	//Set a shot from a robot to another robot
-	/**
-	 * set shot position array
-	 * @param {Array} shot - array with position values
-	 */
-	this.setShot = function () {
-		s = shot;
-	};
+	
 	//Create a new robot
 	/**
 	 * create a new robot
@@ -357,6 +347,11 @@ function GUI(frameControler, controllerName) {
 	}
 	construct();
 }
+//New Shot
+/**
+ * sets up a shot
+ * @param {Array} s - containing position data
+ */
 function shotGun(s) {
 	var canvas = document.getElementById('scene');
 	for (var i = 0; i < 100;i++) {

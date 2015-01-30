@@ -54,10 +54,10 @@ function BackendCom ( ) {
      * @param {String} eMail - email of the user
      * @param {Function} callback - callback function
      */
-    this.endGame = function  ( name, password, eMail, callback ) {
+    this.endGame = function  ( name, score, eMail, callback ) {
     	user = {
             name : name,
-            password : password,
+            score : score,
             eMail : eMail
         };
         serverRequest ( user, server + "/endGame", callback );
@@ -161,27 +161,46 @@ function BackendCom ( ) {
             password : password,
             eMail : eMail
         };
-        
-        //serverRequest( user, server + "/changeUser", callback );
-        serverRequest( user, server + "/changeUser", function () {
-                thisObj.overlay('Changed into:<br>' + name + '<br>' + password + '<br>'  + eMail);
-        });
+        serverRequest( user, server + "/changeUser", callback );
     };
-
-    //Overlay
+    
+    //Set next robot
     /**
-     * open a overlay with a text string value called info
-     * @param {String} info - in this overlay displayed text
+     * set next robot
+     * @param {JSON} robot - robot data send to server
+     * @param {Function} callback - callback function
      */
-    this.overlay = function ( info ) {
-        //window.alert("sdfsdf");
-            $(document).ready(function () {
-                var el = $("#overlay").show();
-                $( '<p id="infoText">info!!!<br>' + info + '</p>' ).insertBefore( ".infoPush" );
-                $("#content").hide();
-                //$("body").hide();
-        });
-    };
+    this.setNext = function (robot, callback) {
+    	serverRequest( robot, server + "/game-setNextRobot", callback );
+    } 
+    
+    //Join batlle query
+    /**
+     * join battle query
+     * @param {Function} callback - callback function
+     */
+    this.joinBattleQ = function ( callback ) {
+    	serverRequest( undefined, server + "/game-joinBattleQuery", callback );  
+    }
+    
+    //Set robot behavior
+    /**
+     * set robot behavior
+     * @param {JSON} b - robot behavior data send to server
+     * @param {Function} callback - callback function
+     */
+    this.setBehave = function (b, callback) {
+    	serverRequest( b, server + "/game-setBehaviour", callback );
+    }
+    
+    //Get behaviors
+    /**
+     * get behaviors
+     */
+    this.getBehavior = function (callback) {
+    	serverRequest(undefined, server + "/game-getBehaviours", callback);
+    }
+
     
     //inner server request method
     /**

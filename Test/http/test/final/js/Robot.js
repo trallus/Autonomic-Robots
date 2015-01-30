@@ -8,8 +8,9 @@
  * @param {Number} id - unique robot id
  */
 
-function Robot ( frameControler, color, id) {
-    var thisObj = this, health = 100;
+function Robot ( frameControler, color, id, name) {
+    var thisObj = this; 
+    var health = 100;
     var posX;
     var posY;
     var direction = Math.PI;
@@ -19,24 +20,29 @@ function Robot ( frameControler, color, id) {
     var acceleration = 10; // pix / (sec*sec)
     var moveVector = new Array(0, 0);
     var speed = 0; // pix / sec
-    radius = 10;
-    mass = 1;
+    var dead;
+    var radius = 15;
+    var mass = 1;
     canvaswidth = 600;
     canvasheight = 600;
-    colors = ["#0f0", "red"];
+    var colors = ["LimeGreen","red"];
+    thisObj.user;
     startPosition();
-    
+    if(color==0) thisObj.user="you";
+    else thisObj.user="enemy";
     //Start Position
     /**
      * give every player his start position
      */
     function startPosition () {
     	if(id%2 == 1){
-    		posX=0+ canvaswidth/2;
-    		posY=100+ canvasheight/2;
+    		posX=0;/*+ canvaswidth/2;*/
+    		posY=100;/*+ canvasheight/2;*/
+    		
     	}else{
-    		posX=14+ canvaswidth/2;
-    		posY=-98+ canvasheight/2;
+    		posX=14;/*+ canvaswidth/2;*/
+    		posY=-98;/*+ canvasheight/2;*/
+    		
     	}
     }
     
@@ -63,6 +69,23 @@ function Robot ( frameControler, color, id) {
     thisObj.getPosition = function () {
         ret = [posX, posY];
         return ret;
+    };
+    //Get Name
+    /**
+     * get position
+     * @return {Array} ret - position array
+     */
+    thisObj.getName = function () {
+        return name;
+    };
+    
+    thisObj.getUser = function () { return thisObj.user; };
+    
+    thisObj.getColor = function (i) { 
+    	/*if(color == 0) {return colors[0];}
+    	else{ return colors[1];}*/
+    	if(color == 0) {return "rgba(50,205,50,0.5)";}
+    	else{ return "rgba(255,0,0,0.5)";}
     };
     
     //Get move vector
@@ -109,8 +132,8 @@ function Robot ( frameControler, color, id) {
      * @param {Array} p - position array
      */
     thisObj.setDestination = function ( p ) {
-        destinationX = p[0]+ canvaswidth/2;
-        destinationY = p[1]+ canvasheight/2;
+        destinationX = p[0];/*+ canvaswidth/2;*/
+        destinationY = p[1];/*+ canvasheight/2;*/
     };
     
     //Set current health
@@ -118,7 +141,14 @@ function Robot ( frameControler, color, id) {
      * set health
      * @param {Number} damage - damage to subtract from health
      */
-    function setHealth (damage) { health = health-damage;}
+    thisObj.setHealth = function (hp) {
+    	//console.log(hp);
+    	if(hp == 0) {
+    		dead = true;
+    		
+    	} else if(!hp) return health;
+    	health = hp;
+    }
     
     //Set behavior
     /**
@@ -156,8 +186,12 @@ function Robot ( frameControler, color, id) {
      * @param {Number} timeSinceLastDraw - time since last draw
      */
     function onFrame ( context, timeSinceLastDraw ) {
-        calcPosition ( timeSinceLastDraw );
-        draw ( context );
+    	
+        	calcPosition ( timeSinceLastDraw );
+            draw ( context );
+            if ( dead )  {
+            	return dead;
+            } 
     }
     
     //Draw
@@ -166,28 +200,29 @@ function Robot ( frameControler, color, id) {
      * @param {getContext("2d")} context - to draw context
      */
     function draw ( context ) {
-    	//draw info
-    	context.beginPath();
-    	context.fillStyle = '#000000';
-    	context.fillRect(posX-16,posY-24,32,15);
-    	context.fillStyle = '#0F0';
-    	context.fillRect(posX-15,posY-23,Math.floor(health*0.3),13);
-    	//draw robot
-    	context.font = "10px Verdana";
-        context.fillStyle = '#FFFFFF';
-        context.fillText( '#' + id, posX-7, posY-13);
-        context.arc( posX, posY, radius/2, 0, 2 * Math.PI, false);
-        //set drawing style
-        context.lineWidth = 1;
-        context.strokeStyle =  "#000";
-        context.fillStyle= colors[color];
-        context.fill();
-        context.stroke(); 
-        //draw destination
-        context.beginPath();
-        context.arc( destinationX, destinationY, 2, 0, 2 * Math.PI, false);
-        //actually start drawing
-        context.stroke();    
+    	if(!dead){
+	    	//draw info
+	    	context.beginPath();
+	    	context.fillStyle = '#000000';
+	    	context.fillRect(posX-16,posY-14,32,5);
+	    	context.fillStyle = '#0F0';
+	    	context.fillRect(posX-15,posY-13,health*0.3,3);
+	    	//draw robot
+	    	context.font = "10px Verdana";
+	        context.fillStyle = '#FFFFFF';
+	        context.arc( posX, posY, radius/2, 0, 2 * Math.PI, false);
+	        //set drawing style
+	        context.lineWidth = 1;
+	        context.strokeStyle =  "#000";
+	        context.fillStyle= colors[color];
+	        context.fill();
+	        context.stroke(); 
+	        } else {
+	        	context.beginPath();
+	        	context.fillStyle= colors[color];
+	        	context.fillText( 'X', posX-3, posY+4);
+	        	delete thisObj;
+	        }
     }
     
     //Physics
@@ -242,6 +277,105 @@ function Robot ( frameControler, color, id) {
             console.log(angleDiff);
             console.log(direction);
         }
+    }
+    construct ();
+}
+
+
+
+/**
+ * Shot - sets up a shot Object
+ * @class Robot
+ * @author Florian Krüllke
+ * @version 0.1
+ * @param {FrameControler} frameControler - controls frame activity
+ * @param {Array} s - shot with start and end position, color data
+ */
+
+function Shot ( frameControler, s) {
+    var thisObj = this; 
+    var health = 100;
+    var posX;
+    var posY;
+    var destinationX; 
+    var destinationY; 
+    var dead;
+    startPosition();
+    //Start Position
+    /**
+     * give every shot his start and end position
+     */
+    function startPosition () {
+    	posX = s[0][0];
+    	posY = s[0][1];
+    	destinationX = s[1][0];
+    	destinationY = s[1][1];
+    }
+    //Construct
+    /**
+     * add onFrame (draw, check for updates) to frameController
+     */
+    function construct () {
+        frameControler.addOnNewFrame ( onFrame );
+        
+    }
+    thisObj.setPos = function (pos) {
+    	s = pos;
+    }
+    
+    thisObj.setHealth = function (hp) {
+    	if (!hp) return hp;
+    	else health = hp;
+    }
+    //On frame
+    /**
+     * onframe - global ticker for drawing methods
+     * @param {getContext("2d")} context - to draw context
+     * @param {Number} timeSinceLastDraw - time since last draw
+     */
+    function onFrame ( context, timeSinceLastDraw ) {
+        	calcPosition ( timeSinceLastDraw );
+            draw ( context );
+    }
+    //Draw
+    /**
+     * drawing method
+     * @param {getContext("2d")} context - to draw context
+     */
+    function draw ( context ) {
+    	
+    	if(!dead){    		
+    		
+    		context.beginPath();
+    		context.lineWidth = 2.5;
+    		context.strokeStyle = s[2];
+    		context.lineCap = "round";
+    		context.moveTo(s[0][0],s[0][1]);
+    		context.lineTo(s[1][0],s[1][1]);
+    		context.stroke();
+    		} else {
+    			delete thisObj;
+	        }
+    }
+    
+    //Physics
+    /**
+     * create a physical behavior on changed destinations
+     * @param {Number} timeSinceLastDraw - time since last draw
+     */
+    function calcPosition ( timeSinceLastDraw ) {
+        //angle between direction and pos, destination
+        //treeangle abc: tan @ = a/b
+        b = parseInt(destinationX) - parseInt(posX);
+        if ( parseInt(b) <= 5 && parseInt(b) >= -5) dead = true;
+        if ( b > 0 ) {
+            	posX+=1;
+                posY+=1;
+            }
+            else {
+            	posX-=1;
+                posY-=1;
+            }
     }
     construct ();
 }

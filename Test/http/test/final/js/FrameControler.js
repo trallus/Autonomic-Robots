@@ -1,7 +1,7 @@
 /**
  * FrameController - controls main frame activity
  * @class FrameControler
- * @author Christian Köderitz
+ * @author Christian Köditz
  * @version 0.1
  */
 
@@ -13,7 +13,23 @@ function FrameControler ( ) {
     var onNewFrameFunctions = [];
     var gui;
     var pause = false;
-    
+
+    //Request Animation Frame
+    /**
+     * Request Animation Frame - setting request animation frame for different browsers
+     * @method requestAnimFrame
+     * @param {Function} callback - callback function
+     */
+    window.requestAnimFrame = (function(){
+        return  window.requestAnimationFrame       || 
+                window.webkitRequestAnimationFrame || 
+                window.mozRequestAnimationFrame    || 
+                window.oRequestAnimationFrame      || 
+                window.msRequestAnimationFrame     || 
+                function(callback, element){
+                  window.setTimeout(callback, 1000 / maxFrameRate);
+                };
+      })();
     /**
      * set a GUI to render on frame
      * @param {} extGUI
@@ -40,9 +56,9 @@ function FrameControler ( ) {
             pause = true;
         }
     };
-    
+    //Next frame
     /**
-     * calculates next frame
+     * calculates next frames
      */
     function nextFrame () {
         
@@ -56,9 +72,9 @@ function FrameControler ( ) {
         
         // Eigentliche Frame-tätigkeit
         for (var i in onNewFrameFunctions) {
-            onNewFrameFunctions[i]( gui.context, timeSinceLastDraw );
+        	
+        	hold = onNewFrameFunctions[i]( gui.context, timeSinceLastDraw );
         }
-        
         // Sicherstellen das die maximale Framerate nicht überschritten wird
         var actFrameTime = new Date().getTime();
         var timeDiff = actFrameTime - lastFrameTime;
@@ -67,27 +83,11 @@ function FrameControler ( ) {
             setTimeout ( nextFrame , minFrameLength - timeDiff);
             return;
         }
-        
+        onNewFrameFunctions = [];
+       //nextFrame(); 
+       requestAnimFrame(nextFrame);
     }
-    
-    //Request Animation Frame
-    /**
-     * Request Animation Frame - setting request animation frame for different browsers
-     * @method requestAnimFrame
-     * @param {Function} callback - callback function
-     */
-    window.requestAnimFrame = (function(){
-        return  window.requestAnimationFrame       || 
-                window.webkitRequestAnimationFrame || 
-                window.mozRequestAnimationFrame    || 
-                window.oRequestAnimationFrame      || 
-                window.msRequestAnimationFrame     || 
-                function(/* function */ callback, /* DOMElement */ element){
-                  window.setTimeout(callback, 1000 / 60);
-                };
-      })();
   
-    requestAnimFrame(nextFrame);
     //Add context on new frame
     /**
      * possibility to add a context to frameController

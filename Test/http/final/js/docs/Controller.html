@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Controller.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="BackendCom.html">
+                BackendCom.js
+              </a>
+            
+              
+              <a class="source" href="Controller.html">
+                Controller.js
+              </a>
+            
+              
+              <a class="source" href="FrameControler.html">
+                FrameControler.js
+              </a>
+            
+              
+              <a class="source" href="GUI.html">
+                GUI.js
+              </a>
+            
+              
+              <a class="source" href="GameController.html">
+                GameController.js
+              </a>
+            
+              
+              <a class="source" href="Robot.html">
+                Robot.js
+              </a>
+            
+              
+              <a class="source" href="jquery-1.7.1.html">
+                jquery-1.7.1.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>Controller.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/**
+ * Controller - main user/client side functionality
+ * @class Controller
+ * @project Automatic Robots
+ * @author Florian Krüllke
+ * @version 0.1
+ */</span>
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Controller</span><span class="hljs-params">()</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Global var’s</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+    *to create a static methods
+    * @type this
+    * @memberof Controller
+    */</span>
+	<span class="hljs-keyword">var</span> thisObj = <span class="hljs-keyword">this</span>;
+	<span class="hljs-comment">/**
+    *name space for build up URLs 
+    * @type String
+    * @memberof Controller
+    */</span>
+	<span class="hljs-keyword">var</span> server = <span class="hljs-string">"serverRequest"</span>;
+	<span class="hljs-comment">/**
+    *new BackendCom-Object for server communication
+    * @type BackendCom
+    * @memberof Controller
+    */</span>
+	<span class="hljs-keyword">var</span> backendCom = <span class="hljs-keyword">new</span> BackendCom();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <ul>
+<li>User</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+    *static name space for user name
+    * @type String
+    * @memberof Controller
+    */</span>
+	thisObj.name;
+	<span class="hljs-comment">/**
+    *password of the user
+    * @type String
+    * @memberof Controller
+    */</span>
+	<span class="hljs-keyword">var</span> password;
+	<span class="hljs-comment">/**
+     *email of the user
+     * @type String
+     * @memberof Controller
+     */</span>
+	<span class="hljs-keyword">var</span> eMail;
+	<span class="hljs-comment">/**
+    *to hold user-object
+    * @type object
+    * @memberof Controller
+    */</span>
+	<span class="hljs-keyword">var</span> user;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <ul>
+<li>access for changed robot values by user</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+    *array to hold all robot-objects, static access
+    * @type Array
+    * @memberof Controller
+    */</span>
+	thisObj.roboSet = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <ul>
+<li>default robo issue names &amp; values</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+    *array for default name configuration
+    * @type Array
+    * @memberof Controller
+    */</span>
+	<span class="hljs-keyword">var</span> roboName = [<span class="hljs-string">"range"</span>, <span class="hljs-string">"rateOfFire"</span>, <span class="hljs-string">"damage"</span>, <span class="hljs-string">"armor"</span>, <span class="hljs-string">"enginePower"</span>, <span class="hljs-string">"behavior"</span>];
+	<span class="hljs-comment">/**
+    *array for default values configuration
+    * @type Array
+    * @memberof Controller
+    */</span>
+	<span class="hljs-keyword">var</span> roboVal = [<span class="hljs-number">100</span>, <span class="hljs-number">30</span>, <span class="hljs-number">10</span>, <span class="hljs-number">100</span>, <span class="hljs-number">100</span>, <span class="hljs-string">"gibts noch nicht"</span>];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Get html parts method</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * get html parts via AJAX
+	 * @method getAJAX
+	 * @param {String} destination - specifies the path URL
+	 */</span>
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getAJAX</span><span class="hljs-params">(destination)</span> </span>{
+		$.ajax({
+			url : destination
+		}).done(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(html)</span> </span>{
+			$(<span class="hljs-string">"#content"</span>).html(html).promise().done(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+				regisButtons();
+			});
+
+		});
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Outer methods
+Load debug-mode</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * open debug file - auto.html - in a new window
+	 * @method loadDebug
+	 */</span>
+	<span class="hljs-keyword">this</span>.loadDebug = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+		<span class="hljs-built_in">window</span>.open(<span class="hljs-string">"auto.html"</span>);
+	};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Load account settings</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * load account-settings-page
+	 * @method loadAccount
+	 */</span>
+	<span class="hljs-keyword">this</span>.loadAccount = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+		getAJAX(<span class="hljs-string">"account.html"</span>);
+	};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Registration</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * load sign-up-page
+	 * @method loadRegister
+	 */</span>
+	<span class="hljs-keyword">this</span>.loadRegister = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+		getAJAX(<span class="hljs-string">"signup.html"</span>);
+	};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Load home-page</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * load home-page
+	 * @method loadHome
+	 */</span>
+	<span class="hljs-keyword">this</span>.loadHome = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+		getAJAX(<span class="hljs-string">"home.html"</span>);
+	};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Load login-page</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * load login-page
+	 * @method loadLogin
+	 */</span>
+	<span class="hljs-keyword">this</span>.loadLogin = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+		getAJAX(<span class="hljs-string">"login.html"</span>);
+	};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>load logout-page</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * user loguut
+	 * @method logOut
+	 */</span>
+	<span class="hljs-keyword">this</span>.logOut = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+		backendCom.logOut(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+			thisObj.loadLogin();
+		});
+	};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>End a game</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * end a game
+	 * @method endGame
+	 */</span>
+	<span class="hljs-keyword">this</span>.endGame = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+		backendCom.endGame(name, password, eMail, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+			thisObj.loadHome();
+		});
+	};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Start a game</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * start a Game
+	 * @method startGame
+	 */</span>
+	<span class="hljs-keyword">this</span>.startGame = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+		<span class="hljs-keyword">if</span>($(<span class="hljs-string">"#users :selected"</span>)){
+			<span class="hljs-keyword">var</span> e = $(<span class="hljs-string">"#users :selected"</span>).text();
+			<span class="hljs-built_in">console</span>.log(e);
+			thisObj.name = e;
+		}
+		<span class="hljs-keyword">if</span> (thisObj.name) {
+			backendCom.logIn(<span class="hljs-string">""</span>, thisObj.name, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(json)</span> </span>{
+
+				<span class="hljs-keyword">if</span> (json.logedIn) {
+					$.ajax({
+						url : <span class="hljs-string">"robots.html"</span>
+					}).done(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(html)</span> </span>{
+						$(<span class="hljs-string">"#content"</span>).html(html).promise().done(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+							GameController.main(thisObj);
+							<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"setNext"</span>).appendChild(setNext());
+							$(<span class="hljs-string">"#setNext"</span>).show();
+							regisButtons();
+						});
+					});
+				} <span class="hljs-keyword">else</span>
+					thisObj.overlay(<span class="hljs-string">'Wrong mail or password!&lt;br&gt;Please try again!!!'</span>);
+			});
+			e = <span class="hljs-string">''</span>;
+		}
+
+	};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Inner methods
+End a game</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * end a Game
+	 * @method endGame
+	 */</span>
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">endGame</span><span class="hljs-params">()</span> </span>{
+		backendCom.endGame(name, password, eMail, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+			thisObj.loadHome();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>$(“#overlay”).hide();</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			$(<span class="hljs-string">"#setNext"</span>).hide();
+		});
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Registration</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * registration
+	 * @method registration
+	 */</span>
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">registration</span><span class="hljs-params">()</span> </span>{
+		readInputFealds();
+		<span class="hljs-keyword">if</span> (name.trim() == <span class="hljs-string">''</span>) {
+			thisObj.overlay(<span class="hljs-string">'Your name can\'t be empty'</span>);
+		} <span class="hljs-keyword">else</span> {
+			<span class="hljs-keyword">if</span> (eMail.indexOf(<span class="hljs-string">'@'</span>) &lt; <span class="hljs-number">0</span>) {
+				thisObj.overlay(<span class="hljs-string">'This is no valid eMail'</span>);
+			} <span class="hljs-keyword">else</span> {
+				backendCom.registration(name, password, eMail, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(json)</span> </span>{
+
+					<span class="hljs-keyword">if</span> (json.registered) {
+						<span class="hljs-keyword">var</span> text = <span class="hljs-string">'Successfully registered... &lt;br&gt;Welcome '</span> + name + <span class="hljs-string">'!!!&lt;br&gt;'</span>;
+						thisObj.overlay(text);
+						logIn();
+
+					} <span class="hljs-keyword">else</span> {
+						<span class="hljs-built_in">console</span>.log(json);
+					}
+				});
+			}
+		}
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Change user settings</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * change user settings via readInputFields()
+	 * @method changeUser
+	 */</span>
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">changeUser</span><span class="hljs-params">()</span> </span>{
+		readInputFealds();
+		backendCom.changeUser(name, password, eMail, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(json)</span> </span>{
+			<span class="hljs-keyword">if</span> (json.userChanged) {
+				thisObj.overlay(<span class="hljs-built_in">JSON</span>.stringify(json));
+				thisObj.loadHome();
+			}
+		});
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Open account</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * open account settings page
+	 * @method account
+	 */</span>
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">account</span><span class="hljs-params">()</span> </span>{
+		thisObj.loadAccount();
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Login</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * login
+	 * @method logIn
+	 */</span>
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">logIn</span><span class="hljs-params">()</span> </span>{
+		readInputFealds();
+		backendCom.logIn(password, eMail, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(json)</span> </span>{
+
+			<span class="hljs-keyword">if</span> (json.logedIn) {
+				thisObj.valid = <span class="hljs-literal">true</span>;
+				thisObj.loadHome();
+
+			} <span class="hljs-keyword">else</span>
+				thisObj.overlay(<span class="hljs-string">'Wrong mail or password!&lt;br&gt;Please try again!!!'</span>);
+		});
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Logout</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * logOut
+	 * @method logOut
+	 */</span>
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">logOut</span><span class="hljs-params">()</span> </span>{
+		backendCom.logOut(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+			thisObj.overlay(<span class="hljs-string">'You\'ve been logged out!'</span>);
+			thisObj.loadLogin();
+		});
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Remove the user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * remove an User
+	 * @method remove
+	 */</span>
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">remove</span><span class="hljs-params">()</span> </span>{
+		readInputFealds();
+		user = {
+			name : name,
+			password : password,
+			eMail : eMail
+		};
+		backendCom.remove(name, password, eMail, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(json)</span> </span>{
+			<span class="hljs-keyword">if</span> (json.removed) {
+				thisObj.overlay(<span class="hljs-string">'User '</span> + name + <span class="hljs-string">' has been removed'</span>);
+				thisObj.loadRegister();
+			} <span class="hljs-keyword">else</span> {
+				thisObj.overlay(<span class="hljs-string">'There is no User: '</span> + name + <span class="hljs-string">'\n... Please try again...\nType in name, eMail and password'</span>);
+			}
+		});
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Search for other online users</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * search for other online users
+	 * @method searchUser
+	 */</span>
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">searchUser</span><span class="hljs-params">()</span> </span>{
+		$(<span class="hljs-string">'select'</span>).empty();
+		backendCom.searchUser($(<span class="hljs-string">"#inputUserName"</span>).val(), <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(json)</span> </span>{
+			<span class="hljs-keyword">var</span> searchResult = json.searchResult;
+			$select = $(<span class="hljs-string">'#Users'</span>);
+			<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; searchResult.length; i++) {
+				$select.append($(<span class="hljs-string">'&lt;option /&gt;'</span>, {
+					value : (i + <span class="hljs-number">1</span>),
+					text : searchResult[i]
+				}));
+			}
+		});
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Debug load player feature</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * load dummy players for default users select
+	 * @method loadPlayer
+	 * @param {JSON} users
+	 */</span>
+	<span class="hljs-keyword">this</span>.loadPlayer = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(users)</span> </span>{
+		<span class="hljs-keyword">var</span> e = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">"select"</span>);
+		e.setAttribute(<span class="hljs-string">"name"</span>, <span class="hljs-string">"users"</span>);
+		e.setAttribute(<span class="hljs-string">"style"</span>, <span class="hljs-string">"cursor: pointer"</span>);
+		e.id = <span class="hljs-string">"users"</span>;
+		<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"overlay"</span>).insertBefore(e, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"infoPush"</span>));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>$(“#overlay”).remove(“#infoText”);
+$(‘#content’).hide();
+$(“#overlay”).show();</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">var</span> $select = $(<span class="hljs-string">'#users'</span>);
+		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> users) {
+			$select.append($(<span class="hljs-string">'&lt;option /&gt;'</span>, {
+				value : (key),
+				text : users[key] + <span class="hljs-string">"@"</span>
+			}));
+		}
+	};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Robot Stuff
+Set next robot HTML-element</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * set next robot div element builder
+	 * @method setNext
+	 * @return div - returns a HTML-DIV containing default set up of a robot
+	 */</span>
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setNext</span><span class="hljs-params">()</span> </span>{
+		$(<span class="hljs-string">"#btnOverlayOff"</span>).hide();
+		<span class="hljs-keyword">var</span> div = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">"div"</span>);
+		div.id = <span class="hljs-string">"setRobot"</span>;
+		div.setAttribute(<span class="hljs-string">"class"</span>, <span class="hljs-string">"setRobot"</span>);
+		<span class="hljs-keyword">var</span> x = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">"LABEL"</span>);
+		x.innerHTML = <span class="hljs-string">"Set next robot via arrow up or down for changes on selected numbers - MAX =&gt; +5&lt;br&gt;&lt;br&gt;"</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>“ + “<br>“ + “</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		div.appendChild(x);
+		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">6</span>; i++) {
+			<span class="hljs-keyword">var</span> e = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">"input"</span>);
+			e.id = roboName[i] + <span class="hljs-string">"-setter"</span>;
+			<span class="hljs-keyword">var</span> n = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'br'</span>);
+			e.setAttribute(<span class="hljs-string">"class"</span>, <span class="hljs-string">"inputRobo"</span>);
+			<span class="hljs-keyword">if</span>(i&lt;<span class="hljs-number">5</span>){
+				e.setAttribute(<span class="hljs-string">"type"</span>, <span class="hljs-string">"number"</span>);
+			}<span class="hljs-keyword">else</span>{
+				e.setAttribute(<span class="hljs-string">"type"</span>, <span class="hljs-string">"text"</span>);
+			}
+			e.appendChild(n);
+			e.value = roboVal[i];
+			e.name = <span class="hljs-string">"number"</span>;
+			e.title = roboName[i];
+			div.appendChild(e);
+		}
+		<span class="hljs-keyword">var</span> min = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">"p"</span>);
+		min.id = <span class="hljs-string">"setRobotControl"</span>;
+		div.appendChild(min);
+		<span class="hljs-keyword">return</span> div;
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Get current robot values</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * get the values and behavior of the next robot from document inputs
+	 * @method getRobot
+	 */</span>
+	<span class="hljs-keyword">this</span>.getRobot = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+		<span class="hljs-comment">/*
+		 thisObj.roboSet = {
+		 weaponPrototype : {
+		 range : $("#range").val(),
+		 rateOfFire : $("#rateOfFire").val(),
+		 damage : $("#damage").val()
+		 },
+		 armor : $("#armor").val(),
+		 enginePower : $("#enginePower").val(),
+		 behaviour : $("#behavior").val()
+		 };
+		 */</span>
+		thisObj.roboSet[<span class="hljs-number">0</span>] = $(<span class="hljs-string">"#range-setter"</span>).val();
+		thisObj.roboSet[<span class="hljs-number">1</span>] = $(<span class="hljs-string">"#rateOfFire-setter"</span>).val();
+		thisObj.roboSet[<span class="hljs-number">2</span>] = $(<span class="hljs-string">"#damage-setter"</span>).val();
+		thisObj.roboSet[<span class="hljs-number">3</span>] = $(<span class="hljs-string">"#armor-setter"</span>).val();
+		thisObj.roboSet[<span class="hljs-number">4</span>] = $(<span class="hljs-string">"#enginePower-setter"</span>).val();
+		thisObj.roboSet[<span class="hljs-number">5</span>] = $(<span class="hljs-string">"#behavior-setter"</span>).val();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>console.log(thisObj.roboSet);
+return thisObj.roboSet;</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Create a SetRobot-DIV-element for the overlay</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * function for setting the first robot via function overlay
+	 * @method setRobot
+	 */</span>
+	<span class="hljs-keyword">this</span>.setRobot = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+		<span class="hljs-keyword">var</span> div = setNext();
+		<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"overlay"</span>).appendChild(div);
+		<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"overlay"</span>).insertBefore(div, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"infoPush"</span>));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>thisObj.overlay(‘<div class="button" id="btnStartGame" style="cursor: pointer" onClick="controller.setRoboColor();controller.startGame();controller.overlayOff()">startGame</div></div>‘);</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">var</span> e = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">"div"</span>);
+		e.setAttribute(<span class="hljs-string">"class"</span>, <span class="hljs-string">"button"</span>);
+		e.setAttribute(<span class="hljs-string">"onClick"</span>, <span class="hljs-string">"controller.getRobot();controller.startGame();controller.overlayOff();"</span>);
+		e.innerHTML = <span class="hljs-string">"startGame"</span>;
+		e.setAttribute(<span class="hljs-string">"style"</span>, <span class="hljs-string">"cursor: pointer"</span>);
+		style = <span class="hljs-string">"cursor: pointer"</span>;
+		e.id = <span class="hljs-string">"btnStartGame"</span>;
+		<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"overlay"</span>).insertBefore(e, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"infoPush"</span>));
+		$(<span class="hljs-string">"#overlay"</span>).remove(<span class="hljs-string">"#infoText"</span>);
+		$(<span class="hljs-string">'#content'</span>).hide();
+		$(<span class="hljs-string">"#overlay"</span>).show();
+	};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>UtilityStuff</p>
+<p>Button initialization</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * button initialization
+	 * @inner bi
+	 * @method regisButtons
+	 */</span>
+	regisButtons = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+
+		$(<span class="hljs-string">"#btnRegister"</span>).click(registration);
+		$(<span class="hljs-string">"#btnLogIn"</span>).click(logIn);
+		$(<span class="hljs-string">"#btnLogOut"</span>).click(logOut);
+		$(<span class="hljs-string">"#btnRemove"</span>).click(remove);
+		$(<span class="hljs-string">"#btnEndGame"</span>).click(endGame);
+		$(<span class="hljs-string">"#btnAccount"</span>).click(account);
+		$(<span class="hljs-string">"#btnChangeUser"</span>).click(changeUser);
+		$(<span class="hljs-string">"#btnSearchUser"</span>).click(searchUser);
+	};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>Input read</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * input fields read
+	 * @method readInputFealds
+	 */</span>
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">readInputFealds</span><span class="hljs-params">()</span> </span>{
+		name = $(<span class="hljs-string">"#inputUserName"</span>).val();
+		password = $(<span class="hljs-string">"#inputUserPass"</span>).val();
+		eMail = $(<span class="hljs-string">"#inputUserEMail"</span>).val();
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>Check JSON for two values</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * Description JSON CHECK for 2 values
+	 * @method check
+	 * @param {JSON} json - JSON to search through
+	 * @param {VALUE} value1 - any value to look for
+	 * @param {VALUE} value2 - any value to look for
+	 * @return boolean - true or false for success or not
+	 */</span>
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">check</span><span class="hljs-params">(json, value1, value2)</span> </span>{
+		<span class="hljs-keyword">for</span> (key <span class="hljs-keyword">in</span> json) {
+			<span class="hljs-keyword">if</span> ( <span class="hljs-keyword">typeof</span> (json[key]) === <span class="hljs-string">"object"</span>) {
+				<span class="hljs-keyword">return</span> checkForValue(json[key], value1, value2);
+
+			} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (json[key] === value2 &amp;&amp; (<span class="hljs-built_in">JSON</span>.stringify(json).indexOf(value1) &gt; <span class="hljs-number">0</span> )) {
+				<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+			}
+		}
+		<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>Overlay opener</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * open a overlay with a text string called info
+	 * @method overlay
+	 * @param {String} info
+	 */</span>
+	<span class="hljs-keyword">this</span>.overlay = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(info)</span> </span>{
+		$(<span class="hljs-built_in">document</span>).ready(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+			$(<span class="hljs-string">'#content'</span>).hide();
+			<span class="hljs-keyword">var</span> el = $(<span class="hljs-string">"#overlay"</span>).show();
+			$(<span class="hljs-string">'&lt;p id="infoText"&gt;INFO!&lt;br&gt;&lt;br&gt;'</span> + info + <span class="hljs-string">'&lt;/p&gt;'</span>).insertBefore(<span class="hljs-string">".infoPush"</span>);
+		});
+	};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>Overlay closer</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * close the overlay and remove the tag with id "infoText"
+	 * @method overlayOff
+	 */</span>
+	<span class="hljs-keyword">this</span>.overlayOff = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+		$(<span class="hljs-built_in">document</span>).ready(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+			$(<span class="hljs-string">"#content"</span>).show();
+			<span class="hljs-keyword">var</span> el = $(<span class="hljs-string">"#overlay"</span>).hide();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>el.remove(‘#infoText’);</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			$(<span class="hljs-string">"#infoText"</span>).remove();
+			$(<span class="hljs-string">"#btnOverlayOff"</span>).show();
+			$(<span class="hljs-string">"#btnStartGame"</span>).remove();
+			$(<span class="hljs-string">"#setRobot"</span>).remove();
+			$(<span class="hljs-string">"#overlay p"</span>).remove();
+			$(<span class="hljs-string">"#setNext"</span>).remove();
+			$(<span class="hljs-string">'#users'</span>).remove();
+		});
+	};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>DEBUG FEATURES</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-comment">/**
+	 * DEBUG FEATURES
+	 */</span>
+	<span class="hljs-keyword">var</span> users = [<span class="hljs-string">"a"</span>, <span class="hljs-string">"b"</span>, <span class="hljs-string">"c"</span>, <span class="hljs-string">"d"</span>, <span class="hljs-string">"e"</span>, <span class="hljs-string">"f"</span>, <span class="hljs-string">"g"</span>, <span class="hljs-string">"h"</span>];
+	<span class="hljs-keyword">var</span> controller;
+	
+	<span class="hljs-comment">/**
+	 * registers a bunch of auto-users for development
+	 * @method regist
+	 */</span>
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">regist</span><span class="hljs-params">()</span> </span>{
+	
+		<span class="hljs-keyword">var</span> backendCom = <span class="hljs-keyword">new</span> BackendCom();
+		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> users) {
+			backendCom.registration(users[i] + <span class="hljs-string">'@'</span>, <span class="hljs-string">""</span>, users[i] + <span class="hljs-string">'@'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(json)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>console.log(json);</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	
+			});
+		}
+	};
+	
+	<span class="hljs-comment">/**
+	 * initialization method for creating a new instance of class Controller
+	 * @method start
+	 */</span>
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">start</span><span class="hljs-params">()</span> </span>{
+		controller = <span class="hljs-keyword">new</span> Controller();
+	};
+	
+	<span class="hljs-comment">/**
+	 * initialization method for debugging mode, creates a bunch of dummy users
+	 * @method startDebug
+	 */</span>
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">startDebug</span><span class="hljs-params">()</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>regist();</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	
+		controller = <span class="hljs-keyword">new</span> Controller();
+		controller.setRobot();
+		controller.loadPlayer(users);
+	};</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
